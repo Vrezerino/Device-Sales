@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { GetServerSideProps } from 'next';
+import { ConnectionStatus } from './definitions';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -28,10 +29,6 @@ if (process.env.NODE_ENV === 'development') {
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }
-
-type ConnectionStatus = {
-  isConnected: boolean;
-};
 
 const getServerSideProps: GetServerSideProps<
   ConnectionStatus
