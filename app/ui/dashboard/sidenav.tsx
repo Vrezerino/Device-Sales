@@ -4,6 +4,9 @@ import DeviceLogo from '@/app/ui/di-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import '@/app/ui/dashboard/sidenav.css';
 
+import { clientPromise, getServerSideProps } from '@/app/lib/mongodb';
+import { InferGetServerSidePropsType } from 'next';
+
 export default function SideNav() {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">

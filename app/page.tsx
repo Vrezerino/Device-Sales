@@ -4,7 +4,12 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Page() {
+import { getServerSideProps } from '@/app/lib/mongodb';
+import { InferGetServerSidePropsType } from 'next';
+
+export default function Page({
+  isConnected,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main className="flex min-h-screen flex-col p-6">
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-black p-4 md:h-52">
@@ -23,7 +28,7 @@ export default function Page() {
           </Link>
         </div>
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          edsghsrgs
+          { isConnected ? 'Connected' : 'Not connected' }
         </div>
       </div>
     </main>
