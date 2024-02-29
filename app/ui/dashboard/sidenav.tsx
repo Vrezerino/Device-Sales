@@ -4,10 +4,12 @@ import DeviceLogo from '@/app/ui/di-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import '@/app/ui/dashboard/sidenav.css';
 
-import { clientPromise, getServerSideProps } from '@/app/lib/mongodb';
+import { getServerSideProps } from '@/app/lib/mongodb';
 import { InferGetServerSidePropsType } from 'next';
 
-export default function SideNav() {
+export default function SideNav({
+  isConnected,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link
@@ -20,7 +22,7 @@ export default function SideNav() {
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
-        <div className="hidden h-auto w-full grow rounded-md bg-neutral-900 md:block"></div>
+        <div className="hidden h-auto w-full grow rounded-md bg-neutral-900 md:block">{isConnected ? 'hehe' : 'nah'}</div>
         <form>
           <button className="flex h-[48px] w-full grow items-center justify-center gap-2 border border-orange-200/30 rounded-md bg-neutral-900 p-3 text-sm font-medium hover:bg-neutral-800 hover:text-red-700 md:flex-none md:justify-start md:p-2 md:px-3">
             <PowerIcon className="w-6" />
