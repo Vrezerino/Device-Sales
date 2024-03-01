@@ -15,6 +15,7 @@ let clientPromise: Promise<MongoClient>;
 if (process.env.NODE_ENV === 'development') {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  console.log('Connecting to Device Issuance (dev)');
   let globalWithMongo = global as typeof globalThis & {
     _mongoClientPromise?: Promise<MongoClient>;
   };
@@ -24,13 +25,13 @@ if (process.env.NODE_ENV === 'development') {
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
-  console.log('Connected to Device Assuance (dev)!');
+  console.log('Connected to Device Issuance (dev)!');
 } else {
   // In production mode, it's best to not use a global variable.
-  console.log('Connecting to Device Assuance');
+  console.log('Connecting to Device Issuance');
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
-  console.log('Connected to Device Assuances!');
+  console.log('Connected to Device Issuance!');
 }
 
 export { clientPromise };
