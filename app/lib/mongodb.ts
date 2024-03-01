@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
-import { GetServerSideProps } from 'next';
-import { ConnectionStatus } from './definitions';
+import { GetStaticProps } from 'next';
+import { Devices } from './definitions';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -24,35 +24,13 @@ if (process.env.NODE_ENV === 'development') {
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
+  console.log('Connected to Device Assuance (dev)!');
 } else {
   // In production mode, it's best to not use a global variable.
+  console.log('Connecting to Device Assuance');
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
+  console.log('Connected to Device Assuances!');
 }
 
-const getServerSideProps: GetServerSideProps<
-  ConnectionStatus
-> = async () => {
-  try {
-    await clientPromise;
-    // `await clientPromise` will use the default database passed in the MONGODB_URI
-    // However you can use another database (e.g. myDatabase) by replacing the `await clientPromise` with the following code:
-    //
-    // `const client = await clientPromise`
-    // `const db = client.db("myDatabase")`
-    //
-    // Then you can execute queries against your database like so:
-    // db.find({}) or any of the MongoDB Node Driver commands
-
-    return {
-      props: { isConnected: true },
-    };
-  } catch (e) {
-    console.error(e);
-    return {
-      props: { isConnected: false },
-    };
-  }
-};
-
-export { clientPromise, getServerSideProps };
+export { clientPromise };

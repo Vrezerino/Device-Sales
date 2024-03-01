@@ -9,6 +9,18 @@ export type User = {
   password: string;
 };
 
+export type Device = {
+  deviceName: string;
+  deviceManufacturer: string;
+  deviceNumber: string;
+  image: string;
+  deviceDescription: string;
+}
+
+export interface Devices {
+  devices: Device[];
+}
+
 export type Customer = {
   id: string;
   name: string;

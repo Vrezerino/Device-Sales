@@ -10,6 +10,25 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
+//import { GetStaticProps } from 'next';
+import { Devices } from './definitions';
+import { clientPromise } from './mongodb';
+
+export const fetchDevices = async () => {
+  try {
+    const client = await clientPromise;
+    const db = client.db('device-issuance-nextjs');
+    const devices = await db.collection('devices').find({}).toArray();
+    return JSON.parse(JSON.stringify(devices));
+  } catch (e) {
+    console.error(e);
+    return {
+      devices: [],
+    };
+  }
+};
+
+
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
