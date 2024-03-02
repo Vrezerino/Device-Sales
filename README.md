@@ -1,1 +1,1 @@
-## Device Issuance (Next.js/MongoDB/Redux)
+## Device Sales (Next.js/MongoDB/Redux)
