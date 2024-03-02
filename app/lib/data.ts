@@ -8,16 +8,46 @@ import {
   User,
   Revenue,
 } from './definitions';
+import {
+  users,
+  customers,
+  invoices,
+  revenue,
+  devices
+} from './placeholder-data';
 import { formatCurrency } from './utils';
 
 //import { GetStaticProps } from 'next';
 import { Devices } from './definitions';
-import { clientPromise } from './mongodb';
+import { clientPromise, DB_NAME } from './mongodb';
+
+export const initDb = async () => {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    /*
+    const users = db.listCollections({ name: 'users' });
+    if (!users) {
+      db.createCollection('users');
+      // ...
+    }*/
+
+    db?.collection('users').insertMany(users);
+    db?.collection('customers').insertMany(customers);
+    db?.collection('invoices').insertMany(invoices);
+    db?.collection('revenue').insertMany(revenue);
+    db?.collection('devices').insertMany(devices);
+
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export const fetchDevices = async () => {
   try {
     const client = await clientPromise;
-    const db = client.db('device-issuance-nextjs');
+    const db = client.db(DB_NAME);
     const devices = await db.collection('devices').find({}).toArray();
     return JSON.parse(JSON.stringify(devices));
   } catch (e) {
@@ -28,7 +58,21 @@ export const fetchDevices = async () => {
   }
 };
 
+export const fetchRevenue = async () => {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+    const revenue = await db.collection('revenue').find({}).toArray();
+    return JSON.parse(JSON.stringify(revenue));
+  } catch (e) {
+    console.error(e);
+    return {
+      revenue: [],
+    };
+  }
+};
 
+/*
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
@@ -50,6 +94,7 @@ export async function fetchRevenue() {
     throw new Error('Failed to fetch revenue data.');
   }
 }
+*/
 
 export async function fetchLatestInvoices() {
   try {

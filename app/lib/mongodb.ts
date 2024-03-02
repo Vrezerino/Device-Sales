@@ -1,6 +1,13 @@
 import { MongoClient } from 'mongodb';
-import { GetStaticProps } from 'next';
-import { Devices } from './definitions';
+import {
+  users,
+  customers,
+  invoices,
+  revenue,
+  devices
+} from './placeholder-data'
+//import { GetStaticProps } from 'next';
+//import { Devices } from './definitions';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -8,6 +15,8 @@ if (!process.env.MONGODB_URI) {
 
 const uri = process.env.MONGODB_URI;
 const options = {};
+const DB_NAME = process.env.NODE_ENV === 'production'
+  ? 'device-sales' : 'device-sales-dev';
 
 let client;
 let clientPromise: Promise<MongoClient>;
@@ -15,7 +24,7 @@ let clientPromise: Promise<MongoClient>;
 if (process.env.NODE_ENV === 'development') {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  console.log('Connecting to Device Issuance (dev)');
+  console.log('Connecting to Device Sales (dev)...');
   let globalWithMongo = global as typeof globalThis & {
     _mongoClientPromise?: Promise<MongoClient>;
   };
@@ -25,13 +34,13 @@ if (process.env.NODE_ENV === 'development') {
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
-  console.log('Connected to Device Issuance (dev)!');
+  console.log('Connected to Device Sales (dev)!');
 } else {
   // In production mode, it's best to not use a global variable.
-  console.log('Connecting to Device Issuance');
+  console.log('Connecting to Device Sales...');
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
-  console.log('Connected to Device Issuance!');
+  console.log('Connected to Device Sales!');
 }
 
-export { clientPromise };
+export { clientPromise, DB_NAME };

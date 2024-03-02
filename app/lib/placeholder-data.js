@@ -9,6 +9,16 @@ const users = [
   },
 ];
 
+const devices = [
+  {
+    deviceName: "Pluribus",
+    deviceManufacturer: "BBN",
+    deviceNumber: "785697845067",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/69/BBN_Pluribus_at_Wharton_School%2C_by_Tony_Patti%2C_April_1979.jpg",
+    deviceDescription: "The Pluribus multiprocessor was an early multi-processor computer designed by BBN for use as a packet switch in the ARPANET. Its design later influenced the BBN Butterfly computer. The Pluribus had its beginnings in 1972 when the need for a second-generation interface message processor (IMP) became apparent. At that time, the BBN had already installed IMPs at more than thirty-five ARPANET sites. These IMPs were Honeywell 316 and 516 minicomputers. The network was growing rapidly in several dimensions: number of nodes, hosts, and terminals; volume of traffic; and geographic coverage (including plans, now realized, for satellite extensions to Europe and Hawaii)."
+  }
+];
+
 const customers = [
   {
     id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
@@ -195,4 +205,5 @@ module.exports = {
   customers,
   invoices,
   revenue,
+  devices
 };
