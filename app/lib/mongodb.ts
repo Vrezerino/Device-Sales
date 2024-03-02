@@ -1,13 +1,4 @@
 import { MongoClient } from 'mongodb';
-import {
-  users,
-  customers,
-  invoices,
-  revenue,
-  devices
-} from './placeholder-data'
-//import { GetStaticProps } from 'next';
-//import { Devices } from './definitions';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
