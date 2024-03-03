@@ -41,6 +41,7 @@ export const initDb = async () => {
 
   } catch (e) {
     console.error(e);
+    throw new Error('Failed to initiate database!');
   }
 };
 
@@ -52,9 +53,7 @@ export const fetchDevices = async () => {
     return JSON.parse(JSON.stringify(devices));
   } catch (e) {
     console.error(e);
-    return {
-      devices: [],
-    };
+    throw new Error('Failed to fetch customer devices!');
   }
 };
 
@@ -66,78 +65,92 @@ export const fetchRevenue = async () => {
     return JSON.parse(JSON.stringify(revenue));
   } catch (e) {
     console.error(e);
-    return {
-      revenue: [],
-    };
+    throw new Error('Failed to fetch customer revenue!');
   }
 };
 
-/*
-export async function fetchRevenue() {
-  // Add noStore() here to prevent the response from being cached.
-  // This is equivalent to in fetch(..., {cache: 'no-store'}).
-
+export const fetchLatestInvoices = async () => {
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
 
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    // JOIN Invoices and Customers.
+    const invoices = await db.collection('invoices').aggregate([
+      {
+        '$lookup': {
+          'from': 'customers', // Collection to join
+          'localField': 'customer_id', // From invoices field
+          'foreignField': 'id', // From customers field
+          'as': 'latestInvoices' // Output array field
+        }
+      },
+      {
+        $replaceRoot: { // Replaces the input document with the specified document.
+          newRoot: {
+            $mergeObjects: [ // Merge joined documents into a single document.
+              {
+                $arrayElemAt: ['$latestInvoices', 0]
+              }, '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $project: {
+          latestInvoices: 0
+        }
+      },
+      {
+        $unset: [ // Drop fields from result set we don't need.
+          '_id',
+          'customer_id',
+          'department',
+          'status',
 
-    const data = await sql<Revenue>`SELECT * FROM revenue`;
+        ]
+      }
+    ]).sort({ date: -1 }).limit(5).toArray(); // Sort by date, descending and limit to five results.
 
-    // console.log('Data fetch completed after 3 seconds.');
-
-    return data.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
+    return JSON.parse(JSON.stringify(invoices));
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch latest invoices!');
   }
-}
-*/
+};
 
-export async function fetchLatestInvoices() {
+export const fetchCardData = async () => {
   try {
-    const data = await sql<LatestInvoiceRaw>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
-      LIMIT 5`;
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
 
-    const latestInvoices = data.rows.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
-    return latestInvoices;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest invoices.');
-  }
-}
+    // SELECT COUNT(*) FROM x
+    const invoiceCountPromise = db.collection('invoices').countDocuments();
+    const customerCountPromise = db.collection('customers').countDocuments();
 
-export async function fetchCardData() {
-  try {
-    // You can probably combine these into a single SQL query
-    // However, we are intentionally splitting them to demonstrate
-    // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
+    // SELECT status, SUM(amount) FROM invoices GROUP BY status ASC
+    const invoiceStatusPromise = db.collection('invoices').aggregate([
+      {
+        $group: {
+          _id: '$status',
+          sum: { $sum: '$amount' },
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]).toArray();
 
+    // Parallel data fetching to avoid waterfalls.
     const data = await Promise.all([
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
     ]);
 
-    const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
-    const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
+    const numberOfInvoices = Number(data[0]);
+    const numberOfCustomers = Number(data[1]);
+    const totalPaidInvoices = formatCurrency(data[2][0].sum ?? '0');
+    const totalPendingInvoices = formatCurrency(data[2][1].sum ?? '0');
 
     return {
       numberOfCustomers,
@@ -145,11 +158,11 @@ export async function fetchCardData() {
       totalPaidInvoices,
       totalPendingInvoices,
     };
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch card data.');
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch card data!');
   }
-}
+};
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
@@ -183,9 +196,9 @@ export async function fetchFilteredInvoices(
     return invoices.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoices.');
+    throw new Error('Failed to fetch invoices!');
   }
-}
+};
 
 export async function fetchInvoicesPages(query: string) {
   try {
@@ -204,52 +217,44 @@ export async function fetchInvoicesPages(query: string) {
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of invoices.');
+    throw new Error('Failed to fetch total number of invoices!');
   }
-}
+};
 
 export async function fetchInvoiceById(id: string) {
   try {
-    const data = await sql<InvoiceForm>`
-      SELECT
-        invoices.id,
-        invoices.customer_id,
-        invoices.amount,
-        invoices.status
-      FROM invoices
-      WHERE invoices.id = ${id};
-    `;
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
 
-    const invoice = data.rows.map((invoice) => ({
+    // SELECT * FROM users WHERE email=${email}
+    const data = await db.collection('invoices').find({ id }).toArray();
+
+    const invoice = data.map((invoice) => ({
       ...invoice,
       // Convert amount from cents to dollars
       amount: invoice.amount / 100,
     }));
 
     return invoice[0];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch invoice!');
   }
-}
+};
 
 export async function fetchCustomers() {
   try {
-    const data = await sql<CustomerField>`
-      SELECT
-        id,
-        name
-      FROM customers
-      ORDER BY name ASC
-    `;
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
 
-    const customers = data.rows;
-    return customers;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
+    // SELECT * FROM customers ORDER BY customers.name ASC
+    const customers = await db.collection('customers').find({}).sort({ name: 1 }).toArray();
+    return JSON.parse(JSON.stringify(customers));
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch customers!');
   }
-}
+};
 
 export async function fetchFilteredCustomers(query: string) {
   try {
@@ -278,18 +283,22 @@ export async function fetchFilteredCustomers(query: string) {
     }));
 
     return customers;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch customer table.');
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch customer table!');
   }
 }
 
 export async function getUser(email: string) {
   try {
-    const user = await sql`SELECT * FROM users WHERE email=${email}`;
-    return user.rows[0] as User;
-  } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    // SELECT * FROM users WHERE email=${email}
+    const user = await db.collection('users').findOne({ email: email });
+    return JSON.parse(JSON.stringify(user));
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to get user!');
   }
 }
