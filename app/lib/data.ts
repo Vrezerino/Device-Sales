@@ -170,9 +170,13 @@ export async function fetchFilteredInvoices(
   currentPage: number,
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
+  const queryString = query;
   try {
-    const invoices = await sql<InvoicesTable>`
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    /*
+    The next MongoDB function should be equal to such query:
       SELECT
         invoices.id,
         invoices.amount,
@@ -192,16 +196,104 @@ export async function fetchFilteredInvoices(
       ORDER BY invoices.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
+    */
 
-    return invoices.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
+    const invoices = await db.collection('invoices').aggregate([
+      {
+        '$lookup': {
+          'from': 'customers', // Collection to join
+          'localField': 'customer_id', // From invoices field
+          'foreignField': 'id', // From customers field
+          'as': 'filteredInvoices' // Output array field
+        }
+      },
+      {
+        $replaceRoot: { // Replaces the input document with the specified document.
+          newRoot: {
+            $mergeObjects: [ // Merge joined documents into a single document.
+              {
+                $arrayElemAt: ['$filteredInvoices', 0]
+              }, '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $match: {
+
+            $or: [
+              { name: { $regex: new RegExp(query, 'i') } },
+              { email: { $regex: new RegExp(query, 'i') } },
+              { amount: { $regex: new RegExp(query, 'i') } },
+              { date: { $regex: new RegExp(query, 'i') } },
+              { status: { $regex: new RegExp(query, 'i') } }
+            ]
+          
+        }
+      },
+      {
+        $project: {
+          filteredInvoices: 0
+        }
+      },
+      {
+        $unset: [ // Drop fields from result set we don't need.
+          //'_id',
+          'customer_id',
+          'department'
+        ]
+      }
+    ]).limit(ITEMS_PER_PAGE).skip(offset).toArray();
+    console.log(invoices);
+
+    return JSON.parse(JSON.stringify(invoices));
+  } catch (e) {
+    console.error(e);
     throw new Error('Failed to fetch invoices!');
   }
 };
 
 export async function fetchInvoicesPages(query: string) {
   try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    const count = await db.collection('invoices').aggregate([
+      {
+        '$lookup': {
+          'from': 'customers', // Collection to join
+          'localField': 'customer_id', // From invoices field
+          'foreignField': 'id', // From customers field
+          'as': 'invoiceCount' // Output array field
+        }
+      },
+      {
+        $replaceRoot: { // Replaces the input document with the specified document.
+          newRoot: {
+            $mergeObjects: [ // Merge joined documents into a single document.
+              {
+                $arrayElemAt: ['$invoiceCount', 0]
+              }, '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { name: { query } },
+            { email: { query } },
+            { amount: { query } },
+            { date: { query } },
+            { status: { query } }
+          ]
+        }
+      },
+      {
+        $count: 'invoiceCount'
+      },
+    ]);
+    /*
     const count = await sql`SELECT COUNT(*)
     FROM invoices
     JOIN customers ON invoices.customer_id = customers.id
@@ -212,11 +304,11 @@ export async function fetchInvoicesPages(query: string) {
       invoices.date::text ILIKE ${`%${query}%`} OR
       invoices.status ILIKE ${`%${query}%`}
   `;
-
-    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    */
+    const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
     return totalPages;
-  } catch (error) {
-    console.error('Database Error:', error);
+  } catch (e) {
+    console.error(e);
     throw new Error('Failed to fetch total number of invoices!');
   }
 };
@@ -295,7 +387,7 @@ export async function getUser(email: string) {
     const db = client.db(DB_NAME);
 
     // SELECT * FROM users WHERE email=${email}
-    const user = await db.collection('users').findOne({ email: email });
+    const user = await db.collection('users').findOne({ email });
     return JSON.parse(JSON.stringify(user));
   } catch (e) {
     console.error(e);
