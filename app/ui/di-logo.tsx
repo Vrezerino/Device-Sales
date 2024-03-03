@@ -8,7 +8,7 @@ export default function DeviceLogo() {
         className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
       >
         <TvIcon className="h-12 w-12" />
-        <p className="text-[33px] text-white">Device Issuance</p>
+        <p className="text-[33px] text-white">Device Sales</p>
       </div>
     </div>
   );
