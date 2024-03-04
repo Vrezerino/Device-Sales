@@ -49,11 +49,11 @@ export const fetchDevices = async () => {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
-    const devices = await db.collection('devices').find({}).toArray();
+    const devices = await db.collection('devices').find({}).sort({ deviceName: -1 }).toArray();
     return JSON.parse(JSON.stringify(devices));
   } catch (e) {
     console.error(e);
-    throw new Error('Failed to fetch customer devices!');
+    throw new Error('Failed to fetch devices!');
   }
 };
 
