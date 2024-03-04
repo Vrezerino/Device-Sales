@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
 import { fetchLatestInvoices } from '@/app/lib/data';
 import { LatestInvoice } from '@/app/lib/definitions';
+import { formatCurrency } from '@/app/lib/utils';
 
 export default async function LatestInvoices() {
   const latestInvoices: LatestInvoice[] = await fetchLatestInvoices();
@@ -47,7 +48,7 @@ export default async function LatestInvoices() {
                 <p
                   className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
                 >
-                  {invoice.amountInCents}
+                  {formatCurrency(Number(invoice.amountInCents))}
                 </p>
               </div>
             );
