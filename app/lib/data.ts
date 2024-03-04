@@ -7,6 +7,8 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  Invoice,
+  NewInvoice,
 } from './definitions';
 import {
   users,
@@ -176,7 +178,6 @@ export async function fetchFilteredInvoices(
     const db = client.db(DB_NAME);
 
     /*
-    The next MongoDB function should be equal to such query:
       SELECT
         invoices.id,
         invoices.amount,
@@ -196,13 +197,15 @@ export async function fetchFilteredInvoices(
       ORDER BY invoices.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
+
+    Pagination disabled for now.
     */
 
     const invoices = await db.collection('invoices').aggregate([
       {
         '$lookup': {
           'from': 'customers', // Collection to join
-          'localField': 'customer_id', // From invoices field
+          'localField': 'customerId', // From invoices field
           'foreignField': 'id', // From customers field
           'as': 'filteredInvoices' // Output array field
         }
@@ -221,14 +224,14 @@ export async function fetchFilteredInvoices(
       {
         $match: {
 
-            $or: [
-              { name: { $regex: new RegExp(query, 'i') } },
-              { email: { $regex: new RegExp(query, 'i') } },
-              { amount: { $regex: new RegExp(query, 'i') } },
-              { date: { $regex: new RegExp(query, 'i') } },
-              { status: { $regex: new RegExp(query, 'i') } }
-            ]
-          
+          $or: [
+            { name: { $regex: new RegExp(query, 'i') } },
+            { email: { $regex: new RegExp(query, 'i') } },
+            { amount: { $regex: new RegExp(query, 'i') } },
+            { date: { $regex: new RegExp(query, 'i') } },
+            { status: { $regex: new RegExp(query, 'i') } }
+          ]
+
         }
       },
       {
@@ -238,13 +241,12 @@ export async function fetchFilteredInvoices(
       },
       {
         $unset: [ // Drop fields from result set we don't need.
-          //'_id',
-          'customer_id',
+          'id',
+          'customerId',
           'department'
         ]
       }
-    ]).limit(ITEMS_PER_PAGE).skip(offset).toArray();
-
+    ]).toArray();
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
     console.error(e);
@@ -261,7 +263,7 @@ export async function fetchInvoicesPages(query: string) {
       {
         '$lookup': {
           'from': 'customers', // Collection to join
-          'localField': 'customer_id', // From invoices field
+          'localField': 'customerId', // From invoices field
           'foreignField': 'id', // From customers field
           'as': 'invoiceCount' // Output array field
         }
@@ -282,7 +284,7 @@ export async function fetchInvoicesPages(query: string) {
           $or: [
             { name: { query } },
             { email: { query } },
-            { amount: { query } },
+            { amountInCents: { query } },
             { date: { query } },
             { status: { query } }
           ]
@@ -317,7 +319,6 @@ export async function fetchInvoiceById(id: string) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    // SELECT * FROM users WHERE email=${email}
     const data = await db.collection('invoices').find({ id }).toArray();
 
     const invoice = data.map((invoice) => ({
@@ -391,5 +392,19 @@ export async function getUser(email: string) {
   } catch (e) {
     console.error(e);
     throw new Error('Failed to get user!');
+  }
+}
+
+export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/) {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    // 
+    await db.collection('invoices').insertOne(invoice);
+    //return res.status(201).send('Created');
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to insert new invoice!');
   }
 }
