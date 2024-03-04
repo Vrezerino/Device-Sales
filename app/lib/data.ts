@@ -105,7 +105,7 @@ export const fetchLatestInvoices = async () => {
       {
         $unset: [ // Drop fields from result set we don't need.
           //'_id',
-          'customer_id',
+          'customerId',
           'department',
           'status',
 
