@@ -81,7 +81,7 @@ export const fetchLatestInvoices = async () => {
       {
         '$lookup': {
           'from': 'customers', // Collection to join
-          'localField': 'customer_id', // From invoices field
+          'localField': 'customerId', // From invoices field
           'foreignField': 'id', // From customers field
           'as': 'latestInvoices' // Output array field
         }
@@ -104,7 +104,7 @@ export const fetchLatestInvoices = async () => {
       },
       {
         $unset: [ // Drop fields from result set we don't need.
-          '_id',
+          //'_id',
           'customer_id',
           'department',
           'status',
@@ -134,7 +134,7 @@ export const fetchCardData = async () => {
       {
         $group: {
           _id: '$status',
-          sum: { $sum: '$amount' },
+          sum: { $sum: '$amountInCents' },
         }
       },
       {

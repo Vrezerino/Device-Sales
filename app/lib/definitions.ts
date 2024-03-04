@@ -54,7 +54,7 @@ export type LatestInvoice = {
   name: string;
   image_url: string;
   email: string;
-  amount: string;
+  amountInCents: string;
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function

@@ -47,7 +47,7 @@ export default async function LatestInvoices() {
                 <p
                   className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
                 >
-                  {invoice.amount}
+                  {invoice.amountInCents}
                 </p>
               </div>
             );
