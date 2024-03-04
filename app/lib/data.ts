@@ -244,7 +244,6 @@ export async function fetchFilteredInvoices(
         ]
       }
     ]).limit(ITEMS_PER_PAGE).skip(offset).toArray();
-    console.log(invoices);
 
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {

@@ -5,6 +5,7 @@ import { DevicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 
 export default async function Page() {
+    const rand = Math.floor(Math.random() * 100);
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
@@ -13,7 +14,7 @@ export default async function Page() {
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                 <CreateDevice />
             </div>
-            <Suspense fallback={<DevicesTableSkeleton />}>
+            <Suspense key={rand} fallback={<DevicesTableSkeleton />}>
                 <Table />
             </Suspense>
         </div>

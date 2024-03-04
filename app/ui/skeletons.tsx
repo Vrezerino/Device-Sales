@@ -256,6 +256,10 @@ export function DeviceTableRowSkeleton() {
       <td className="whitespace-nowrap px-3 py-3">
         <div className="h-6 w-16 rounded bg-neutral-900"></div>
       </td>
+      {/* Amount */}
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      </td>
     </tr>
   );
 }
@@ -281,6 +285,9 @@ export function DevicesTableSkeleton() {
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Device Number
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Amount
                 </th>
                 <th
                   scope="col"
