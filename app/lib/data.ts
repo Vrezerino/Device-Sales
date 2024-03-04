@@ -17,7 +17,7 @@ import {
   revenue,
   devices
 } from './placeholder-data';
-import { formatCurrency } from './utils';
+import { formatCurrency, monthOrder } from './utils';
 
 //import { GetStaticProps } from 'next';
 import { Devices } from './definitions';
@@ -64,7 +64,13 @@ export const fetchRevenue = async () => {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
     const revenue = await db.collection('revenue').find({}).toArray();
-    return JSON.parse(JSON.stringify(revenue));
+    const parsedAndStringifiedRevenue: Revenue[] = JSON.parse(JSON.stringify(revenue));
+
+    const revebueSortedByMonth = parsedAndStringifiedRevenue.sort((a, b) => {
+      return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
+    });
+
+    return revebueSortedByMonth;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to fetch customer revenue!');
