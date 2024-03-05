@@ -18,7 +18,7 @@ const DeviceFormSchema = z.object({
     deviceNumber: z.string(),
     deviceDescription: z.string(),
     deviceManufacturer: z.string(),
-    amount: z.number(),
+    amount: z.coerce.number(),
     imageUrl: z.string()
 });
 
