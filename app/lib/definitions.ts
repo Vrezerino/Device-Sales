@@ -22,12 +22,14 @@ export interface Devices {
   devices: Device[];
 }
 
-export type Customer = {
-  id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  department: string;
+export type DevicesTable = {
+  _id: string;
+  deviceName: string;
+  deviceDescription: string,
+  deviceManufacturer: string;
+  deviceNumber: string;
+  imageUrl: string;
+  amount: number;
 };
 
 export type Invoice = {
@@ -41,9 +43,11 @@ export type Invoice = {
 export type NewInvoice = Omit<Invoice, 'id'>;
 export type UpdatingInvoice = Omit<Invoice, 'date'>;
 
-export type Revenue = {
-  month: string;
-  revenue: number;
+export type InvoiceForm = {
+  _id: string;
+  customerId: string;
+  amount: number;
+  status: 'pending' | 'paid';
 };
 
 export type LatestInvoice = {
@@ -70,13 +74,12 @@ export type InvoicesTable = {
   status: 'pending' | 'paid';
 };
 
-export type DevicesTable = {
-  _id: string;
-  deviceName: string;
-  deviceManufacturer: string;
-  deviceNumber: string;
-  imageUrl: string;
-  amount: number;
+export type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  image_url: string;
+  department: string;
 };
 
 export type CustomersTableType = {
@@ -104,13 +107,11 @@ export type CustomerField = {
   name: string;
 };
 
-export type InvoiceForm = {
-  _id: string;
-  customerId: string;
-  amount: number;
-  status: 'pending' | 'paid';
-};
-
 export type ConnectionStatus = {
   isConnected: boolean;
+};
+
+export type Revenue = {
+  month: string;
+  revenue: number;
 };
