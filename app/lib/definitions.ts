@@ -75,7 +75,7 @@ export type InvoicesTable = {
 };
 
 export type DevicesTable = {
-  id: string;
+  _id: string;
   deviceName: string;
   deviceManufacturer: string;
   deviceNumber: string;

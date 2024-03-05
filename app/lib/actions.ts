@@ -80,8 +80,8 @@ export async function createDevice(formData: FormData) {
     redirect('/dashboard/devices');
 }
 
-export async function destroyDevice(number: string) {
-    await deleteDevice(number);
+export async function destroyDevice(id: string) {
+    await deleteDevice(id);
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/devices');
 }

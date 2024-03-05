@@ -13,7 +13,7 @@ export default async function InvoicesTable() {
           <div className="md:hidden">
             {devices?.map((device) => (
               <div
-                key={device.id}
+                key={device._id}
                 className="mb-2 w-full rounded-md bg-neutral-700 p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
@@ -42,8 +42,8 @@ export default async function InvoicesTable() {
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateDevice deviceNumber={device.deviceNumber} />
-                    <DeleteDevice deviceNumber={device.deviceNumber} />
+                    <UpdateDevice id={device._id} />
+                    <DeleteDevice id={device._id} />
                   </div>
                 </div>
               </div>
@@ -72,7 +72,7 @@ export default async function InvoicesTable() {
             <tbody className="bg-neutral-700">
               {devices?.map((device) => (
                 <tr
-                  key={device.id}
+                  key={device._id}
                   className="w-full border-orange-200/10 border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
@@ -98,8 +98,8 @@ export default async function InvoicesTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateDevice deviceNumber={device.deviceNumber} />
-                      <DeleteDevice deviceNumber={device.deviceNumber} />
+                      <UpdateDevice id={device._id} />
+                      <DeleteDevice id={device._id} />
                     </div>
                   </td>
                 </tr>

@@ -66,12 +66,13 @@ export const fetchDevices = async () => {
   }
 };
 
-export async function getDeviceByNumber(deviceNumber: string) {
+export async function getDeviceById(id: string) {
   try {
+    const _id = new ObjectId(id);
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    const device = await db.collection('devices').findOne({ deviceNumber });
+    const device = await db.collection('devices').findOne({ _id });
     return JSON.parse(JSON.stringify(device));
   } catch (e) {
     console.error(e);

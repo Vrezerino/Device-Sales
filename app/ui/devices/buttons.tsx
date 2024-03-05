@@ -14,10 +14,10 @@ export function CreateDevice() {
   );
 }
 
-export function UpdateDevice({ deviceNumber }: { deviceNumber: string }) {
+export function UpdateDevice({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/devices/${deviceNumber}/edit`}
+      href={`/dashboard/devices/${id}/edit`}
       className="rounded-md border border-orange-200/20 p-2 hover:bg-amber-500"
     >
       <PencilIcon className="w-5" />
@@ -25,8 +25,8 @@ export function UpdateDevice({ deviceNumber }: { deviceNumber: string }) {
   );
 }
 
-export function DeleteDevice({ deviceNumber }: { deviceNumber: string }) {
-  const deleteInvoiceWithId = destroyDevice.bind(null, deviceNumber);
+export function DeleteDevice({ id }: { id: string }) {
+  const deleteInvoiceWithId = destroyDevice.bind(null, id);
   return (
     <>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">

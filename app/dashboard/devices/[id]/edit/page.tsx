@@ -1,11 +1,11 @@
 import Form from '@/app/ui/devices/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { getDeviceByNumber } from '@/app/lib/data';
+import { getDeviceById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { deviceNumber: string } }) {
-    const num = params.deviceNumber;
-    const device = await getDeviceByNumber(num);
+export default async function Page({ params }: { params: { id: string } }) {
+    const deviceId = params.id;
+    const device = await getDeviceById(deviceId);
 
     // Redirect to 404 page if invoice not found.
     if (!device) notFound();
@@ -14,10 +14,10 @@ export default async function Page({ params }: { params: { deviceNumber: string 
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: 'Invoices', href: '/dashboard/devices' },
+                    { label: 'Devices', href: '/dashboard/devices' },
                     {
-                        label: 'Edit Invoice',
-                        href: `/dashboard/devices/${num}/edit`,
+                        label: 'Edit Device',
+                        href: `/dashboard/devices/${deviceId}/edit`,
                         active: true,
                     },
                 ]}
