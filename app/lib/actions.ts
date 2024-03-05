@@ -2,7 +2,14 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { postInvoice, updateInvoice, deleteInvoice, postDevice, deleteDevice } from './data';
+import {
+    postInvoice,
+    updateInvoice,
+    deleteInvoice,
+    postDevice,
+    updateDevice,
+    deleteDevice
+} from './data';
 
 const InvoiceFormSchema = z.object({
     id: z.string(),
@@ -55,9 +62,9 @@ export async function createInvoice(formData: FormData) {
     redirect('/dashboard/invoices');
 };
 
-const UpdateInvoice = InvoiceFormSchema.omit({date: true});
+const UpdateInvoice = InvoiceFormSchema.omit({ date: true });
 
-export async function modifyInvoice(id: string, formData: FormData) {
+export async function modifyInvoice(id: string, formData: FormData) { // "updateInvoice" already in actions.ts
     const { customerId, amount, status } = UpdateInvoice.parse({
         id: formData.get('id'),
         customerId: formData.get('customerId'),
@@ -96,7 +103,26 @@ export async function createDevice(formData: FormData) {
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/devices');
     redirect('/dashboard/devices');
-}
+};
+
+const UpdateDevice = DeviceFormSchema;
+
+export async function modifyDevice(id: string, formData: FormData) { // "updateDevice" already in actions.ts
+    const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
+        deviceName: formData.get('deviceName'),
+        deviceNumber: formData.get('deviceNumber'),
+        deviceManufacturer: formData.get('deviceManufacturer'),
+        deviceDescription: formData.get('deviceDescription'),
+        amount: formData.get('amount'),
+        imageUrl: formData.get('imageUrl'),
+    });
+
+    await updateDevice(id, { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
+    // Clear some caches and trigger a new request to the server.
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/devices');
+    redirect('/dashboard/devices');
+};
 
 export async function destroyDevice(id: string) {
     await deleteDevice(id);

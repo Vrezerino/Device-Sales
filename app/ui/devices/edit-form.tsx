@@ -2,10 +2,12 @@
 
 import { CustomerField, Device } from '@/app/lib/definitions';
 import {
+    CpuChipIcon,
+    ComputerDesktopIcon,
+    PhotoIcon,
     CheckIcon,
-    ClockIcon,
-    CurrencyDollarIcon,
     UserCircleIcon,
+    CubeIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
@@ -39,7 +41,7 @@ export default function EditInvoiceForm({
                             </option>
 
                         </select>
-                        <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500" />
+                        <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500" />
                     </div>
                 </div>
 
@@ -59,7 +61,7 @@ export default function EditInvoiceForm({
                                 placeholder='Manufacturer'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
-                            <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                            <CpuChipIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -80,7 +82,28 @@ export default function EditInvoiceForm({
                                 placeholder='Description'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
-                            <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                            <CheckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Image URL */}
+                <div className="mb-4">
+                    <label htmlFor="imageUrl" className="mb-2 block text-sm font-medium">
+                        Image URL
+                    </label>
+                    <div className="relative mt-2 rounded-md">
+                        <div className="relative">
+                            <input
+                                id="imageUrl"
+                                name="imageUrl"
+                                type="string"
+                                step="0.01"
+                                defaultValue={device.imageUrl}
+                                placeholder='Image URL'
+                                className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                            />
+                            <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -101,7 +124,7 @@ export default function EditInvoiceForm({
                                 placeholder="Enter integer value"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
-                            <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                            <CubeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
