@@ -514,8 +514,6 @@ export const fetchCardData = async () => {
       invoiceStatusPromise,
     ]);
 
-    console.log(data);
-
     const numberOfInvoices = Number(data[0]);
     const numberOfCustomers = Number(data[1]);
     const totalPaidInvoices = formatCurrency(data[2][0].sum ?? '0');
@@ -529,7 +527,7 @@ export const fetchCardData = async () => {
     };
   } catch (e) {
     console.error(e);
-    throw new Error('Failed to fetch card data!');
+    //throw new Error('Failed to fetch card data!');
   }
 };
 
