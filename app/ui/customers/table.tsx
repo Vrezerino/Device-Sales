@@ -86,8 +86,8 @@ export default async function CustomersTable() {
                             src={customer.image_url}
                             className="rounded-full"
                             alt={`${customer.name}'s profile picture`}
-                            width={28}
-                            height={28}
+                            width={90}
+                            height={90}
                           />
                           <p>{customer.name}</p>
                         </div>

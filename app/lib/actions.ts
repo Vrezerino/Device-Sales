@@ -162,6 +162,7 @@ export async function createCustomer(formData: FormData) {
 // CreateCustomer schema can be re-used.
 export async function modifyCustomer(_id: string, formData: FormData) { // "updateCustomer" already in actions.ts
     const { name, email, image_url, company } = CreateCustomer.parse({
+        _id: formData.get('_id'),
         name: formData.get('name'),
         email: formData.get('email'),
         image_url: formData.get('imageUrl'),

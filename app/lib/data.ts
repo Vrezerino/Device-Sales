@@ -210,7 +210,6 @@ export async function fetchFilteredInvoices(
         ]
       }
     ]).toArray();
-    console.log(JSON.parse(JSON.stringify(invoices)));
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
     console.error(e);
@@ -390,11 +389,12 @@ export async function deleteInvoice(id: string) {
 
 export async function getCustomer(id: string) {
   try {
+    const _id = new ObjectId(id);
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
     // SELECT * FROM users WHERE email=${email}
-    const customer = await db.collection('customers').findOne({ id });
+    const customer = await db.collection('customers').findOne({ _id });
     return JSON.parse(JSON.stringify(customer));
   } catch (e) {
     console.error(e);
