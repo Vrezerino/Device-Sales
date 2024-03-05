@@ -93,12 +93,13 @@ export async function postDevice(device: Device) {
   }
 };
 
-export async function deleteDevice(deviceNumber: string) {
+export async function deleteDevice(id: string) {
   try {
+    const _id = new ObjectId(id);
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('devices').deleteOne({ deviceNumber });
+    await db.collection('devices').deleteOne({ _id });
   } catch (e) {
     console.error(e);
     throw new Error('Failed to delete device!');
