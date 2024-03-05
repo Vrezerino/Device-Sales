@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import {
     CheckIcon,
-    ClockIcon,
-    CurrencyDollarIcon,
-    UserCircleIcon,
+    ComputerDesktopIcon,
+    CpuChipIcon,
+    CubeIcon,
+    DocumentTextIcon,
+    PhotoIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createDevice } from '@/app/lib/actions';
@@ -27,6 +29,8 @@ export default function Form() {
                                 placeholder="Device Name"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
+                            <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+
                         </div>
                     </div>
                 </div>
@@ -47,6 +51,7 @@ export default function Form() {
                                 placeholder="Manufacturer"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
+                            <CpuChipIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -67,6 +72,7 @@ export default function Form() {
                                 placeholder="Device Description"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
+                            <CheckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -86,6 +92,7 @@ export default function Form() {
                                 placeholder="Device Number (can include letters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
+                            <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -105,6 +112,7 @@ export default function Form() {
                                 placeholder="Amount of device in store (integer)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
+                            <CubeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -124,6 +132,7 @@ export default function Form() {
                                 placeholder="Device Image URLn"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
+                            <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>

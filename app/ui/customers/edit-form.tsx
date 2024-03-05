@@ -1,87 +1,85 @@
 'use client';
 
-import { Device, DevicesTable } from '@/app/lib/definitions';
+import { Device, FormattedCustomersTable } from '@/app/lib/definitions';
 import {
-    CheckIcon,
-    ComputerDesktopIcon,
-    CpuChipIcon,
-    CubeIcon,
-    PhotoIcon
+    AtSymbolIcon,
+    IdentificationIcon,
+    PhotoIcon,
+    BriefcaseIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyDevice } from '@/app/lib/actions';
+import { modifyCustomer } from '@/app/lib/actions';
 
 export default function EditInvoiceForm({
-    device
+    customer
 }: {
-    device: DevicesTable;
+    customer: FormattedCustomersTable;
 }) {
-    const updateDeviceWithId = modifyDevice.bind(null, device._id);
+    const updateCustomerWithId = modifyCustomer.bind(null, customer.id);
     return (
-        <form action={updateDeviceWithId}>
-            <input type="hidden" name="id" value={device._id} />
-            <input type="hidden" name="deviceNumber" value={device.deviceNumber} />
+        <form action={updateCustomerWithId}>
+            <input type="hidden" name="id" value={customer._id} />
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">
-                {/* Device Name */}
+                {/* Name */}
                 <div className="mb-4">
-                    <label htmlFor="deviceName" className="mb-2 block text-sm font-medium">
-                        Device Name
+                    <label htmlFor="name" className="mb-2 block text-sm font-medium">
+                        Full Name
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="deviceName"
-                                name="deviceName"
+                                id="name"
+                                name="name"
                                 type="string"
                                 step="0.01"
-                                defaultValue={device.deviceName}
-                                placeholder='Device Name'
+                                defaultValue={customer.name}
+                                placeholder='Name'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
-                            <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
 
-                {/* Manufacturer */}
+                {/* Email */}
                 <div className="mb-4">
-                    <label htmlFor="deviceManufacturer" className="mb-2 block text-sm font-medium">
-                        Manufacturer
+                    <label htmlFor="email" className="mb-2 block text-sm font-medium">
+                        Email address
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="deviceManufacturer"
-                                name="deviceManufacturer"
+                                id="email"
+                                name="email"
                                 type="string"
                                 step="0.01"
-                                defaultValue={device.deviceManufacturer}
-                                placeholder='Manufacturer'
+                                defaultValue={customer.email}
+                                placeholder='Email'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
-                            <CpuChipIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                            <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
 
-                {/* Description */}
+                {/* Company */}
                 <div className="mb-4">
-                    <label htmlFor="deviceDescription" className="mb-2 block text-sm font-medium">
-                        Description
+                    <label htmlFor="company" className="mb-2 block text-sm font-medium">
+                        Company Name
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="deviceDescription"
-                                name="deviceDescription"
+                                id="company"
+                                name="company"
                                 type="string"
                                 step="0.01"
-                                defaultValue={device.deviceDescription}
-                                placeholder='Description'
+                                defaultValue={customer.company}
+                                placeholder='Company Name'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
-                            <CheckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
+                            <BriefcaseIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
@@ -89,7 +87,7 @@ export default function EditInvoiceForm({
                 {/* Image URL */}
                 <div className="mb-4">
                     <label htmlFor="imageUrl" className="mb-2 block text-sm font-medium">
-                        Image URL
+                        Profile Image URL
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
@@ -98,32 +96,11 @@ export default function EditInvoiceForm({
                                 name="imageUrl"
                                 type="string"
                                 step="0.01"
-                                defaultValue={device.imageUrl}
-                                placeholder='Image URL'
+                                defaultValue={customer.image_url}
+                                placeholder='Profile Image URL'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
                             <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Device Amount */}
-                <div className="mb-4">
-                    <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-                        Amount
-                    </label>
-                    <div className="relative mt-2 rounded-md">
-                        <div className="relative">
-                            <input
-                                id="amount"
-                                name="amount"
-                                type="number"
-                                step="0.01"
-                                defaultValue={device.amount}
-                                placeholder="Enter integer value"
-                                className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
-                            />
-                            <CubeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
                     </div>
                 </div>
