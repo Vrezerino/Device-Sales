@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     },
                 ]}
             />
-            <Form device={customer} />
+            <Form customer={customer} />
         </main>
     );
 }
