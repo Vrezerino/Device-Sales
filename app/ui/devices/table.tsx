@@ -20,7 +20,7 @@ export default async function InvoicesTable() {
                   <div>
                     <div className="mb-2 flex items-center">
                       <Image
-                        src={device.image_url}
+                        src={device.imageUrl}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
@@ -31,7 +31,7 @@ export default async function InvoicesTable() {
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                <div>
+                  <div>
                     <p className="text-xl font-medium">
                       {device.deviceManufacturer}
                     </p>
@@ -42,8 +42,8 @@ export default async function InvoicesTable() {
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateDevice id={device.id} />
-                    <DeleteDevice id={device.id} />
+                    <UpdateDevice deviceNumber={device.deviceNumber} />
+                    <DeleteDevice deviceNumber={device.deviceNumber} />
                   </div>
                 </div>
               </div>
@@ -78,7 +78,7 @@ export default async function InvoicesTable() {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <Image
-                        src={device.image_url}
+                        src={device.imageUrl}
                         className="rounded-full"
                         width={28}
                         height={28}
@@ -98,8 +98,8 @@ export default async function InvoicesTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateDevice id={device.id} />
-                      <DeleteDevice id={device.id} />
+                      <UpdateDevice deviceNumber={device.deviceNumber} />
+                      <DeleteDevice deviceNumber={device.deviceNumber} />
                     </div>
                   </td>
                 </tr>

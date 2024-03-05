@@ -102,7 +102,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/invoices"
-          className="flex h-10 items-center rounded-lg bg-neutral-100 px-4 text-sm font-medium text-neutral-600 transition-colors hover:bg-gray-200"
+          className="flex h-10 items-center rounded-lg bg-neutral-100 px-4 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-200"
         >
           Cancel
         </Link>

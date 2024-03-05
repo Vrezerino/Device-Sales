@@ -13,8 +13,9 @@ export type Device = {
   deviceName: string;
   deviceManufacturer: string;
   deviceNumber: string;
-  image: string;
+  imageUrl: string;
   deviceDescription: string;
+  amount: number
 }
 
 export interface Devices {
@@ -78,7 +79,7 @@ export type DevicesTable = {
   deviceName: string;
   deviceManufacturer: string;
   deviceNumber: string;
-  image_url: string;
+  imageUrl: string;
   amount: number;
 };
 
@@ -108,8 +109,8 @@ export type CustomerField = {
 };
 
 export type InvoiceForm = {
-  id: string;
-  customer_id: string;
+  _id: string;
+  customerId: string;
   amount: number;
   status: 'pending' | 'paid';
 };

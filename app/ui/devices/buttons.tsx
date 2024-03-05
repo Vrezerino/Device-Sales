@@ -1,5 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { destroyDevice } from '@/app/lib/actions';
 
 export function CreateDevice() {
   return (
@@ -13,10 +14,10 @@ export function CreateDevice() {
   );
 }
 
-export function UpdateDevice({ id }: { id: string }) {
+export function UpdateDevice({ deviceNumber }: { deviceNumber: string }) {
   return (
     <Link
-      href="/dashboard/devices"
+      href={`/dashboard/devices/${deviceNumber}/edit`}
       className="rounded-md border border-orange-200/20 p-2 hover:bg-amber-500"
     >
       <PencilIcon className="w-5" />
@@ -24,7 +25,8 @@ export function UpdateDevice({ id }: { id: string }) {
   );
 }
 
-export function DeleteDevice({ id }: { id: string }) {
+export function DeleteDevice({ deviceNumber }: { deviceNumber: string }) {
+  const deleteInvoiceWithId = destroyDevice.bind(null, deviceNumber);
   return (
     <>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">

@@ -9,6 +9,8 @@ import {
   Revenue,
   Invoice,
   NewInvoice,
+  Device,
+  Customer,
 } from './definitions';
 import {
   users,
@@ -22,6 +24,7 @@ import { formatCurrency, monthOrder } from './utils';
 //import { GetStaticProps } from 'next';
 import { Devices } from './definitions';
 import { clientPromise, DB_NAME } from './mongodb';
+import { ObjectId } from 'mongodb';
 
 export const initDb = async () => {
   try {
@@ -47,6 +50,10 @@ export const initDb = async () => {
   }
 };
 
+////////////////////////////////////////////
+/////////// DEVICE CRUD METHODS ////////////
+////////////////////////////////////////////
+
 export const fetchDevices = async () => {
   try {
     const client = await clientPromise;
@@ -59,118 +66,47 @@ export const fetchDevices = async () => {
   }
 };
 
-export const fetchRevenue = async () => {
-  try {
-    const client = await clientPromise;
-    const db = client.db(DB_NAME);
-    const revenue = await db.collection('revenue').find({}).toArray();
-    const parsedAndStringifiedRevenue: Revenue[] = JSON.parse(JSON.stringify(revenue));
-
-    const revebueSortedByMonth = parsedAndStringifiedRevenue.sort((a, b) => {
-      return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
-    });
-
-    return revebueSortedByMonth;
-  } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch customer revenue!');
-  }
-};
-
-export const fetchLatestInvoices = async () => {
+export async function getDeviceByNumber(deviceNumber: string) {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    // JOIN Invoices and Customers.
-    const invoices = await db.collection('invoices').aggregate([
-      {
-        '$lookup': {
-          'from': 'customers', // Collection to join
-          'localField': 'customerId', // From invoices field
-          'foreignField': 'id', // From customers field
-          'as': 'latestInvoices' // Output array field
-        }
-      },
-      {
-        $replaceRoot: { // Replaces the input document with the specified document.
-          newRoot: {
-            $mergeObjects: [ // Merge joined documents into a single document.
-              {
-                $arrayElemAt: ['$latestInvoices', 0]
-              }, '$$ROOT'
-            ]
-          }
-        }
-      },
-      {
-        $project: {
-          latestInvoices: 0
-        }
-      },
-      {
-        $unset: [ // Drop fields from result set we don't need.
-          //'_id',
-          'customerId',
-          'department',
-          'status',
-
-        ]
-      }
-    ]).sort({ date: -1 }).limit(5).toArray(); // Sort by date, descending and limit to five results.
-
-    return JSON.parse(JSON.stringify(invoices));
+    const device = await db.collection('devices').findOne({ deviceNumber });
+    return JSON.parse(JSON.stringify(device));
   } catch (e) {
     console.error(e);
-    throw new Error('Failed to fetch latest invoices!');
+    throw new Error('Failed to fetch device!');
   }
 };
 
-export const fetchCardData = async () => {
+export async function postDevice(device: Device) {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    // SELECT COUNT(*) FROM x
-    const invoiceCountPromise = db.collection('invoices').countDocuments();
-    const customerCountPromise = db.collection('customers').countDocuments();
-
-    // SELECT status, SUM(amount) FROM invoices GROUP BY status ASC
-    const invoiceStatusPromise = db.collection('invoices').aggregate([
-      {
-        $group: {
-          _id: '$status',
-          sum: { $sum: '$amountInCents' },
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      }
-    ]).toArray();
-
-    // Parallel data fetching to avoid waterfalls.
-    const data = await Promise.all([
-      invoiceCountPromise,
-      customerCountPromise,
-      invoiceStatusPromise,
-    ]);
-
-    const numberOfInvoices = Number(data[0]);
-    const numberOfCustomers = Number(data[1]);
-    const totalPaidInvoices = formatCurrency(data[2][0].sum ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2][1].sum ?? '0');
-
-    return {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
-    };
+    await db.collection('devices').insertOne(device);
+    //return res.status(201).send('Created');
   } catch (e) {
     console.error(e);
-    throw new Error('Failed to fetch card data!');
+    throw new Error('Failed to insert new device!');
   }
 };
+
+export async function deleteDevice(deviceNumber: string) {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    await db.collection('devices').deleteOne({ deviceNumber });
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to delete device!');
+  }
+};
+
+/////////////////////////////////////
+////////// INVOICE METHODS //////////
+/////////////////////////////////////
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
@@ -322,21 +258,121 @@ export async function fetchInvoicesPages(query: string) {
 
 export async function fetchInvoiceById(id: string) {
   try {
+    const _id = new ObjectId(id);
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    const data = await db.collection('invoices').find({ id }).toArray();
-
-    const invoice = data.map((invoice) => ({
-      ...invoice,
-      // Convert amount from cents to dollars
-      amount: invoice.amount / 100,
-    }));
-
-    return invoice[0];
+    const invoice = await db.collection('invoices').findOne({ _id });
+    return JSON.parse(JSON.stringify(invoice));
   } catch (e) {
     console.error(e);
     throw new Error('Failed to fetch invoice!');
+  }
+};
+
+export const fetchLatestInvoices = async () => {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    // JOIN Invoices and Customers.
+    const invoices = await db.collection('invoices').aggregate([
+      {
+        '$lookup': {
+          'from': 'customers', // Collection to join
+          'localField': 'customerId', // From invoices field
+          'foreignField': 'id', // From customers field
+          'as': 'latestInvoices' // Output array field
+        }
+      },
+      {
+        $replaceRoot: { // Replaces the input document with the specified document.
+          newRoot: {
+            $mergeObjects: [ // Merge joined documents into a single document.
+              {
+                $arrayElemAt: ['$latestInvoices', 0]
+              }, '$$ROOT'
+            ]
+          }
+        }
+      },
+      {
+        $project: {
+          latestInvoices: 0
+        }
+      },
+      {
+        $unset: [ // Drop fields from result set we don't need.
+          //'_id',
+          'customerId',
+          'department',
+          'status',
+
+        ]
+      }
+    ]).sort({ date: -1 }).limit(5).toArray(); // Sort by date, descending and limit to five results.
+
+    return JSON.parse(JSON.stringify(invoices));
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch latest invoices!');
+  }
+};
+
+export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/) {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    await db.collection('invoices').insertOne(invoice);
+    //return res.status(201).send('Created');
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to insert new invoice!');
+  }
+};
+
+export async function deleteInvoice(id: string) {
+  try {
+    const _id = new ObjectId(id);
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    await db.collection('invoices').deleteOne({ _id });
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to delete invoice!');
+  }
+};
+
+//////////////////////////////////////
+////////// CUSTOMER METHODS //////////
+//////////////////////////////////////
+
+export async function getCustomer(id: string) {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    // SELECT * FROM users WHERE email=${email}
+    const customer = await db.collection('customers').findOne({ id });
+    return JSON.parse(JSON.stringify(customer));
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to get customer!');
+  }
+};
+
+export async function createCustomer(customer: Customer) {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    await db.collection('customers').insertOne(customer);
+    //return res.status(201).send('Created');
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to create customer!');
   }
 };
 
@@ -385,7 +421,61 @@ export async function fetchFilteredCustomers(query: string) {
     console.error(e);
     throw new Error('Failed to fetch customer table!');
   }
-}
+};
+
+//////////////////////////////////
+////////// CARD METHODS //////////
+//////////////////////////////////
+
+export const fetchCardData = async () => {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    // SELECT COUNT(*) FROM x
+    const invoiceCountPromise = db.collection('invoices').countDocuments();
+    const customerCountPromise = db.collection('customers').countDocuments();
+
+    // SELECT status, SUM(amount) FROM invoices GROUP BY status ASC
+    const invoiceStatusPromise = db.collection('invoices').aggregate([
+      {
+        $group: {
+          _id: '$status',
+          sum: { $sum: '$amountInCents' },
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]).toArray();
+
+    // Parallel data fetching to avoid waterfalls.
+    const data = await Promise.all([
+      invoiceCountPromise,
+      customerCountPromise,
+      invoiceStatusPromise,
+    ]);
+
+    const numberOfInvoices = Number(data[0]);
+    const numberOfCustomers = Number(data[1]);
+    const totalPaidInvoices = formatCurrency(data[2][0].sum ?? '0');
+    const totalPendingInvoices = formatCurrency(data[2][1].sum ?? '0');
+
+    return {
+      numberOfCustomers,
+      numberOfInvoices,
+      totalPaidInvoices,
+      totalPendingInvoices,
+    };
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch card data!');
+  }
+};
+
+//////////////////////////////////
+////////// USER METHODS //////////
+//////////////////////////////////
 
 export async function getUser(email: string) {
   try {
@@ -399,18 +489,39 @@ export async function getUser(email: string) {
     console.error(e);
     throw new Error('Failed to get user!');
   }
-}
+};
 
-export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/) {
+export async function createUser(user: User) {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    // 
-    await db.collection('invoices').insertOne(invoice);
+    await db.collection('users').insertOne(user);
     //return res.status(201).send('Created');
   } catch (e) {
     console.error(e);
-    throw new Error('Failed to insert new invoice!');
+    throw new Error('Failed to create user!');
   }
-}
+};
+
+/////////////////////////////////////
+////////// REVENUE METHODS //////////
+/////////////////////////////////////
+
+export const fetchRevenue = async () => {
+  try {
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+    const revenue = await db.collection('revenue').find({}).toArray();
+    const parsedAndStringifiedRevenue: Revenue[] = JSON.parse(JSON.stringify(revenue));
+
+    const revebueSortedByMonth = parsedAndStringifiedRevenue.sort((a, b) => {
+      return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
+    });
+
+    return revebueSortedByMonth;
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to fetch customer revenue!');
+  }
+};
