@@ -2,7 +2,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { postInvoice, deleteInvoice, postDevice, deleteDevice } from './data';
+import { postInvoice, updateInvoice, deleteInvoice, postDevice, deleteDevice } from './data';
 
 const InvoiceFormSchema = z.object({
     id: z.string(),
@@ -37,7 +37,7 @@ const UserFormSchema = z.object({
     password: z.string()
 });
 
-const CreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
+const CreateInvoice = InvoiceFormSchema;
 
 export async function createInvoice(formData: FormData) {
     const { customerId, amount, status } = CreateInvoice.parse({
@@ -53,13 +53,31 @@ export async function createInvoice(formData: FormData) {
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
-}
+};
+
+const UpdateInvoice = InvoiceFormSchema.omit({date: true});
+
+export async function modifyInvoice(id: string, formData: FormData) {
+    const { customerId, amount, status } = UpdateInvoice.parse({
+        id: formData.get('id'),
+        customerId: formData.get('customerId'),
+        amount: formData.get('amount'),
+        status: formData.get('status')
+    });
+    const amountInCents = amount * 100;
+
+    await updateInvoice(id, { _id: id, customerId, amount: amountInCents, status });
+    // Clear some caches and trigger a new request to the server.
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
+};
 
 export async function destroyInvoice(id: string) {
     await deleteInvoice(id);
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/invoices');
-}
+};
 
 const CreateDevice = DeviceFormSchema.omit({ id: true });
 
@@ -84,4 +102,4 @@ export async function destroyDevice(id: string) {
     await deleteDevice(id);
     revalidatePath('/dashboard');
     revalidatePath('/dashboard/devices');
-}
+};

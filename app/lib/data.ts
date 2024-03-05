@@ -93,6 +93,25 @@ export async function postDevice(device: Device) {
   }
 };
 
+export async function updateDevice(id: string, device: Device) {
+  try {
+    const _id = new ObjectId(id);
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+    await db.collection('devices').updateOne({ _id }, { 
+      $set: {
+        deviceName: device.deviceName,
+        deviceManufacturer: device.deviceManufacturer,
+        deviceDescription: device.deviceDescription,
+        amount: device.amount,
+        imageUrl: device.imageUrl
+      }});
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to update device!');
+  }
+};
+
 export async function deleteDevice(id: string) {
   try {
     const _id = new ObjectId(id);
@@ -331,6 +350,23 @@ export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/)
   } catch (e) {
     console.error(e);
     throw new Error('Failed to insert new invoice!');
+  }
+};
+
+export async function updateInvoice(id: string, invoice: InvoiceForm) {
+  try {
+    const _id = new ObjectId(id);
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    await db.collection('invoices').updateOne({ _id }, {
+      $set: {
+        amountInCents: invoice.amount, status: invoice.status
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to update invoice!');
   }
 };
 

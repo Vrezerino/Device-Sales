@@ -108,7 +108,7 @@ export default function EditInvoiceForm({
             </div>
             <div className="mt-6 flex justify-end gap-4">
                 <Link
-                    href="/dashboard/invoices"
+                    href="/dashboard/devices"
                     className="flex h-10 items-center rounded-lg bg-neutral-100 px-4 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-200"
                 >
                     Cancel

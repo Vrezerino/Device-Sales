@@ -32,18 +32,14 @@ export type Customer = {
 
 export type Invoice = {
   id: string;
-  customer_id: string;
-  amount: number;
+  customerId: string;
+  amountInCents: number;
   date: string;
   status: 'pending' | 'paid';
 };
 
-export type NewInvoice = {
-  customerId: string,
-  amountInCents: number,
-  status: string,
-  date: string
-}
+export type NewInvoice = Omit<Invoice, 'id'>;
+export type UpdatingInvoice = Omit<Invoice, 'date'>;
 
 export type Revenue = {
   month: string;
