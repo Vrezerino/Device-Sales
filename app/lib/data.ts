@@ -400,7 +400,7 @@ export async function getCustomer(id: string) {
   }
 };
 
-export async function createCustomer(customer: Customer) {
+export async function postCustomer(customer: Customer) {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
@@ -413,13 +413,32 @@ export async function createCustomer(customer: Customer) {
   }
 };
 
+export async function updateCustomer(id: string, customer: Customer) {
+  try {
+    const _id = new ObjectId(id);
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    await db.collection('customers').updateOne({ _id }, {
+      $set: {
+        name: customer.name,
+        email: customer.email,
+        image_url: customer.image_url,
+        department: customer.department
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to update customer!');
+  }
+};
+
 export async function fetchCustomers() {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
-
-    // SELECT * FROM customers ORDER BY customers.name ASC
     const customers = await db.collection('customers').find({}).sort({ name: 1 }).toArray();
+
     return JSON.parse(JSON.stringify(customers));
   } catch (e) {
     console.error(e);

@@ -3,7 +3,7 @@ import { UpdateDevice, DeleteDevice } from '@/app/ui/devices/buttons';
 import { fetchDevices } from '@/app/lib/data';
 import { DevicesTable } from '@/app/lib/definitions';
 
-export default async function InvoicesTable() {
+export default async function DevicesTable() {
   const devices: DevicesTable[] = await fetchDevices();
 
   return (

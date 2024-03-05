@@ -8,16 +8,10 @@ import {
     deleteInvoice,
     postDevice,
     updateDevice,
-    deleteDevice
+    deleteDevice,
+    postCustomer,
+    updateCustomer,
 } from './data';
-
-const InvoiceFormSchema = z.object({
-    id: z.string(),
-    customerId: z.string(),
-    amount: z.coerce.number(),
-    status: z.enum(['pending', 'paid']),
-    date: z.string(),
-});
 
 const DeviceFormSchema = z.object({
     id: z.string(),
@@ -27,6 +21,14 @@ const DeviceFormSchema = z.object({
     deviceManufacturer: z.string(),
     amount: z.coerce.number(),
     imageUrl: z.string()
+});
+
+const InvoiceFormSchema = z.object({
+    id: z.string(),
+    customerId: z.string(),
+    amount: z.coerce.number(),
+    status: z.enum(['pending', 'paid']),
+    date: z.string(),
 });
 
 const CustomerFormSchema = z.object({
@@ -43,6 +45,57 @@ const UserFormSchema = z.object({
     email: z.string(),
     password: z.string()
 });
+
+///////////////////////////////////////
+/////////// DEVICE ACTIONS ////////////
+///////////////////////////////////////
+
+const CreateDevice = DeviceFormSchema.omit({ id: true });
+
+export async function createDevice(formData: FormData) {
+    const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
+        deviceName: formData.get('deviceName'),
+        deviceNumber: formData.get('deviceNumber'),
+        deviceManufacturer: formData.get('deviceManufacturer'),
+        deviceDescription: formData.get('deviceDescription'),
+        amount: formData.get('amount'),
+        imageUrl: formData.get('imageUrl'),
+    });
+
+    await postDevice({ deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
+    // Clear some caches and trigger a new request to the server.
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/devices');
+    redirect('/dashboard/devices');
+};
+
+// CreateDevice schema can be re-used.
+export async function modifyDevice(id: string, formData: FormData) { // "updateDevice" already in actions.ts
+    const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
+        deviceName: formData.get('deviceName'),
+        deviceNumber: formData.get('deviceNumber'),
+        deviceManufacturer: formData.get('deviceManufacturer'),
+        deviceDescription: formData.get('deviceDescription'),
+        amount: formData.get('amount'),
+        imageUrl: formData.get('imageUrl'),
+    });
+
+    await updateDevice(id, { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
+    // Clear some caches and trigger a new request to the server.
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/devices');
+    redirect('/dashboard/devices');
+};
+
+export async function destroyDevice(id: string) {
+    await deleteDevice(id);
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/devices');
+};
+
+/////////////////////////////////////
+////////// INVOICE ACTIONS //////////
+/////////////////////////////////////
 
 const CreateInvoice = InvoiceFormSchema;
 
@@ -86,46 +139,35 @@ export async function destroyInvoice(id: string) {
     revalidatePath('/dashboard/invoices');
 };
 
-const CreateDevice = DeviceFormSchema.omit({ id: true });
+//////////////////////////////////////
+////////// CUSTOMER ACTIONS //////////
+//////////////////////////////////////
 
-export async function createDevice(formData: FormData) {
-    const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
-        deviceName: formData.get('deviceName'),
-        deviceNumber: formData.get('deviceNumber'),
-        deviceManufacturer: formData.get('deviceManufacturer'),
-        deviceDescription: formData.get('deviceDescription'),
-        amount: formData.get('amount'),
-        imageUrl: formData.get('imageUrl'),
+const CreateCustomer = CustomerFormSchema;
+
+export async function createCustomer(formData: FormData) {
+    const { id, name, email, image_url, department } = CreateCustomer.parse({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        image_url: formData.get('imageUrl'),
+        department: formData.get('department')
     });
 
-    await postDevice({ deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
-    // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard');
-    revalidatePath('/dashboard/devices');
-    redirect('/dashboard/devices');
+    await postCustomer({ id, name, email, image_url, department });
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
 };
 
-const UpdateDevice = DeviceFormSchema;
-
-export async function modifyDevice(id: string, formData: FormData) { // "updateDevice" already in actions.ts
-    const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
-        deviceName: formData.get('deviceName'),
-        deviceNumber: formData.get('deviceNumber'),
-        deviceManufacturer: formData.get('deviceManufacturer'),
-        deviceDescription: formData.get('deviceDescription'),
-        amount: formData.get('amount'),
-        imageUrl: formData.get('imageUrl'),
+// CreateCustomer schema can be re-used.
+export async function modifyCustomer(id: string, formData: FormData) { // "updateCustomer" already in actions.ts
+    const { name, email, image_url, department } = CreateCustomer.parse({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        image_url: formData.get('imageUrl'),
+        department: formData.get('department')
     });
 
-    await updateDevice(id, { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
-    // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard');
-    revalidatePath('/dashboard/devices');
-    redirect('/dashboard/devices');
-};
-
-export async function destroyDevice(id: string) {
-    await deleteDevice(id);
-    revalidatePath('/dashboard');
-    revalidatePath('/dashboard/devices');
+    await updateCustomer(id, { id, name, email, image_url, department });
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
 };

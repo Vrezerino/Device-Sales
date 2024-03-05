@@ -79,7 +79,7 @@ export type Customer = {
   name: string;
   email: string;
   image_url: string;
-  department: string;
+  company: string;
 };
 
 export type CustomersTableType = {
@@ -97,9 +97,9 @@ export type FormattedCustomersTable = {
   name: string;
   email: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
+  totalInvoices: number;
+  totalPending: string;
+  totalPaid: string;
 };
 
 export type CustomerField = {
