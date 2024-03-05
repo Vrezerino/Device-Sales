@@ -36,7 +36,7 @@ const CustomerFormSchema = z.object({
     name: z.string(),
     email: z.string(),
     image_url: z.string(),
-    department: z.string(),
+    company: z.string(),
 });
 
 const UserFormSchema = z.object({
@@ -146,28 +146,28 @@ export async function destroyInvoice(id: string) {
 const CreateCustomer = CustomerFormSchema;
 
 export async function createCustomer(formData: FormData) {
-    const { id, name, email, image_url, department } = CreateCustomer.parse({
+    const { id, name, email, image_url, company } = CreateCustomer.parse({
         name: formData.get('name'),
         email: formData.get('email'),
         image_url: formData.get('imageUrl'),
-        department: formData.get('department')
+        company: formData.get('company')
     });
 
-    await postCustomer({ id, name, email, image_url, department });
+    await postCustomer({ id, name, email, image_url, company });
     revalidatePath('/dashboard/customers');
     redirect('/dashboard/customers');
 };
 
 // CreateCustomer schema can be re-used.
 export async function modifyCustomer(id: string, formData: FormData) { // "updateCustomer" already in actions.ts
-    const { name, email, image_url, department } = CreateCustomer.parse({
+    const { name, email, image_url, company } = CreateCustomer.parse({
         name: formData.get('name'),
         email: formData.get('email'),
         image_url: formData.get('imageUrl'),
-        department: formData.get('department')
+        company: formData.get('company')
     });
 
-    await updateCustomer(id, { id, name, email, image_url, department });
+    await updateCustomer(id, { id, name, email, image_url, company });
     revalidatePath('/dashboard/customers');
     redirect('/dashboard/customers');
 };

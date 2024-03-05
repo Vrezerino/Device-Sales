@@ -19,7 +19,7 @@ export default function EditInvoiceForm({
     const updateCustomerWithId = modifyCustomer.bind(null, customer.id);
     return (
         <form action={updateCustomerWithId}>
-            <input type="hidden" name="id" value={customer._id} />
+            <input type="hidden" name="id" value={customer.id} />
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">
                 {/* Name */}
                 <div className="mb-4">
@@ -107,12 +107,12 @@ export default function EditInvoiceForm({
             </div>
             <div className="mt-6 flex justify-end gap-4">
                 <Link
-                    href="/dashboard/devices"
+                    href="/dashboard/customers"
                     className="flex h-10 items-center rounded-lg bg-neutral-100 px-4 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-200"
                 >
                     Cancel
                 </Link>
-                <Button type="submit">Edit Device</Button>
+                <Button type="submit">Edit Customer</Button>
             </div>
         </form>
     );
