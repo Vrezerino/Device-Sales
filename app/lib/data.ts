@@ -1,13 +1,9 @@
 import { sql } from '@vercel/postgres';
 import {
-  CustomerField,
   CustomersTableType,
   InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
   User,
   Revenue,
-  Invoice,
   NewInvoice,
   Device,
   Customer,
@@ -21,10 +17,13 @@ import {
 } from './placeholder-data';
 import { formatCurrency, monthOrder } from './utils';
 
-//import { GetStaticProps } from 'next';
-import { Devices } from './definitions';
 import { clientPromise, DB_NAME } from './mongodb';
 import { ObjectId } from 'mongodb';
+import { NextResponse } from 'next/server';
+
+export const healthCheck = async () => {
+  return NextResponse.json({ status: 'ok' });
+}
 
 export const initDb = async () => {
   try {
