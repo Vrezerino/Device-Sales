@@ -7,7 +7,7 @@ if (!process.env.MONGODB_URI) {
 const uri = process.env.MONGODB_URI;
 const options = {};
 const DB_NAME = process.env.NODE_ENV === 'production'
-  ? 'device-sales' : 'device-sales-dev';
+  ? 'device-sales' : 'device-sales';
 
 let client;
 let clientPromise: Promise<MongoClient>;
