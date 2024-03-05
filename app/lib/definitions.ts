@@ -1,6 +1,9 @@
 // This file contains type definitions for your data.
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
+
+import { ObjectId } from "mongodb";
+
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 export type User = {
   id: string;
@@ -75,15 +78,17 @@ export type InvoicesTable = {
 };
 
 export type Customer = {
-  id: string;
+  _id: ObjectId;
   name: string;
   email: string;
   image_url: string;
   company: string;
 };
 
+export type NewCustomer = Omit<Customer, '_id'>;
+
 export type CustomersTableType = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   image_url: string;
@@ -94,7 +99,7 @@ export type CustomersTableType = {
 };
 
 export type FormattedCustomersTable = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   image_url: string;
@@ -105,7 +110,7 @@ export type FormattedCustomersTable = {
 };
 
 export type CustomerField = {
-  id: string;
+  _id: string;
   name: string;
 };
 

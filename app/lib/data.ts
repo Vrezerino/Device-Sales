@@ -7,6 +7,7 @@ import {
   NewInvoice,
   Device,
   Customer,
+  NewCustomer,
 } from './definitions';
 import {
   users,
@@ -168,7 +169,7 @@ export async function fetchFilteredInvoices(
         '$lookup': {
           'from': 'customers', // Collection to join
           'localField': 'customerId', // From invoices field
-          'foreignField': 'id', // From customers field
+          'foreignField': '_id', // From customers field
           'as': 'filteredInvoices' // Output array field
         }
       },
@@ -203,12 +204,13 @@ export async function fetchFilteredInvoices(
       },
       {
         $unset: [ // Drop fields from result set we don't need.
-          'id',
+          //'_id',
           'customerId',
-          'department'
+          'company'
         ]
       }
     ]).toArray();
+    console.log(JSON.parse(JSON.stringify(invoices)));
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
     console.error(e);
@@ -226,7 +228,7 @@ export async function fetchInvoicesPages(query: string) {
         '$lookup': {
           'from': 'customers', // Collection to join
           'localField': 'customerId', // From invoices field
-          'foreignField': 'id', // From customers field
+          'foreignField': '_id', // From customers field
           'as': 'invoiceCount' // Output array field
         }
       },
@@ -301,7 +303,7 @@ export const fetchLatestInvoices = async () => {
         '$lookup': {
           'from': 'customers', // Collection to join
           'localField': 'customerId', // From invoices field
-          'foreignField': 'id', // From customers field
+          'foreignField': '_id', // From customers field
           'as': 'latestInvoices' // Output array field
         }
       },
@@ -344,7 +346,7 @@ export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/)
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('invoices').insertOne(invoice);
+    await db.collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
     //return res.status(201).send('Created');
   } catch (e) {
     console.error(e);
@@ -400,7 +402,7 @@ export async function getCustomer(id: string) {
   }
 };
 
-export async function postCustomer(customer: Customer) {
+export async function postCustomer(customer: NewCustomer) {
   try {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
@@ -424,7 +426,7 @@ export async function updateCustomer(id: string, customer: Customer) {
         name: customer.name,
         email: customer.email,
         image_url: customer.image_url,
-        department: customer.department
+        company: customer.company
       }
     });
   } catch (e) {
@@ -468,8 +470,8 @@ export async function fetchFilteredCustomers(query: string) {
 
     const customers = data.rows.map((customer) => ({
       ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid),
+      total_pending: formatCurrency(customer.totalPending),
+      total_paid: formatCurrency(customer.totalPaid),
     }));
 
     return customers;

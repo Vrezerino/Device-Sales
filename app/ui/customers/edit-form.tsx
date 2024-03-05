@@ -16,10 +16,10 @@ export default function EditInvoiceForm({
 }: {
     customer: FormattedCustomersTable;
 }) {
-    const updateCustomerWithId = modifyCustomer.bind(null, customer.id);
+    const updateCustomerWithId = modifyCustomer.bind(null, customer._id);
     return (
         <form action={updateCustomerWithId}>
-            <input type="hidden" name="id" value={customer.id} />
+            <input type="hidden" name="id" value={customer._id} />
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">
                 {/* Name */}
                 <div className="mb-4">

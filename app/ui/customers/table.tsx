@@ -18,7 +18,7 @@ export default async function CustomersTable() {
               <div className="md:hidden">
                 {customers?.map((customer) => (
                   <div
-                    key={customer.id}
+                    key={customer._id}
                     className="mb-2 w-full rounded-md bg-neutral-700 p-4"
                   >
                     <div className="flex items-center justify-between border-b pb-4">
@@ -79,7 +79,7 @@ export default async function CustomersTable() {
 
                 <tbody className="bg-neutral-700">
                   {customers.map((customer) => (
-                    <tr key={customer.id} className="w-full border-orange-200/10 border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+                    <tr key={customer._id} className="w-full border-orange-200/10 border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
                           <Image
@@ -106,7 +106,7 @@ export default async function CustomersTable() {
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
-                          <UpdateCustomer id={customer.id} />
+                          <UpdateCustomer id={customer._id} />
                         </div>
                       </td>
                     </tr>

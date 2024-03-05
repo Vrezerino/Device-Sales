@@ -12,6 +12,7 @@ import {
     postCustomer,
     updateCustomer,
 } from './data';
+import { ObjectId } from 'mongodb';
 
 const DeviceFormSchema = z.object({
     id: z.string(),
@@ -32,7 +33,7 @@ const InvoiceFormSchema = z.object({
 });
 
 const CustomerFormSchema = z.object({
-    id: z.string(),
+    _id: z.string(),
     name: z.string(),
     email: z.string(),
     image_url: z.string(),
@@ -97,7 +98,7 @@ export async function destroyDevice(id: string) {
 ////////// INVOICE ACTIONS //////////
 /////////////////////////////////////
 
-const CreateInvoice = InvoiceFormSchema;
+const CreateInvoice = InvoiceFormSchema.omit({date: true, id: true});
 
 export async function createInvoice(formData: FormData) {
     const { customerId, amount, status } = CreateInvoice.parse({
@@ -146,20 +147,6 @@ export async function destroyInvoice(id: string) {
 const CreateCustomer = CustomerFormSchema;
 
 export async function createCustomer(formData: FormData) {
-    const { id, name, email, image_url, company } = CreateCustomer.parse({
-        name: formData.get('name'),
-        email: formData.get('email'),
-        image_url: formData.get('imageUrl'),
-        company: formData.get('company')
-    });
-
-    await postCustomer({ id, name, email, image_url, company });
-    revalidatePath('/dashboard/customers');
-    redirect('/dashboard/customers');
-};
-
-// CreateCustomer schema can be re-used.
-export async function modifyCustomer(id: string, formData: FormData) { // "updateCustomer" already in actions.ts
     const { name, email, image_url, company } = CreateCustomer.parse({
         name: formData.get('name'),
         email: formData.get('email'),
@@ -167,7 +154,22 @@ export async function modifyCustomer(id: string, formData: FormData) { // "updat
         company: formData.get('company')
     });
 
-    await updateCustomer(id, { id, name, email, image_url, company });
+    await postCustomer({ name, email, image_url, company });
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
+};
+
+// CreateCustomer schema can be re-used.
+export async function modifyCustomer(_id: string, formData: FormData) { // "updateCustomer" already in actions.ts
+    const { name, email, image_url, company } = CreateCustomer.parse({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        image_url: formData.get('imageUrl'),
+        company: formData.get('company')
+    });
+    const objectId = new ObjectId(_id);
+
+    await updateCustomer(_id, { _id: objectId, name, email, image_url, company });
     revalidatePath('/dashboard/customers');
     redirect('/dashboard/customers');
 };
