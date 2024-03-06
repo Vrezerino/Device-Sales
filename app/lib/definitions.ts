@@ -105,8 +105,8 @@ export type FormattedCustomersTable = {
   image_url: string;
   company: string;
   totalInvoices: number;
-  totalPending: string;
-  totalPaid: string;
+  totalPending: number;
+  totalPaid: number;
 };
 
 export type CustomerField = {

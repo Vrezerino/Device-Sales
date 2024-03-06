@@ -4,11 +4,15 @@ import { lusitana } from '@/app/ui/fonts';
 import {
   FormattedCustomersTable
 } from '@/app/lib/definitions';
-import { fetchCustomers } from '@/app/lib/data';
+import { fetchFilteredCustomers } from '@/app/lib/data';
+import { formatCurrency } from '@/app/lib/utils';
 
-export default async function CustomersTable() {
-  const customers: FormattedCustomersTable[] = await fetchCustomers();
-
+export default async function CustomersTable({
+  query,
+}: {
+  query: string;
+}) {
+  const customers: FormattedCustomersTable[] = await fetchFilteredCustomers(query);
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -35,8 +39,11 @@ export default async function CustomersTable() {
                             <p>{customer.name}</p>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-neutral-200">
                           {customer.email}
+                        </p>
+                        <p className="text-sm text-neutral-400">
+                          {customer.company}
                         </p>
                       </div>
                     </div>
@@ -64,6 +71,9 @@ export default async function CustomersTable() {
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
                       Email
+                    </th>
+                    <th scope="col" className="px-3 py-5 font-medium">
+                      Company
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
                       Total Invoices
@@ -96,13 +106,16 @@ export default async function CustomersTable() {
                         {customer.email}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3">
+                        {customer.company}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-3">
                         {customer.totalInvoices}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3">
-                        {customer.totalPending}
+                        {formatCurrency(customer.totalPaid)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3">
-                        {customer.totalPaid}
+                        {formatCurrency(customer.totalPaid)}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">

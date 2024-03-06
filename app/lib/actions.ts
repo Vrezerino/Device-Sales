@@ -14,6 +14,9 @@ import {
 } from './data';
 import { ObjectId } from 'mongodb';
 
+import { signIn } from '../auth';
+import { AuthError } from 'next-auth';
+
 const DeviceFormSchema = z.object({
     id: z.string(),
     deviceName: z.string(),
@@ -98,7 +101,7 @@ export async function destroyDevice(id: string) {
 ////////// INVOICE ACTIONS //////////
 /////////////////////////////////////
 
-const CreateInvoice = InvoiceFormSchema.omit({date: true, id: true});
+const CreateInvoice = InvoiceFormSchema.omit({ date: true, id: true });
 
 export async function createInvoice(formData: FormData) {
     const { customerId, amount, status } = CreateInvoice.parse({
@@ -173,4 +176,27 @@ export async function modifyCustomer(_id: string, formData: FormData) { // "upda
     await updateCustomer(_id, { _id: objectId, name, email, image_url, company });
     revalidatePath('/dashboard/customers');
     redirect('/dashboard/customers');
+};
+
+//////////////////////////////////////
+////////// USER ACTIONS //////////////
+//////////////////////////////////////
+
+export async function authenticate(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        await signIn('credentials', formData);
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                    return 'Invalid credentials.';
+                default:
+                    return 'Something went wrong.';
+            }
+        }
+        throw error;
+    }
 };

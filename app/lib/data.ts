@@ -31,13 +31,6 @@ export const initDb = async () => {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    /*
-    const users = db.listCollections({ name: 'users' });
-    if (!users) {
-      db.createCollection('users');
-      // ...
-    }*/
-
     db?.collection('users').insertMany(users);
     db?.collection('customers').insertMany(customers);
     db?.collection('invoices').insertMany(invoices);
@@ -98,14 +91,15 @@ export async function updateDevice(id: string, device: Device) {
     const _id = new ObjectId(id);
     const client = await clientPromise;
     const db = client.db(DB_NAME);
-    await db.collection('devices').updateOne({ _id }, { 
+    await db.collection('devices').updateOne({ _id }, {
       $set: {
         deviceName: device.deviceName,
         deviceManufacturer: device.deviceManufacturer,
         deviceDescription: device.deviceDescription,
         amount: device.amount,
         imageUrl: device.imageUrl
-      }});
+      }
+    });
   } catch (e) {
     console.error(e);
     throw new Error('Failed to update device!');
@@ -257,18 +251,7 @@ export async function fetchInvoicesPages(query: string) {
         $count: 'invoiceCount'
       },
     ]);
-    /*
-    const count = await sql`SELECT COUNT(*)
-    FROM invoices
-    JOIN customers ON invoices.customer_id = customers.id
-    WHERE
-      customers.name ILIKE ${`%${query}%`} OR
-      customers.email ILIKE ${`%${query}%`} OR
-      invoices.amount::text ILIKE ${`%${query}%`} OR
-      invoices.date::text ILIKE ${`%${query}%`} OR
-      invoices.status ILIKE ${`%${query}%`}
-  `;
-    */
+
     const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (e) {
@@ -450,31 +433,72 @@ export async function fetchCustomers() {
 
 export async function fetchFilteredCustomers(query: string) {
   try {
-    const data = await sql<CustomersTableType>`
-		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
-	  `;
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
 
-    const customers = data.rows.map((customer) => ({
-      ...customer,
-      total_pending: formatCurrency(customer.totalPending),
-      total_paid: formatCurrency(customer.totalPaid),
-    }));
+    const data = await db.collection('customers').aggregate([
+      {
+        $lookup: {
+          from: 'invoices',
+          localField: '_id',
+          foreignField: 'customerId',
+          as: 'invoices'
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { 'name': { $regex: query, $options: 'i' } },
+            { 'email': { $regex: query, $options: 'i' } }
+          ]
+        }
+      },
+      {
+        $project: {
+          id: 1,
+          name: 1,
+          email: 1,
+          image_url: 1,
+          company: 1,
+          totalInvoices: { $size: '$invoices' },
+          totalPending: {
+            $sum: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$invoices',
+                    as: 'invoice',
+                    cond: { $eq: ['$$invoice.status', 'pending'] }
+                  }
+                },
+                as: 'pendingInvoice',
+                in: '$$pendingInvoice.amountInCents'
+              }
+            }
+          },
+          totalPaid: {
+            $sum: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$invoices',
+                    as: 'invoice',
+                    cond: { $eq: ['$$invoice.status', 'paid'] }
+                  }
+                },
+                as: 'paidInvoice',
+                in: '$$paidInvoice.amountInCents'
+              }
+            }
+          }
+        }
+      },
+      {
+        $sort: { name: 1 }
+      }
+    ]).toArray();
 
-    return customers;
+    return JSON.parse(JSON.stringify(data));
   } catch (e) {
     console.error(e);
     throw new Error('Failed to fetch customer table!');
@@ -540,7 +564,6 @@ export async function getUser(email: string) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    // SELECT * FROM users WHERE email=${email}
     const user = await db.collection('users').findOne({ email });
     return JSON.parse(JSON.stringify(user));
   } catch (e) {
