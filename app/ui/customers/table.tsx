@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { UpdateCustomer } from '@/app/ui/customers/buttons';
-import { lusitana } from '@/app/ui/fonts';
 import {
   FormattedCustomersTable
 } from '@/app/lib/definitions';

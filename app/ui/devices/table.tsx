@@ -1,10 +1,28 @@
+'use client';
 import Image from 'next/image';
 import { UpdateDevice, DeleteDevice } from '@/app/ui/devices/buttons';
 import { fetchDevices } from '@/app/lib/data';
 import { DevicesTable } from '@/app/lib/definitions';
 
-export default async function DevicesTable() {
-  const devices: DevicesTable[] = await fetchDevices();
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { setDevices } from '@/redux/features/deviceSlice';
+import { useEffect } from 'react';
+
+export default function DevicesTable() {
+  const dispatch = useDispatch<AppDispatch>();
+  const devices: DevicesTable[] = useSelector(
+    (state: RootState) => state.deviceReducer.deviceList
+  );
+
+  useEffect(() => {
+    const fetchAndSetDevices = async () => {
+      const data = await fetchDevices();
+      dispatch(setDevices(data));
+    };
+    
+    fetchAndSetDevices();
+  }, []);
 
   return (
     <div className="mt-6 flow-root">

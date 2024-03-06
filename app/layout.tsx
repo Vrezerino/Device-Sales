@@ -1,5 +1,6 @@
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
+import ReduxProvider from '@/redux/provider';
 
 export default function RootLayout({
   children,
@@ -11,7 +12,9 @@ export default function RootLayout({
       <head>
         <title>Device Sales</title>
       </head>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <ReduxProvider>
+        <body className={`${inter.className} antialiased`}>{children}</body>
+      </ReduxProvider>
     </html>
   );
 }

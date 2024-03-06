@@ -3,9 +3,13 @@ import { CreateDevice } from '@/app/ui/devices/buttons';
 import Table from '@/app/ui/devices/table';
 import { DevicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
+import { DevicesTable } from '@/app/lib/definitions';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 export default async function Page() {
     const rand = Math.floor(Math.random() * 100);
+    
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
