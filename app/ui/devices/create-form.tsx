@@ -28,6 +28,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Device Name"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <ComputerDesktopIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
 
@@ -50,6 +51,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Manufacturer"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <CpuChipIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
@@ -71,6 +73,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Device Description"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <CheckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
@@ -91,6 +94,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Device Number (can include letters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
@@ -111,6 +115,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Amount of device in store (integer)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <CubeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
@@ -131,6 +136,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Device Image URLn"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>

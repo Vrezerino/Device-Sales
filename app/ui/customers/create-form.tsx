@@ -21,11 +21,12 @@ export default function Form() {
                         <div className="relative">
                             <input
                                 id="name"
-                                name="nme"
+                                name="name"
                                 type="string"
                                 step="0.01"
                                 placeholder="Full Name"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
@@ -47,6 +48,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Email Address"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
@@ -68,6 +70,7 @@ export default function Form() {
                                 step="0.01"
                                 placeholder="Company Name"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
+                                required
                             />
                             <BriefcaseIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>

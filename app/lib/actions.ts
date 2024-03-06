@@ -36,7 +36,7 @@ const InvoiceFormSchema = z.object({
 });
 
 const CustomerFormSchema = z.object({
-    _id: z.string(),
+    //_id: z.string(),
     name: z.string(),
     email: z.string(),
     image_url: z.string(),
@@ -68,7 +68,7 @@ export async function createDevice(formData: FormData) {
 
     await postDevice({ deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
     // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard');
+    //revalidatePath('/dashboard');
     revalidatePath('/dashboard/devices');
     redirect('/dashboard/devices');
 };
@@ -86,14 +86,14 @@ export async function modifyDevice(id: string, formData: FormData) { // "updateD
 
     await updateDevice(id, { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
     // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard');
+    //revalidatePath('/dashboard');
     revalidatePath('/dashboard/devices');
     redirect('/dashboard/devices');
 };
 
 export async function destroyDevice(id: string) {
     await deleteDevice(id);
-    revalidatePath('/dashboard');
+    //revalidatePath('/dashboard');
     revalidatePath('/dashboard/devices');
 };
 
@@ -114,7 +114,7 @@ export async function createInvoice(formData: FormData) {
 
     await postInvoice({ customerId, amountInCents, status, date });
     // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard');
+    //revalidatePath('/dashboard');
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 };
@@ -132,7 +132,7 @@ export async function modifyInvoice(id: string, formData: FormData) { // "update
 
     await updateInvoice(id, { _id: id, customerId, amount: amountInCents, status });
     // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard');
+    //revalidatePath('/dashboard');
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 };
