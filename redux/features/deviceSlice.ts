@@ -27,4 +27,3 @@ export const deviceSlice = createSlice({
 
 export const { setDevices, addDevice, removeDevice } = deviceSlice.actions;
 export default deviceSlice.reducer;
-

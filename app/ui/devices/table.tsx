@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { setDevices } from '@/redux/features/deviceSlice';
 import { useEffect } from 'react';
+import { DevicesTableSkeleton } from '../skeletons';
 
 export default function DevicesTable() {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +24,8 @@ export default function DevicesTable() {
     
     fetchAndSetDevices();
   }, []);
+
+  if (!devices) return <DevicesTableSkeleton />
 
   return (
     <div className="mt-6 flow-root">

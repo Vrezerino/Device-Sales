@@ -1,24 +1,38 @@
+'use client';
 import { generateYAxis } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
 import { fetchRevenue } from '@/app/lib/data';
 import { Revenue } from '@/app/lib/definitions';
 
-// This component is representational only.
-// For data visualization UI, check out:
-// https://www.tremor.so/
-// https://www.chartjs.org/
-// https://airbnb.io/visx/
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { useEffect } from 'react';
+import { setRevenue } from '@/redux/features/revenueSlice';
+import { RevenueChartSkeleton } from '../skeletons';
 
-export default async function RevenueChart() {
-  const revenue: Revenue[] = await fetchRevenue(); // Fetch data inside the component
+export default function RevenueChart() {
+  const dispatch = useDispatch<AppDispatch>();
+  const revenue: Revenue[] = useSelector(
+    (state: RootState) => state.revenueReducer.revenueList
+  );
+
+  useEffect(() => {
+    const fetchAndSetRevenue = async () => {
+      const data = await fetchRevenue();
+      dispatch(setRevenue(data));
+    };
+    
+    fetchAndSetRevenue();
+  }, []);
+  //const revenue: Revenue[] = await fetchRevenue(); // Fetch data inside the component
   const chartHeight = 350;
   // NOTE: comment in this code when you get to this point in the course
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   if (!revenue || revenue.length === 0) {
-    return <p className="mt-4 text-gray-400">No data available.</p>;
+    return <RevenueChartSkeleton />;
   }
 
   return (
