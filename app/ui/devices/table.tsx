@@ -23,7 +23,7 @@ export default function DevicesTable() {
     };
     
     fetchAndSetDevices();
-  }, []);
+  }, [dispatch]);
 
   if (!devices) return <DevicesTableSkeleton />
 

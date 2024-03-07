@@ -24,7 +24,7 @@ export default async function RevenueChart() {
     };
     
     fetchAndSetRevenue();
-  }, []);
+  }, [dispatch]);
   //const revenue: Revenue[] = await fetchRevenue(); // Fetch data inside the component
   const chartHeight = 350;
   // NOTE: comment in this code when you get to this point in the course
