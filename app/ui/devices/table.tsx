@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { UpdateDevice, DeleteDevice } from '@/app/ui/devices/buttons';
 import { fetchDevices } from '@/app/lib/data';
-import { DevicesTable } from '@/app/lib/definitions';
+import { DevicesTable as DevicesTableType } from '@/app/lib/definitions';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -12,7 +12,7 @@ import { DevicesTableSkeleton } from '../skeletons';
 
 export default function DevicesTable() {
   const dispatch = useDispatch<AppDispatch>();
-  const devices: DevicesTable[] = useSelector(
+  const devices: DevicesTableType[] = useSelector(
     (state: RootState) => state.deviceReducer.deviceList
   );
 
