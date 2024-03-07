@@ -18,7 +18,7 @@ export const fetchAndSetRevenue = async () => {
     dispatch(setRevenue(data));
 };
 
-/* kirjoita tämä
+/* 
 export const createDevice = async (formData: FormData) => {
     const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
         deviceName: formData.get('deviceName'),

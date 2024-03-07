@@ -1,4 +1,4 @@
-import Pagination from '@/app/ui/invoices/pagination';
+//import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@/app/ui/search';
 import Table from '@/app/ui/invoices/table';
 import { CreateInvoice } from '@/app/ui/invoices/buttons';
@@ -17,7 +17,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchInvoicesPages(query);
+  //const totalPages = await fetchInvoicesPages(query);
 
   return (
     <div className="w-full">

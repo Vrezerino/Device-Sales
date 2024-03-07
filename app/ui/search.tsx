@@ -8,6 +8,11 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  /*
+  Debouncing is essentially a timer for when to execute a search,
+  so that a new search is not executed immediately on every change
+  in the search field.
+  */
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');

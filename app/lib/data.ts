@@ -1,6 +1,6 @@
 'use server';
 
-import { sql } from '@vercel/postgres';
+//import { sql } from '@vercel/postgres';
 import {
   CustomersTableType,
   InvoiceForm,
@@ -378,7 +378,6 @@ export async function getCustomer(id: string) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    // SELECT * FROM users WHERE email=${email}
     const customer = await db.collection('customers').findOne({ _id });
     return JSON.parse(JSON.stringify(customer));
   } catch (e) {

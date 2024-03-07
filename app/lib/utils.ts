@@ -68,6 +68,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
+// A function utilizing this array will get the order number from each month's index in the array
 export const monthOrder = [
   'Jan',
   'Feb',
