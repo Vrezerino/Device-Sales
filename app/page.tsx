@@ -12,9 +12,9 @@ export default function Page() {
       </div>
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-neutral-900 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`${lusitana.className} antialiased`}>
-            <strong>Welcome to Device Sales.</strong>
-          </p>
+          <h2 className={`${lusitana.className} antialiased`}>
+            Welcome to Device Sales.
+          </h2>
           <Link
             href="/login"
             className="flex items-center gap-5 self-start rounded-lg bg-neutral-900 px-6 py-3 border border-orange-200/30 text-sm font-medium text-white transition-colors hover:bg-neutral-800 md:text-base"

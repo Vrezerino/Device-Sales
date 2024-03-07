@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 import { setRevenue } from '@/redux/features/revenueSlice';
 import { RevenueChartSkeleton } from '../skeletons';
 
-export default function RevenueChart() {
+export default async function RevenueChart() {
   const dispatch = useDispatch<AppDispatch>();
   const revenue: Revenue[] = useSelector(
     (state: RootState) => state.revenueReducer.revenueList
