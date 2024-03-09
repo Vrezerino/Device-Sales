@@ -11,36 +11,29 @@ import { useEffect } from 'react';
 import { setRevenue } from '@/redux/features/revenueSlice';
 import { RevenueChartSkeleton } from '../skeletons';
 
-export default async function RevenueChart() {
+export default function RevenueChart() {
   const dispatch = useDispatch<AppDispatch>();
   const revenue: Revenue[] = useSelector(
     (state: RootState) => state.revenueReducer.revenueList
   );
 
+  const fetchAndSetRevenue = async () => {
+    const data = await fetchRevenue();
+    dispatch(setRevenue(data));
+  };
+
   useEffect(() => {
-    const fetchAndSetRevenue = async () => {
-      const data = await fetchRevenue();
-      dispatch(setRevenue(data));
-    };
-    
     fetchAndSetRevenue();
-  }, [dispatch]);
-  //const revenue: Revenue[] = await fetchRevenue(); // Fetch data inside the component
+  }, [fetchAndSetRevenue]);
   const chartHeight = 350;
-  // NOTE: comment in this code when you get to this point in the course
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
-
-  if (!revenue || revenue.length === 0) {
-    return <RevenueChartSkeleton />;
-  }
 
   return (
     <div className="w-full md:col-span-4">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         Recent Revenue
       </h2>
-      {/* NOTE: comment in this code when you get to this point in the course */}
 
       <div className="rounded-xl bg-neutral-800 p-4">
         <div className="sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-neutral-800 p-4 md:gap-4">

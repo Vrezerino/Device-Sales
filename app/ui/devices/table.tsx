@@ -16,14 +16,14 @@ export default function DevicesTable() {
     (state: RootState) => state.deviceReducer.deviceList
   );
 
+  const fetchAndSetDevices = async () => {
+    const data = await fetchDevices();
+    dispatch(setDevices(data));
+  };
+
   useEffect(() => {
-    const fetchAndSetDevices = async () => {
-      const data = await fetchDevices();
-      dispatch(setDevices(data));
-    };
-    
     fetchAndSetDevices();
-  }, [dispatch]);
+  }, [fetchAndSetDevices]);
 
   if (!devices) return <DevicesTableSkeleton />
 

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { DevicesTable } from '@/app/lib/definitions';
 
 type DeviceState = {
@@ -13,7 +13,7 @@ export const deviceSlice = createSlice({
     name: 'devices',
     initialState,
     reducers: {
-        setDevices: (state, action) => {
+        setDevices: (state, action: PayloadAction<DevicesTable[]>) => {
             state.deviceList = action.payload;
         },
         addDevice: (state, action) => {

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Revenue } from '@/app/lib/definitions';
 
 type RevenueState = {
@@ -13,7 +13,7 @@ export const revenueSlice = createSlice({
     name: 'revenue',
     initialState,
     reducers: {
-        setRevenue: (state, action) => {
+        setRevenue: (state, action: PayloadAction<Revenue[]>) => {
             state.revenueList = action.payload;
         }
     },
