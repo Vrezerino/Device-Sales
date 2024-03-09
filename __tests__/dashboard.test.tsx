@@ -11,7 +11,7 @@ describe('Dashboard', () => {
         const ResolvedCardWrapper = await CardWrapper();
         render(ResolvedCardWrapper);
 
-        expect(screen.getByText('$')).toBeDefined();
+        expect(screen.getAllByText('$', { exact: false })).toHaveLength(2);
         expect(screen.getByRole('heading', { level: 3, name: 'Collected' })).toBeDefined();
         expect(screen.getByRole('heading', { level: 3, name: 'Pending' })).toBeDefined();
         expect(screen.getByRole('heading', { level: 3, name: 'Total Invoices' })).toBeDefined();

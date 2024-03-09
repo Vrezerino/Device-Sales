@@ -1,16 +1,37 @@
-import revenueReducer from '@/redux/features/revenueSlice';
-import { configureStore } from '@reduxjs/toolkit';
+import { Revenue } from '@/app/lib/definitions';
+//import revenueReducer from '@/redux/features/revenueSlice';
+import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { vi } from 'vitest';
 
-export const preloadedState = {
-    revenueList: [{ month: 'Jun', revenue: 3200 }]
+// Define mock Redux store.
+type RevenueState = {
+    revenueList: Revenue[];
 };
 
-export const mockStore = configureStore({
+const preloadedState: RevenueState = {
+    revenueList: [
+        { month: 'Jan', revenue: 3200 },
+        { month: 'Feb', revenue: 4000 }
+    ]
+};
+
+const revenueSlice = createSlice({
+    name: 'revenue',
+    initialState: preloadedState,
+    reducers: {
+        setRevenue: (state, action: PayloadAction<Revenue[]>) => {
+            state.revenueList = action.payload;
+        }
+    },
+});
+
+const revenueReducer = revenueSlice.reducer;
+
+const mockStore = configureStore({
     reducer: {
         revenueReducer
-    }
+    },
 });
 
 /*
