@@ -1,4 +1,4 @@
-import Form from '@/app/ui/customers/create-form';
+import Form from '@/app/ui/customers/createForm';
 // Can be re-used from Invoices:
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
  

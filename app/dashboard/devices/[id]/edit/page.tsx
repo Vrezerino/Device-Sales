@@ -1,4 +1,4 @@
-import Form from '@/app/ui/devices/edit-form';
+import Form from '@/app/ui/devices/editForm';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { getDeviceById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';

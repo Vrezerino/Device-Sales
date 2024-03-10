@@ -1,5 +1,5 @@
-import LoginForm from '@/app/ui/login-form';
-import DeviceLogo from '../ui/di-logo';
+import LoginForm from '@/app/ui/loginForm';
+import DeviceLogo from '../ui/diLogo';
 
 export default function LoginPage() {
     return (

@@ -17,7 +17,7 @@ import {
   invoices,
   revenue,
   devices
-} from './placeholder-data';
+} from './placeholderData';
 import { formatCurrency, monthOrder } from './utils';
 
 import { clientPromise, DB_NAME } from './mongodb';

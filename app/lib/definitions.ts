@@ -24,7 +24,7 @@ export interface Devices {
 export type DevicesTable = {
   _id: string;
   deviceName: string;
-  deviceDescription: string,
+  deviceDescription: string;
   deviceManufacturer: string;
   deviceNumber: string;
   imageUrl: string;

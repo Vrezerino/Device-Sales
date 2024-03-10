@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import NavLinks from '@/app/ui/dashboard/nav-links';
-import DeviceLogo from '@/app/ui/di-logo';
+import NavLinks from '@/app/ui/dashboard/navLinks';
+import DeviceLogo from '@/app/ui/diLogo';
 import Button from './button';
 import '@/app/ui/dashboard/sidenav.css';
 import { signOut } from '../../auth';

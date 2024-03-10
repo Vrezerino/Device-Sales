@@ -31,8 +31,14 @@ export const deviceSlice = createSlice({
     name: 'devices',
     initialState: preloadedDeviceState,
     reducers: {
-        setRevenue: (state, action: PayloadAction<DevicesTable[]>) => {
+        setDevices: (state, action: PayloadAction<DevicesTable[]>) => {
             state.deviceList = action.payload;
+        },
+        addDevice: (state, action) => {
+            state.deviceList.push(action.payload);
+        },
+        removeDevice: (state, action) => {
+            state.deviceList = state.deviceList.filter((device) => device._id !== action.payload);
         }
     },
 });

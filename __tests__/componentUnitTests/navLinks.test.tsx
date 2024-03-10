@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import NavLinks from '@/app/ui/dashboard/nav-links';
+import NavLinks from '@/app/ui/dashboard/navLinks';
 
 describe('Navigation', () => {
     it('links exist', () => {

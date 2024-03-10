@@ -1,4 +1,4 @@
-import DeviceLogo from '@/app/ui/di-logo';
+import DeviceLogo from '@/app/ui/diLogo';
 import { lusitana } from './ui/fonts';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
