@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Revenue } from '@/app/lib/definitions';
 
-type RevenueState = {
+export type RevenueState = {
     revenueList: Revenue[];
 };
 
-const initialState: RevenueState = {
+export const initialState: RevenueState = {
     revenueList: [],
 };
 

@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { DevicesTable } from '@/app/lib/definitions';
 
-type DeviceState = {
+export type DeviceState = {
     deviceList: DevicesTable[];
 };
 
-const initialState: DeviceState = {
+export const initialState: DeviceState = {
     deviceList: [],
 };
 

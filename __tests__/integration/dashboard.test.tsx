@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 import CardWrapper from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import { ReduxMockProvider } from './setup';
+import { ReduxMockProvider } from '../setup';
 
 describe('Dashboard', () => {
     // Asynchronous React components need to be resolved before testing.
@@ -20,6 +20,6 @@ describe('Dashboard', () => {
 
     it('revenue chart exists and data is fetched', () => {
         render(<ReduxMockProvider><RevenueChart /></ReduxMockProvider>);
-        expect(screen.getByText('$0K')).toBeTruthy();
+        expect(screen.getByText('$4K')).toBeTruthy();
     });
-});
+}); 
