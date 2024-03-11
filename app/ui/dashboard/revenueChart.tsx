@@ -24,7 +24,7 @@ export default function RevenueChart() {
 
   useEffect(() => {
     fetchAndSetRevenue();
-  }, [fetchAndSetRevenue]);
+  }, []);
   const chartHeight = 350;
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue);

@@ -1,4 +1,3 @@
-import { DevicesTable } from '@/app/lib/definitions';
 import { deviceReducer } from '../setup';
 import { DeviceState, addDevice, removeDevice } from '@/redux/features/deviceSlice';
 

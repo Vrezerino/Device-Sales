@@ -23,7 +23,7 @@ export default function DevicesTable() {
 
   useEffect(() => {
     fetchAndSetDevices();
-  }, [fetchAndSetDevices]);
+  }, []);
 
   if (!devices) return <DevicesTableSkeleton />
 
