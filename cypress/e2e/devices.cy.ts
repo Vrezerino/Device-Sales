@@ -12,7 +12,7 @@ describe('Devices table', () => {
     });
 
     it('device can be added', () => {
-        // Find and "push" Create Invoice button
+        // Find and "push" Create Device button
         const createBtn = cy.get('a.flex.h-10.items-center.rounded-lg.bg-amber-500');
         createBtn.should('have.attr', 'href')
             .and('include', 'create')
@@ -30,7 +30,7 @@ describe('Devices table', () => {
             .type('https://static-00.iconduck.com/assets.00/cypress-icon-2048x2045-rgul477b.png');
         cy.get('form').submit();
 
-        // Check that the last row/invoice is the one we just created
+        // Check that the last row/device is the one we just created
         cy.get('table')
             .find('tr')
             .last()
