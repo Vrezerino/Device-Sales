@@ -4,6 +4,7 @@ describe('Devices table', () => {
     });
 
     it('has the expected columns', () => {
+        // Check table header cell contents
         cy.get('th').eq(0).contains('Device Name');
         cy.get('th').eq(1).contains('Manufacturer');
         cy.get('th').eq(2).contains('Number');
@@ -11,6 +12,7 @@ describe('Devices table', () => {
     });
 
     it('device can be added', () => {
+        // Find and "push" Create Invoice button
         const createBtn = cy.get('a.flex.h-10.items-center.rounded-lg.bg-amber-500');
         createBtn.should('have.attr', 'href')
             .and('include', 'create')
@@ -18,6 +20,7 @@ describe('Devices table', () => {
                 cy.visit(href)
             });
 
+        // Fill new device form
         cy.get('input[name="deviceName"]').type('Cypress');
         cy.get('input[name="deviceManufacturer"]').type('Cypress Manufacturing');
         cy.get('input[name="deviceDescription"]').type('Cypress!');
@@ -27,6 +30,7 @@ describe('Devices table', () => {
             .type('https://static-00.iconduck.com/assets.00/cypress-icon-2048x2045-rgul477b.png');
         cy.get('form').submit();
 
+        // Check that the last row/invoice is the one we just created
         cy.get('table')
             .find('tr')
             .last()
@@ -50,15 +54,18 @@ describe('Devices table', () => {
     });
 
     it('device can be edited', () => {
+        // Find device edit btn from last row/device and click on it
         cy.get('table')
             .find('tr')
             .last()
             .find('td:nth-child(5) a')
             .click();
 
+        // Rename device
         cy.get('input[name="deviceName"]').clear().type('Cypress 1');
         cy.get('form').submit();
 
+        // Check from the row that device name was edited successfully
         cy.get('table')
             .find('tr')
             .last()

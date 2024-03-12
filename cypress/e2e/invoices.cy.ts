@@ -51,14 +51,14 @@ describe('Invoices table', () => {
     });
 
     it('invoice can be edited', () => {
-        // Find Edit Invoice button from last row/invoice and click on it
+        // Find edit invoice btn from last row/invoice and click on it
         cy.get('table')
             .find('tr')
             .last()
             .find('td:nth-child(6) a')
             .click();
 
-        // Rename the invoice
+        // Edit invoice due amount
         cy.get('input[name="amount"]').clear().type('444008');
         cy.get('form').submit();
 
