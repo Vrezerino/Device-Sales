@@ -44,7 +44,7 @@ describe('Devices table', () => {
         cy.get('td')
             .eq(4)
             .find('button span')
-            .should('have.text', 'Delete')
+            .should('have.text', 'Delete');
     });
 
     it('device can be edited', () => {
@@ -52,7 +52,7 @@ describe('Devices table', () => {
             .find('tr')
             .last()
             .find('td:nth-child(5) a')
-            .click()
+            .click();
 
         cy.get('input[name="deviceName"]').clear().type('Cypress 1');
         cy.get('form').submit();
@@ -62,5 +62,19 @@ describe('Devices table', () => {
             .last()
             .find('td:nth-child(1)')
             .contains('Cypress 1');
+    });
+
+    it('device can be deleted', () => {
+        cy.get('table')
+            .find('tr')
+            .last()
+            .find('td:nth-child(5) button')
+            .click();
+
+        cy.get('table')
+            .find('tr')
+            .last()
+            .find('td:nth-child(1)')
+            .contains('Cypress 1').should('not.exist');
     });
 });
