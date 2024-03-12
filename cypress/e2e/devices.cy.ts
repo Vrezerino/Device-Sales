@@ -35,15 +35,17 @@ describe('Devices table', () => {
     });
 
     it('row has edit and delete buttons', () => {
-        cy.get('td')
-            .eq(4)
-            .find('a')
+        cy.get('table')
+            .find('tr')
+            .last()
+            .find('td:nth-child(5) a')
             .should('have.attr', 'href')
             .and('include', 'edit');
 
-        cy.get('td')
-            .eq(4)
-            .find('button span')
+        cy.get('table')
+            .find('tr')
+            .last()
+            .find('td:nth-child(5) button')
             .should('have.text', 'Delete');
     });
 
