@@ -2,10 +2,11 @@ name: Build and test pipeline
 
 on: push
 
+env:
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
 jobs:
   build-and-test:
-    env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
