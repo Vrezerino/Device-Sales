@@ -2,14 +2,14 @@ name: Build and test pipeline
 
 on: push
 
-env:
-  MONGODB_URI: ${{ vars.MONGODB_URI }}
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ vars.MONGODB_URI }}
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo MONGODB_URI=${{secrets.MONGODB_URI}} >> .env
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
