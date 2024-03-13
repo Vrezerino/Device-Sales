@@ -18,8 +18,12 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: npm run build --if-present
       - name: Run unit and integration tests
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: npm test
       - name: Run e2e tests
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         uses: cypress-io/github-action@v6
         with:
           start: npm start
