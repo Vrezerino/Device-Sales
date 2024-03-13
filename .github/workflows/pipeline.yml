@@ -4,12 +4,10 @@ on: push
 
 jobs:
   build-and-test:
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create env file
-        run: |
-          touch .env
-          echo 'MONGODB_URI="${{ secrets.MONGODB_URI }}"' >> .env
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
