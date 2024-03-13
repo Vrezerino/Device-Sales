@@ -3,6 +3,11 @@ import { CreateDevice } from '@/app/ui/devices/buttons';
 import Table from '@/app/ui/devices/table';
 import { DevicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Devices',
+};
 
 export default function Page() {
     const rand = Math.floor(Math.random() * 100);
