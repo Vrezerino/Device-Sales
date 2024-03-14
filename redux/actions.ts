@@ -1,10 +1,16 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { setDevices } from '@/redux/features/deviceSlice';
-import { fetchDevices, fetchRevenue, postDevice } from '@/app/lib/data';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import {
+    fetchDevices,
+    fetchRevenue,
+    postDevice,
+    fetchFilteredInvoices,
+    fetchFilteredCustomers
+} from '@/app/lib/data';
 import { setRevenue } from './features/revenueSlice';
+import { setInvoices } from './features/invoiceSlice';
+import { setCustomersWithInvoiceInfo } from './features/customerSlice';
 
 const dispatch = useDispatch<AppDispatch>();
 
@@ -18,21 +24,12 @@ export const fetchAndSetRevenue = async () => {
     dispatch(setRevenue(data));
 };
 
-/* 
-export const createDevice = async (formData: FormData) => {
-    const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
-        deviceName: formData.get('deviceName'),
-        deviceNumber: formData.get('deviceNumber'),
-        deviceManufacturer: formData.get('deviceManufacturer'),
-        deviceDescription: formData.get('deviceDescription'),
-        amount: formData.get('amount'),
-        imageUrl: formData.get('imageUrl'),
-    });
-
-    await postDevice({ deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
-    // Clear some caches and trigger a new request to the server.
-    revalidatePath('/dashboard/devices');
-    revalidatePath('/dashboard');
-    redirect('/dashboard/devices');
+export const fetchAndSetInvoices = async (query: string, currentPage: number) => {
+    const data = await fetchFilteredInvoices(query, currentPage);
+    dispatch(setInvoices(data));
 };
-*/
+
+export const fetchAndSetCustomersWithInvoiceInfo = async (query: string) => {
+    const data = await fetchFilteredCustomers(query);
+    dispatch(setCustomersWithInvoiceInfo(data));
+};

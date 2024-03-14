@@ -361,7 +361,12 @@ export async function deleteInvoice(id: string) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('invoices').deleteOne({ _id });
+    const removal = await db.collection('invoices').deleteOne({ _id });
+    /* 
+      Return DeleteResult, which contains a boolean "acknowledged" as true 
+      if the operation ran with write concern, or false if write concern was disabled
+    */
+    return removal;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to delete invoice!');
@@ -543,6 +548,7 @@ export const fetchCardData = async () => {
     const numberOfCustomers = Number(data[1]) ?? 0;
     const totalPaidInvoices = formatCurrency(data[2][0].sum ?? '0');
     const totalPendingInvoices = formatCurrency(data[2][1].sum ?? '0');
+    console.log(numberOfCustomers, numberOfInvoices, totalPaidInvoices, totalPendingInvoices);
 
     return {
       numberOfCustomers,
@@ -550,6 +556,7 @@ export const fetchCardData = async () => {
       totalPaidInvoices,
       totalPendingInvoices,
     };
+    
   } catch (e) {
     console.error(e);
     throw new Error('Failed to fetch card data!');

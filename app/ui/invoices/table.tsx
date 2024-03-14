@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
@@ -5,14 +6,32 @@ import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/data';
 import { InvoicesTable as InvoicesTableType } from '@/app/lib/definitions';
 
-export default async function InvoicesTable({
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { setInvoices } from '@/redux/features/invoiceSlice';
+import { useEffect } from 'react';
+
+export default function InvoicesTable({
   query,
   currentPage,
 }: {
   query: string;
   currentPage: number;
 }) {
-  const invoices: InvoicesTableType[] = await fetchFilteredInvoices(query, currentPage);
+  const dispatch = useDispatch<AppDispatch>();
+  const invoices: InvoicesTableType[] = useSelector(
+    (state: RootState) => state.invoiceReducer.invoiceList
+  );
+
+  const fetchAndSetInvoices = async () => {
+    const data = await fetchFilteredInvoices(query, currentPage);
+    dispatch(setInvoices(data));
+  };
+
+  useEffect(() => {
+    fetchAndSetInvoices();
+  }, []);
+  
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

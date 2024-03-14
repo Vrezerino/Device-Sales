@@ -16,6 +16,7 @@ import { ObjectId } from 'mongodb';
 
 import { signIn } from '../auth';
 import { AuthError } from 'next-auth';
+import { removeInvoice } from '@/redux/features/invoiceSlice';
 
 const DeviceFormSchema = z.object({
     id: z.string(),
@@ -138,9 +139,12 @@ export async function modifyInvoice(id: string, formData: FormData) { // "update
 };
 
 export async function destroyInvoice(id: string) {
-    await deleteInvoice(id);
-    revalidatePath('/dashboard');
-    revalidatePath('/dashboard/invoices');
+    const response = await deleteInvoice(id);
+    if (response.acknowledged) {
+        revalidatePath('/dashboard');
+        revalidatePath('/dashboard/invoices');
+        return response.acknowledged;
+    }
 };
 
 //////////////////////////////////////

@@ -1,17 +1,36 @@
+'use client';
 import Image from 'next/image';
 import { UpdateCustomer } from '@/app/ui/customers/buttons';
 import {
-  FormattedCustomersTable
+  FormattedCustomersTable as FormattedCustomersTableType
 } from '@/app/lib/definitions';
 import { fetchFilteredCustomers } from '@/app/lib/data';
 import { formatCurrency } from '@/app/lib/utils';
 
-export default async function CustomersTable({
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { setCustomersWithInvoiceInfo } from '@/redux/features/customerSlice';
+import { useEffect } from 'react';
+
+export default function CustomersTable({
   query,
 }: {
   query: string;
 }) {
-  const customers: FormattedCustomersTable[] = await fetchFilteredCustomers(query);
+  const dispatch = useDispatch<AppDispatch>();
+  const customers: FormattedCustomersTableType[] = useSelector(
+    (state: RootState) => state.customerReducer.customerWithInvoiceInfoList
+  );
+
+  const fetchAndSetCustomers = async () => {
+    const data = await fetchFilteredCustomers(query);
+    dispatch(setCustomersWithInvoiceInfo(data));
+  };
+
+  useEffect(() => {
+    fetchAndSetCustomers();
+  }, []);
+
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -28,13 +47,13 @@ export default async function CustomersTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
-                            <Image
+                            {customer.image_url.length > 0 && <Image
                               src={customer.image_url}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
                               height={28}
-                            />
+                            />}
                             <p>{customer.name}</p>
                           </div>
                         </div>
@@ -92,7 +111,7 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
                           <Image
-                            src={customer.image_url}
+                            src={customer.image_url || '/blankProfile.jpg'}
                             className="rounded-full"
                             alt={`${customer.name}'s profile picture`}
                             width={90}
