@@ -19,12 +19,14 @@ export const invoiceSlice = createSlice({
         addInvoice: (state, action) => {
             state.invoiceList.push(action.payload);
         },
+        editInvoice: (state, action) => {
+            state.invoiceList = state.invoiceList.map((invoice) => invoice._id === action.payload._id ? action.payload : invoice);
+        },
         removeInvoice: (state, action) => {
-            console.log(action.payload);
             state.invoiceList = state.invoiceList.filter((invoice) => invoice._id !== action.payload);
         }
     },
 });
 
-export const { setInvoices, addInvoice, removeInvoice } = invoiceSlice.actions;
+export const { setInvoices, addInvoice, editInvoice, removeInvoice } = invoiceSlice.actions;
 export default invoiceSlice.reducer;

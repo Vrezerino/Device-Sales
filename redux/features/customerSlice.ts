@@ -24,11 +24,14 @@ export const customerSlice = createSlice({
         addCustomer: (state, action) => {
             state.customerList.push(action.payload);
         },
+        editCustomer: (state, action) => {
+            state.customerList = state.customerList.map((customer) => customer._id === action.payload._id ? action.payload : customer);
+        },
         removeCustomer: (state, action) => {
             state.customerList = state.customerList.filter((customer) => customer._id !== action.payload);
         }
     },
 });
 
-export const { setCustomers, setCustomersWithInvoiceInfo, addCustomer, removeCustomer } = customerSlice.actions;
+export const { setCustomers, setCustomersWithInvoiceInfo, addCustomer, editCustomer, removeCustomer } = customerSlice.actions;
 export default customerSlice.reducer;

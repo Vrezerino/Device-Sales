@@ -28,9 +28,16 @@ export function UpdateInvoice({ id }: { id: string }) {
   );
 };
 
-export async function DeleteInvoice({ id }: { id: string }) {
-  //const dispatch = useDispatch<AppDispatch>();
-  const deleteInvoiceWithId = destroyInvoice.bind(null, id);
+export function DeleteInvoice({ id }: { id: string }) {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const deleteInvoiceWithId = () => {
+    const resultPromise = destroyInvoice.bind(null, id);
+    resultPromise().then((result) => {
+      result.acknowledged && dispatch(removeInvoice(id));
+    });
+  }
+
   return (
     <form action={deleteInvoiceWithId}>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">

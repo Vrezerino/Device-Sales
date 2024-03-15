@@ -41,7 +41,7 @@ export default function DevicesTable() {
                   <div>
                     <div className="mb-2 flex items-center">
                       <Image
-                        src={device.imageUrl}
+                        src={device.imageUrl || '/blankDevice.jpg'}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
@@ -99,7 +99,7 @@ export default function DevicesTable() {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <Image
-                        src={device.imageUrl}
+                        src={device.imageUrl || '/blankDevice.jpg'}
                         className="rounded-full"
                         width={28}
                         height={28}

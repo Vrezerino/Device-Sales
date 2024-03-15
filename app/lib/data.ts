@@ -80,8 +80,8 @@ export async function postDevice(device: Device) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('devices').insertOne(device);
-    //return res.status(201).send('Created');
+    const result = await db.collection('devices').insertOne(device);
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to insert new device!');
@@ -93,7 +93,7 @@ export async function updateDevice(id: string, device: Device) {
     const _id = new ObjectId(id);
     const client = await clientPromise;
     const db = client.db(DB_NAME);
-    await db.collection('devices').updateOne({ _id }, {
+    const result = await db.collection('devices').updateOne({ _id }, {
       $set: {
         deviceName: device.deviceName,
         deviceManufacturer: device.deviceManufacturer,
@@ -102,6 +102,7 @@ export async function updateDevice(id: string, device: Device) {
         imageUrl: device.imageUrl
       }
     });
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to update device!');
@@ -114,7 +115,8 @@ export async function deleteDevice(id: string) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('devices').deleteOne({ _id });
+    const result = await db.collection('devices').deleteOne({ _id });
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to delete device!');
@@ -330,8 +332,8 @@ export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/)
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
-    //return res.status(201).send('Created');
+    const added = await db.collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
+    return added;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to insert new invoice!');
@@ -344,11 +346,13 @@ export async function updateInvoice(id: string, invoice: InvoiceForm) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('invoices').updateOne({ _id }, {
+    const modified = await db.collection('invoices').updateOne({ _id }, {
       $set: {
         amountInCents: invoice.amount, status: invoice.status
       }
     });
+    console.log('modified on server:', modified.acknowledged);
+    return modified;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to update invoice!');
@@ -396,8 +400,8 @@ export async function postCustomer(customer: NewCustomer) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('customers').insertOne(customer);
-    //return res.status(201).send('Created');
+    const result = await db.collection('customers').insertOne(customer);
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to create customer!');
@@ -410,7 +414,7 @@ export async function updateCustomer(id: string, customer: Customer) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    await db.collection('customers').updateOne({ _id }, {
+    const result = await db.collection('customers').updateOne({ _id }, {
       $set: {
         name: customer.name,
         email: customer.email,
@@ -418,6 +422,7 @@ export async function updateCustomer(id: string, customer: Customer) {
         company: customer.company
       }
     });
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to update customer!');

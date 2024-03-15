@@ -16,7 +16,11 @@ import { ObjectId } from 'mongodb';
 
 import { signIn } from '../auth';
 import { AuthError } from 'next-auth';
-import { removeInvoice } from '@/redux/features/invoiceSlice';
+
+import { store } from '@/redux/store';
+import { addInvoice, editInvoice, removeInvoice } from '@/redux/features/invoiceSlice';
+import { addDevice, editDevice, removeDevice } from '@/redux/features/deviceSlice';
+import { addCustomer, editCustomer, removeCustomer } from '@/redux/features/customerSlice';
 
 const DeviceFormSchema = z.object({
     id: z.string(),
@@ -67,15 +71,17 @@ export async function createDevice(formData: FormData) {
         imageUrl: formData.get('imageUrl'),
     });
 
-    await postDevice({ deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
-    // Clear some caches and trigger a new request to the server.
-    //revalidatePath('/dashboard');
-    revalidatePath('/dashboard/devices');
-    redirect('/dashboard/devices');
+    const device = { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl };
+    const response = await postDevice(device);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful; can't use useDispatch within server code
+        store.dispatch(addDevice(device));
+        redirect('/dashboard/devices');
+    }
 };
 
 // CreateDevice schema can be re-used.
-export async function modifyDevice(id: string, formData: FormData) { // "updateDevice" already in actions.ts
+export async function modifyDevice(id: string, formData: FormData) {
     const { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl } = CreateDevice.parse({
         deviceName: formData.get('deviceName'),
         deviceNumber: formData.get('deviceNumber'),
@@ -85,17 +91,22 @@ export async function modifyDevice(id: string, formData: FormData) { // "updateD
         imageUrl: formData.get('imageUrl'),
     });
 
-    await updateDevice(id, { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl });
-    // Clear some caches and trigger a new request to the server.
-    //revalidatePath('/dashboard');
-    revalidatePath('/dashboard/devices');
-    redirect('/dashboard/devices');
+    const device = { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl };
+    const response = await updateDevice(id, device);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful; can't use useDispatch within server code
+        store.dispatch(editDevice(device));
+        redirect('/dashboard/devices');
+    }
 };
 
 export async function destroyDevice(id: string) {
-    await deleteDevice(id);
-    //revalidatePath('/dashboard');
-    revalidatePath('/dashboard/devices');
+    const response = await deleteDevice(id);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful; can't use useDispatch within server code
+        store.dispatch(removeDevice(id));
+        redirect('/dashboard/devices');
+    }
 };
 
 /////////////////////////////////////
@@ -105,6 +116,7 @@ export async function destroyDevice(id: string) {
 const CreateInvoice = InvoiceFormSchema.omit({ date: true, id: true });
 
 export async function createInvoice(formData: FormData) {
+    // Parse values from formData object
     const { customerId, amount, status } = CreateInvoice.parse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
@@ -113,16 +125,19 @@ export async function createInvoice(formData: FormData) {
     const amountInCents = amount * 100;
     const date = new Date().toISOString().split('T')[0];
 
-    await postInvoice({ customerId, amountInCents, status, date });
-    // Clear some caches and trigger a new request to the server.
-    //revalidatePath('/dashboard');
-    revalidatePath('/dashboard/invoices');
-    redirect('/dashboard/invoices');
+    const invoice = { customerId, amountInCents, status, date };
+    const response = await postInvoice(invoice);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful; can't use useDispatch within server code
+        store.dispatch(addInvoice(invoice));
+        redirect('/dashboard/invoices');
+    }
 };
 
 const UpdateInvoice = InvoiceFormSchema.omit({ date: true });
 
-export async function modifyInvoice(id: string, formData: FormData) { // "updateInvoice" already in actions.ts
+export async function modifyInvoice(id: string, formData: FormData) {
+    // Parse values from formData object
     const { customerId, amount, status } = UpdateInvoice.parse({
         id: formData.get('id'),
         customerId: formData.get('customerId'),
@@ -131,20 +146,23 @@ export async function modifyInvoice(id: string, formData: FormData) { // "update
     });
     const amountInCents = amount * 100;
 
-    await updateInvoice(id, { _id: id, customerId, amount: amountInCents, status });
-    // Clear some caches and trigger a new request to the server.
-    //revalidatePath('/dashboard');
-    revalidatePath('/dashboard/invoices');
-    redirect('/dashboard/invoices');
+    const invoice = { _id: id, customerId, amount: amountInCents, status };
+    const response = await updateInvoice(id, invoice);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful
+        store.dispatch(editInvoice(invoice));
+        redirect('/dashboard/invoices');
+    }
 };
 
 export async function destroyInvoice(id: string) {
     const response = await deleteInvoice(id);
     if (response.acknowledged) {
-        revalidatePath('/dashboard');
-        revalidatePath('/dashboard/invoices');
-        return response.acknowledged;
+        // Use store directly to dispatch if db query successful
+        store.dispatch(removeInvoice(id));
+        redirect('/dashboard/invoices');
     }
+    return response;
 };
 
 //////////////////////////////////////
@@ -161,9 +179,13 @@ export async function createCustomer(formData: FormData) {
         company: formData.get('company')
     });
 
-    await postCustomer({ name, email, image_url, company });
-    revalidatePath('/dashboard/customers');
-    redirect('/dashboard/customers');
+    const customer = { name, email, image_url, company };
+    const response = await postCustomer(customer);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful
+        store.dispatch(addCustomer(customer));
+        redirect('/dashboard/customers');
+    }
 };
 
 // CreateCustomer schema can be re-used.
@@ -177,9 +199,13 @@ export async function modifyCustomer(_id: string, formData: FormData) { // "upda
     });
     const objectId = new ObjectId(_id);
 
-    await updateCustomer(_id, { _id: objectId, name, email, image_url, company });
-    revalidatePath('/dashboard/customers');
-    redirect('/dashboard/customers');
+    const customer = { _id: objectId, name, email, image_url, company };
+    const response = await updateCustomer(_id, customer);
+    if (response.acknowledged) {
+        // Use store directly to dispatch if db query successful
+        store.dispatch(editCustomer(customer));
+        redirect('/dashboard/customers');
+    }
 };
 
 //////////////////////////////////////
