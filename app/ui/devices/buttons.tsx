@@ -1,3 +1,4 @@
+'use client';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { destroyDevice } from '@/app/lib/actions';
@@ -26,9 +27,8 @@ export function UpdateDevice({ id }: { id: string }) {
 };
 
 export function DeleteDevice({ id }: { id: string }) {
-  const deleteDeviceWithId = destroyDevice.bind(null, id);
   return (
-    <form action={deleteDeviceWithId}>
+    <form action={destroyDevice.bind(null, id)}>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />

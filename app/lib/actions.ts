@@ -73,7 +73,7 @@ export async function createDevice(formData: FormData) {
 
     const device = { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl };
     const response = await postDevice(device);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful; can't use useDispatch within server code
         store.dispatch(addDevice(device));
         redirect('/dashboard/devices');
@@ -93,7 +93,7 @@ export async function modifyDevice(id: string, formData: FormData) {
 
     const device = { deviceName, deviceNumber, deviceManufacturer, deviceDescription, amount, imageUrl };
     const response = await updateDevice(id, device);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful; can't use useDispatch within server code
         store.dispatch(editDevice(device));
         redirect('/dashboard/devices');
@@ -102,7 +102,7 @@ export async function modifyDevice(id: string, formData: FormData) {
 
 export async function destroyDevice(id: string) {
     const response = await deleteDevice(id);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful; can't use useDispatch within server code
         store.dispatch(removeDevice(id));
         redirect('/dashboard/devices');
@@ -127,7 +127,7 @@ export async function createInvoice(formData: FormData) {
 
     const invoice = { customerId, amountInCents, status, date };
     const response = await postInvoice(invoice);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful; can't use useDispatch within server code
         store.dispatch(addInvoice(invoice));
         redirect('/dashboard/invoices');
@@ -148,7 +148,7 @@ export async function modifyInvoice(id: string, formData: FormData) {
 
     const invoice = { _id: id, customerId, amount: amountInCents, status };
     const response = await updateInvoice(id, invoice);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful
         store.dispatch(editInvoice(invoice));
         redirect('/dashboard/invoices');
@@ -157,12 +157,11 @@ export async function modifyInvoice(id: string, formData: FormData) {
 
 export async function destroyInvoice(id: string) {
     const response = await deleteInvoice(id);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful
         store.dispatch(removeInvoice(id));
         redirect('/dashboard/invoices');
     }
-    return response;
 };
 
 //////////////////////////////////////
@@ -181,7 +180,7 @@ export async function createCustomer(formData: FormData) {
 
     const customer = { name, email, image_url, company };
     const response = await postCustomer(customer);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful
         store.dispatch(addCustomer(customer));
         redirect('/dashboard/customers');
@@ -201,7 +200,7 @@ export async function modifyCustomer(_id: string, formData: FormData) { // "upda
 
     const customer = { _id: objectId, name, email, image_url, company };
     const response = await updateCustomer(_id, customer);
-    if (response.acknowledged) {
+    if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful
         store.dispatch(editCustomer(customer));
         redirect('/dashboard/customers');

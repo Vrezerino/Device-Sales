@@ -332,8 +332,8 @@ export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/)
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    const added = await db.collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
-    return added;
+    const result = await db.collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to insert new invoice!');
@@ -346,13 +346,12 @@ export async function updateInvoice(id: string, invoice: InvoiceForm) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    const modified = await db.collection('invoices').updateOne({ _id }, {
+    const result = await db.collection('invoices').updateOne({ _id }, {
       $set: {
         amountInCents: invoice.amount, status: invoice.status
       }
     });
-    console.log('modified on server:', modified.acknowledged);
-    return modified;
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to update invoice!');
@@ -365,12 +364,8 @@ export async function deleteInvoice(id: string) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
 
-    const removal = await db.collection('invoices').deleteOne({ _id });
-    /* 
-      Return DeleteResult, which contains a boolean "acknowledged" as true 
-      if the operation ran with write concern, or false if write concern was disabled
-    */
-    return removal;
+    const result = await db.collection('invoices').deleteOne({ _id });
+    return result;
   } catch (e) {
     console.error(e);
     throw new Error('Failed to delete invoice!');
@@ -553,7 +548,6 @@ export const fetchCardData = async () => {
     const numberOfCustomers = Number(data[1]) ?? 0;
     const totalPaidInvoices = formatCurrency(data[2][0].sum ?? '0');
     const totalPendingInvoices = formatCurrency(data[2][1].sum ?? '0');
-    console.log(numberOfCustomers, numberOfInvoices, totalPaidInvoices, totalPendingInvoices);
 
     return {
       numberOfCustomers,

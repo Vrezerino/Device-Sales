@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { InvoicesTable as InvoicesTableType } from '@/app/lib/definitions';
 
-export type invoiceState = {
+export type InvoiceState = {
     invoiceList: InvoicesTableType[];
 };
 
-export const initialState: invoiceState = {
+export const initialState: InvoiceState = {
     invoiceList: [],
 };
 
