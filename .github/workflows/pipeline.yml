@@ -2,6 +2,11 @@ name: Build and test pipeline
 
 on: push
 
+env:
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
+  MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -14,22 +19,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
-          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
         run: npm run build --if-present
       - name: Run unit and integration tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
-          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
         run: npm test
       - name: Run e2e tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
-          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
         uses: cypress-io/github-action@v6
         with:
           start: npm start
