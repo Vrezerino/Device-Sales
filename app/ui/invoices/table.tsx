@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { setInvoices } from '@/redux/features/invoiceSlice';
 import { useEffect } from 'react';
+import { InvoicesTableSkeleton } from '../skeletons';
 
 export default function InvoicesTable({
   query,
@@ -31,6 +32,9 @@ export default function InvoicesTable({
   useEffect(() => {
     fetchAndSetInvoices();
   }, []);
+
+  if (!invoices) return <InvoicesTableSkeleton />
+  
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

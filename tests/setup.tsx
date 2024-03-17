@@ -1,3 +1,4 @@
+import { initDb } from '@/app/lib/data';
 import { Device, DevicesTable, Revenue } from '@/app/lib/definitions';
 import { DeviceState } from '@/redux/features/deviceSlice';
 import { RevenueState } from '@/redux/features/revenueSlice';
@@ -81,4 +82,3 @@ beforeEach(() => {
         }
     });
 });
-

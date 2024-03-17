@@ -47,13 +47,13 @@ export default function CustomersTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
-                            {customer.image_url.length > 0 && <Image
-                              src={customer.image_url}
+                            <Image
+                              src={customer.image_url || '/blankProfile.jpg'}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
                               height={28}
-                            />}
+                            />
                             <p>{customer.name}</p>
                           </div>
                         </div>

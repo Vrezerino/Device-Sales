@@ -4,6 +4,11 @@ import { render, screen } from '@testing-library/react';
 import CardWrapper from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenueChart';
 import { ReduxMockProvider } from '../setup';
+import { clearDb, initDb } from '@/app/lib/data';
+
+beforeAll(async () => {
+    await initDb();
+});
 
 describe('Dashboard', () => {
     // Asynchronous React components need to be resolved before testing.
@@ -22,4 +27,8 @@ describe('Dashboard', () => {
         render(<ReduxMockProvider><RevenueChart /></ReduxMockProvider>);
         expect(screen.getByText('$4K')).toBeTruthy();
     });
-}); 
+});
+
+afterAll(async () => {
+    await clearDb();
+})
