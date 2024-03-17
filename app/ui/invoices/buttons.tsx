@@ -2,7 +2,8 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { destroyInvoice } from '@/app/lib/actions';
-import { useRouter } from 'next/navigation';
+import { InvoicesTable } from '@/app/lib/definitions';
+import { formatCurrency } from '@/app/lib/utils';
 
 export function CreateInvoice() {
   return (
@@ -26,9 +27,13 @@ export function UpdateInvoice({ id }: { id: string }) {
   );
 };
 
-export function DeleteInvoice({ id }: { id: string }) {
+export function DeleteInvoice({ invoice }: { invoice: InvoicesTable }) {
+  const deleteInvoiceWithId = () => {
+    const amount = formatCurrency(invoice.amountInCents);
+    window.confirm(`Really delete ${invoice.name}, ${invoice.date}, ${amount}?`) && destroyInvoice(invoice._id);
+  }
   return (
-    <form action={destroyInvoice.bind(null, id)}>
+    <form action={deleteInvoiceWithId}>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />

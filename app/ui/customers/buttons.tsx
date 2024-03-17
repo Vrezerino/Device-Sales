@@ -1,3 +1,4 @@
+import { destroyCustomer } from '@/app/lib/actions';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 //import { destroyCustomer } from '@/app/lib/actions';
@@ -25,9 +26,10 @@ export function UpdateCustomer({ id }: { id: string }) {
   );
 };
 
-/*
-export function DeleteCustomer({ id }: { id: string }) {
-  const deleteCustomerWithId = destroyCustomer.bind(null, id);
+export function DeleteCustomer({ id, name }: { id: string, name: string }) {
+  const deleteCustomerWithId = () => {
+    window.confirm(`Really delete ${name}?`) && destroyCustomer(id);
+  }
   return (
     <form action={deleteCustomerWithId}>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">
@@ -37,4 +39,3 @@ export function DeleteCustomer({ id }: { id: string }) {
     </form>
   );
 };
-*/

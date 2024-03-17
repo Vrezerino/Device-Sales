@@ -424,6 +424,20 @@ export async function updateCustomer(id: string, customer: Customer) {
   }
 };
 
+export async function deleteCustomer(id: string) {
+  try {
+    const _id = new ObjectId(id);
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+
+    const result = await db.collection('customers').deleteOne({ _id });
+    return result;
+  } catch (e) {
+    console.error(e);
+    throw new Error('Failed to delete customer!');
+  }
+};
+
 export async function fetchCustomers() {
   try {
     const client = await clientPromise;

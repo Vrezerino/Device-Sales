@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { UpdateCustomer } from '@/app/ui/customers/buttons';
+import { DeleteCustomer, UpdateCustomer } from '@/app/ui/customers/buttons';
 import {
   FormattedCustomersTable as FormattedCustomersTableType
 } from '@/app/lib/definitions';
@@ -138,6 +138,7 @@ export default function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateCustomer id={customer._id} />
+                          <DeleteCustomer id={customer._id} name={customer.name} />
                         </div>
                       </td>
                     </tr>

@@ -11,6 +11,7 @@ import {
     deleteDevice,
     postCustomer,
     updateCustomer,
+    deleteCustomer,
 } from './data';
 import { ObjectId } from 'mongodb';
 
@@ -203,6 +204,15 @@ export async function modifyCustomer(_id: string, formData: FormData) { // "upda
     if (response?.acknowledged) {
         // Use store directly to dispatch if db query successful
         store.dispatch(editCustomer(customer));
+        redirect('/dashboard/customers');
+    }
+};
+
+export async function destroyCustomer(id: string) {
+    const response = await deleteCustomer(id);
+    if (response?.acknowledged) {
+        // Use store directly to dispatch if db query successful
+        store.dispatch(removeCustomer(id));
         redirect('/dashboard/customers');
     }
 };

@@ -66,7 +66,7 @@ export default function InvoicesTable({
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={invoice._id} />
-                    <DeleteInvoice id={invoice._id} />
+                    <DeleteInvoice invoice={invoice} />
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@ export default function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateInvoice id={invoice._id} />
-                      <DeleteInvoice id={invoice._id} />
+                      <DeleteInvoice invoice={invoice} />
                     </div>
                   </td>
                 </tr>

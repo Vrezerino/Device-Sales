@@ -64,7 +64,7 @@ export default function DevicesTable() {
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateDevice id={device._id} />
-                    <DeleteDevice id={device._id} />
+                    <DeleteDevice id={device._id} name={device.deviceName} />
                   </div>
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function DevicesTable() {
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateDevice id={device._id} />
-                      <DeleteDevice id={device._id} />
+                      <DeleteDevice id={device._id} name={device.deviceName} />
                     </div>
                   </td>
                 </tr>
