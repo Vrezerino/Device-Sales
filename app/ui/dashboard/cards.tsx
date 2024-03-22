@@ -5,7 +5,7 @@ import {
   InboxIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchCardData } from '@/app/lib/data';
+import { fetchCardData } from '@/services/cards';
 
 const iconMap = {
   collected: BanknotesIcon,
@@ -33,7 +33,7 @@ export default async function CardWrapper() {
       />
     </>
   );
-}
+};
 
 export function Card({
   title,
@@ -60,4 +60,4 @@ export function Card({
       </p>
     </div>
   );
-}
+};

@@ -26,4 +26,4 @@ export default function InvoiceStatus({ status }: { status: string }) {
       ) : null}
     </span>
   );
-}
+};

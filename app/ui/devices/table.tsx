@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { UpdateDevice, DeleteDevice } from '@/app/ui/devices/buttons';
-import { fetchDevices } from '@/app/lib/data';
+import { fetchDevices } from '@/services/devices';
 import { DevicesTable as DevicesTableType } from '@/app/lib/definitions';
 
 import { useDispatch, useSelector } from 'react-redux';

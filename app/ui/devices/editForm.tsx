@@ -1,6 +1,5 @@
 'use client';
-
-import { Device, DevicesTable } from '@/app/lib/definitions';
+import { DevicesTable } from '@/app/lib/definitions';
 import {
     CheckIcon,
     ComputerDesktopIcon,
@@ -144,4 +143,4 @@ export default function EditInvoiceForm({
             </div>
         </form>
     );
-}
+};

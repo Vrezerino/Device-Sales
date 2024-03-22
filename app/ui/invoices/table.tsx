@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredInvoices } from '@/app/lib/data';
+import { fetchFilteredInvoices } from '@/services/invoices';
 import { InvoicesTable as InvoicesTableType } from '@/app/lib/definitions';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -143,4 +143,4 @@ export default function InvoicesTable({
       </div>
     </div>
   );
-}
+};

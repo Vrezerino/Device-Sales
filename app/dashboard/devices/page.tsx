@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
     const rand = Math.floor(Math.random() * 100);
-    
+
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
@@ -25,4 +25,4 @@ export default function Page() {
             </Suspense>
         </div>
     );
-}
+};

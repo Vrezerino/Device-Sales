@@ -3,7 +3,7 @@ import { DeviceState, addDevice, removeDevice } from '@/redux/features/deviceSli
 
 describe('Device reducer', () => {
     it('should return initial state', () => {
-        expect(deviceReducer(undefined, { type: 'unknown' })).toEqual({
+        expect(deviceReducer(undefined, { type: 'unknown' })).equal({
             deviceList: []
         });
     });
@@ -23,7 +23,7 @@ describe('Device reducer', () => {
             deviceList: []
         };
 
-        expect(deviceReducer(previousState, addDevice(newDevice))).toEqual(
+        expect(deviceReducer(previousState, addDevice(newDevice))).equal(
             {
                 deviceList: [{
                     _id: 'test',
@@ -62,7 +62,7 @@ describe('Device reducer', () => {
             amount: 1
         };
 
-        expect(deviceReducer(previousState, addDevice(newDevice))).toEqual(
+        expect(deviceReducer(previousState, addDevice(newDevice))).equal(
             {
                 deviceList: [{
                     _id: 'test1',
@@ -98,7 +98,7 @@ describe('Device reducer', () => {
             }]
         };
 
-        expect(deviceReducer(previousState, removeDevice('test1'))).toEqual(
+        expect(deviceReducer(previousState, removeDevice('test1'))).equal(
             {
                 deviceList: []
             }

@@ -1,7 +1,7 @@
 import Form from '@/app/ui/customers/editForm';
 // Can be re-used from Invoices:
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { getCustomer } from '@/app/lib/data';
+import { getCustomer } from '@/services/customers';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -26,4 +26,4 @@ export default async function Page({ params }: { params: { id: string } }) {
             <Form customer={customer} />
         </main>
     );
-}
+};

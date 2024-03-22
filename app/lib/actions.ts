@@ -1,27 +1,19 @@
 'use server';
-import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import {
-    postInvoice,
-    updateInvoice,
-    deleteInvoice,
-    postDevice,
-    updateDevice,
-    deleteDevice,
-    postCustomer,
-    updateCustomer,
-    deleteCustomer,
-} from './data';
-import { ObjectId } from 'mongodb';
 
-import { signIn } from '../auth';
-import { AuthError } from 'next-auth';
+import { z } from 'zod';
+import { redirect } from 'next/navigation';
+import { postInvoice, updateInvoice, deleteInvoice } from '@/services/invoices';
+import { postDevice, updateDevice, deleteDevice } from '@/services/devices';
+import { postCustomer, updateCustomer, deleteCustomer } from '@/services/customers';
+import { ObjectId } from 'mongodb';
 
 import { store } from '@/redux/store';
 import { addInvoice, editInvoice, removeInvoice } from '@/redux/features/invoiceSlice';
 import { addDevice, editDevice, removeDevice } from '@/redux/features/deviceSlice';
 import { addCustomer, editCustomer, removeCustomer } from '@/redux/features/customerSlice';
+
+import { signIn } from '../auth';
+import { AuthError } from 'next-auth';
 
 const DeviceFormSchema = z.object({
     id: z.string(),

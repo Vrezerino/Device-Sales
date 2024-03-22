@@ -4,7 +4,7 @@ import { DeleteCustomer, UpdateCustomer } from '@/app/ui/customers/buttons';
 import {
   FormattedCustomersTable as FormattedCustomersTableType
 } from '@/app/lib/definitions';
-import { fetchFilteredCustomers } from '@/app/lib/data';
+import { fetchFilteredCustomers } from '@/services/customers';
 import { formatCurrency } from '@/app/lib/utils';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -151,4 +151,4 @@ export default function CustomersTable({
       </div>
     </div>
   );
-}
+};

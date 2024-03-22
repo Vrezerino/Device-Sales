@@ -1,6 +1,6 @@
 import Form from '@/app/ui/devices/editForm';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { getDeviceById } from '@/app/lib/data';
+import { getDeviceById } from '@/services/devices';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -25,4 +25,4 @@ export default async function Page({ params }: { params: { id: string } }) {
             <Form device={device} />
         </main>
     );
-}
+};

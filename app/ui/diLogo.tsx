@@ -1,4 +1,4 @@
-import { GlobeAltIcon, TvIcon } from '@heroicons/react/24/outline';
+import { TvIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
 
 export default function DeviceLogo() {
@@ -12,4 +12,4 @@ export default function DeviceLogo() {
       </div>
     </div>
   );
-}
+};

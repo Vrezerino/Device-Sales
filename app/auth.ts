@@ -4,7 +4,7 @@ import { authConfig } from './auth.config';
 import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
-import { getUser } from './lib/data';
+import { getUser } from '@/services/users';
 
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,

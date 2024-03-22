@@ -76,7 +76,7 @@ export default function LoginForm() {
       </div>
     </form>
   );
-}
+};
 
 function LoginButton() {
   const { pending } = useFormStatus();
@@ -86,4 +86,4 @@ function LoginButton() {
       Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
     </Button>
   );
-}
+};

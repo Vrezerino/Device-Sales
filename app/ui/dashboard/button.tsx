@@ -1,4 +1,4 @@
-import { PowerIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid';
+import { PowerIcon } from '@heroicons/react/20/solid';
 
 const Button = () => {
     return (

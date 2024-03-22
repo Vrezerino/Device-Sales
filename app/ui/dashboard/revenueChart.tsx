@@ -2,14 +2,13 @@
 import { generateYAxis } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchRevenue } from '@/app/lib/data';
+import { fetchRevenue } from '@/services/revenue';
 import { Revenue } from '@/app/lib/definitions';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useEffect } from 'react';
 import { setRevenue } from '@/redux/features/revenueSlice';
-import { RevenueChartSkeleton } from '../skeletons';
 
 export default function RevenueChart() {
   const dispatch = useDispatch<AppDispatch>();
@@ -67,4 +66,4 @@ export default function RevenueChart() {
       </div>
     </div>
   );
-}
+};

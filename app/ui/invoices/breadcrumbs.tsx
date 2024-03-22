@@ -33,4 +33,4 @@ export default function Breadcrumbs({
       </ol>
     </nav>
   );
-}
+};

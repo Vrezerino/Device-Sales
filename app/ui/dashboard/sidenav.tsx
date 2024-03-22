@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/navLinks';
 import DeviceLogo from '@/app/ui/diLogo';
-import Button from './button';
 import '@/app/ui/dashboard/sidenav.css';
-import { signOut } from '../../auth';
+//import Button from './button';
+//import { signOut } from '../../auth';
 
 export default function SideNav() {
   return (
@@ -31,4 +31,4 @@ export default function SideNav() {
       </div>
     </div>
   );
-}
+};

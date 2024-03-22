@@ -1,4 +1,4 @@
-import { healthCheck } from "../lib/data";
+import { healthCheck } from '@/services/periodic';
 
 const HealthCheck = async () => {
     const response = await healthCheck();

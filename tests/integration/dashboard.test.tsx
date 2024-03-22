@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import CardWrapper from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenueChart';
 import { ReduxMockProvider } from '../setup';
-import { clearDb, initDb } from '@/app/lib/data';
+import { clearDb, initDb } from '@/services/testing';
 
 beforeAll(async () => {
     await initDb();

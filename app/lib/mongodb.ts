@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 if (!process.env.MONGODB_URI || !process.env.MONGODB_URI_DEV || !process.env.MONGODB_URI_TEST) {
   throw new Error('One or more database URI environment variables are missing!');
-}
+};
 
 let URI: string;
 let DB_NAME: string;
@@ -24,7 +24,7 @@ switch (process.env.NODE_ENV) {
     break;
   default:
     URI = process.env.MONGODB_URI_TEST;
-}
+};
 
 let client;
 let clientPromise: Promise<MongoClient>;
@@ -52,6 +52,6 @@ if (process.env.NODE_ENV === 'production') {
   clientPromise = client.connect();
   console.log('Connected to Device Sales (test)!');
 
-}
+};
 
 export { clientPromise, DB_NAME };
