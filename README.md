@@ -15,7 +15,7 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 Then, run these commands on your command-line interface.
 
 ```
-cd example_directory // For example cd C:\Users\Username\Documents\Projects
+cd example_directory # For example cd C:\Users\Username\Documents\Projects
 git clone https://github.com/Vrezerino/Device-Sales
 cd Device-Sales
 npm install

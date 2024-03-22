@@ -1,9 +1,10 @@
 import { deviceReducer } from '../setup';
 import { DeviceState, addDevice, removeDevice } from '@/redux/features/deviceSlice';
+import { expect } from 'vitest';
 
 describe('Device reducer', () => {
     it('should return initial state', () => {
-        expect(deviceReducer(undefined, { type: 'unknown' })).equal({
+        expect(deviceReducer(undefined, { type: 'unknown' })).toEqual({
             deviceList: []
         });
     });
@@ -23,7 +24,7 @@ describe('Device reducer', () => {
             deviceList: []
         };
 
-        expect(deviceReducer(previousState, addDevice(newDevice))).equal(
+        expect(deviceReducer(previousState, addDevice(newDevice))).toEqual(
             {
                 deviceList: [{
                     _id: 'test',
@@ -62,7 +63,7 @@ describe('Device reducer', () => {
             amount: 1
         };
 
-        expect(deviceReducer(previousState, addDevice(newDevice))).equal(
+        expect(deviceReducer(previousState, addDevice(newDevice))).toEqual(
             {
                 deviceList: [{
                     _id: 'test1',
@@ -98,7 +99,7 @@ describe('Device reducer', () => {
             }]
         };
 
-        expect(deviceReducer(previousState, removeDevice('test1'))).equal(
+        expect(deviceReducer(previousState, removeDevice('test1'))).toEqual(
             {
                 deviceList: []
             }
