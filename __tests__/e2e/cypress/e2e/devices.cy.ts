@@ -80,10 +80,6 @@ describe('Devices table', () => {
             .find('td:nth-child(5) button')
             .click();
 
-        cy.get('table')
-            .find('tr')
-            .last()
-            .find('td:nth-child(1)')
-            .contains('Cypress 1').should('not.exist');
+        cy.contains('Cypress 1').should('not.exist')
     });
 });

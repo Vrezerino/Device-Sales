@@ -77,6 +77,8 @@ describe('Invoices table', () => {
             .find('td:nth-child(6) button')
             .click();
 
+        cy.reload();
+
         cy.get('table')
             .find('tr')
             .last()
