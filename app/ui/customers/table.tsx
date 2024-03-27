@@ -48,7 +48,7 @@ export default function CustomersTable({
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
                             <Image
-                              src={customer.image_url || '/blankProfile.jpg'}
+                              src={customer.image_url.startsWith('https://') ? customer.image_url : '/blankProfile.jpg'}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}

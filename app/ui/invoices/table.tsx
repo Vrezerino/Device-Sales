@@ -49,7 +49,7 @@ export default function InvoicesTable({
                   <div>
                     <div className="mb-2 flex items-center">
                       <Image
-                        src={invoice.image_url || '/blankProfile.jpg'}
+                        src={invoice.image_url.startsWith('https://') ? invoice.image_url : '/blankProfile.jpg'}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}

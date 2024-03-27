@@ -41,7 +41,7 @@ export default function DevicesTable() {
                   <div>
                     <div className="mb-2 flex items-center">
                       <Image
-                        src={device.imageUrl || '/blankDevice.jpg'}
+                        src={device.imageUrl.startsWith('https://') ? device.imageUrl : '/blankDevice.jpg'}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
