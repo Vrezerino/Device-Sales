@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyInvoice } from '@/app/lib/actions';
+import { modifyInvoice } from '@/app/lib/actions/invoices';
 
 export default function EditInvoiceForm({
   invoice,

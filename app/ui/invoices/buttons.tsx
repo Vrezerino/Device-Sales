@@ -1,7 +1,7 @@
 'use client';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { destroyInvoice } from '@/app/lib/actions';
+import { destroyInvoice } from '@/app/lib/actions/invoices';
 import { InvoicesTable } from '@/app/lib/definitions';
 import { formatCurrency } from '@/app/lib/utils';
 

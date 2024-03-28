@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyDevice } from '@/app/lib/actions';
+import { modifyDevice } from '@/app/lib/actions/devices';
 
 export default function EditInvoiceForm({
     device
@@ -88,22 +88,20 @@ export default function EditInvoiceForm({
                     </div>
                 </div>
 
-                {/* Image URL */}
+                {/* Image */}
                 <div className="mb-4">
-                    <label htmlFor="imageUrl" className="mb-2 block text-sm font-medium">
-                        Image URL
+                    <label htmlFor="image" className="mb-2 block text-sm font-medium">
+                        Image (optional)
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="imageUrl"
-                                name="imageUrl"
-                                type="string"
+                                id="image"
+                                name="image"
+                                type="file"
                                 step="0.01"
-                                defaultValue={device.imageUrl}
-                                placeholder='Image URL'
+                                placeholder='Image (optional)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
-                                required
                             />
                             <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>

@@ -1,4 +1,4 @@
-import { destroyCustomer } from '@/app/lib/actions';
+import { destroyCustomer } from '@/app/lib/actions/customers';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 //import { destroyCustomer } from '@/app/lib/actions';

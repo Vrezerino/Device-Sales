@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-image: url('/bg2.jpg');
+  background-image: url('/img/bg2.jpg');
   color:bisque;
 }
 

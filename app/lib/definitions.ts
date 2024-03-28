@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId } from 'mongodb';
 
 
 export type User = {
@@ -8,11 +8,12 @@ export type User = {
   password: string;
 };
 
+// For new devices with possible image file blob
 export type Device = {
   deviceName: string;
   deviceManufacturer: string;
   deviceNumber: string;
-  imageUrl: string;
+  image: any;
   deviceDescription: string;
   amount: number
 }
@@ -21,6 +22,7 @@ export interface Devices {
   devices: Device[];
 }
 
+// Devices with urls pointing to the image files on the server (not database)
 export type DevicesTable = {
   _id: string;
   deviceName: string;
@@ -73,28 +75,19 @@ export type InvoicesTable = {
   status: 'pending' | 'paid';
 };
 
+// For new customers with possible image file blob
 export type Customer = {
   _id: ObjectId;
   name: string;
   email: string;
-  image_url: string;
+  image: any;
   company: string;
 };
 
-export type NewCustomer = Omit<Customer, '_id'>;
+export type CustomerNoId = Omit<Customer, '_id'>;
 
+// Customers with urls pointing to the image files on the server (not database)
 export type CustomersTableType = {
-  _id: string;
-  name: string;
-  email: string;
-  image_url: string;
-  company: string;
-  totalInvoices: number;
-  totalPending: number;
-  totalPaid: number;
-};
-
-export type FormattedCustomersTable = {
   _id: string;
   name: string;
   email: string;

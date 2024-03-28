@@ -49,7 +49,7 @@ export default function InvoicesTable({
                   <div>
                     <div className="mb-2 flex items-center">
                       <Image
-                        src={invoice.image_url.startsWith('https://') ? invoice.image_url : '/blankProfile.jpg'}
+                        src={invoice.image_url || '/img/customers/___blankProfile.jpg'}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
@@ -108,7 +108,7 @@ export default function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <Image
-                        src={invoice.image_url || '/blankProfile.jpg'}
+                        src={invoice.image_url || '/img/customers/___blankProfile.jpg'}
                         className="rounded-full"
                         width={28}
                         height={28}

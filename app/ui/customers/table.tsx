@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { DeleteCustomer, UpdateCustomer } from '@/app/ui/customers/buttons';
 import {
-  FormattedCustomersTable as FormattedCustomersTableType
+  CustomersTableType
 } from '@/app/lib/definitions';
 import { fetchFilteredCustomers } from '@/services/customers';
 import { formatCurrency } from '@/app/lib/utils';
@@ -18,7 +18,7 @@ export default function CustomersTable({
   query: string;
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  const customers: FormattedCustomersTableType[] = useSelector(
+  const customers: CustomersTableType[] = useSelector(
     (state: RootState) => state.customerReducer.customerWithInvoiceInfoList
   );
 
@@ -48,7 +48,7 @@ export default function CustomersTable({
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
                             <Image
-                              src={customer.image_url.startsWith('https://') ? customer.image_url : '/blankProfile.jpg'}
+                              src={customer.image_url || '/img/customers/___blankProfile.jpg'}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
@@ -111,7 +111,7 @@ export default function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
                           <Image
-                            src={customer.image_url || '/blankProfile.jpg'}
+                            src={customer.image_url || '/img/customers/___blankProfile.jpg'}
                             className="rounded-full"
                             alt={`${customer.name}'s profile picture`}
                             width={90}

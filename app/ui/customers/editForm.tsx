@@ -1,6 +1,6 @@
 'use client';
 
-import { Device, FormattedCustomersTable } from '@/app/lib/definitions';
+import { CustomersTableType } from '@/app/lib/definitions';
 import {
     AtSymbolIcon,
     IdentificationIcon,
@@ -9,12 +9,12 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyCustomer } from '@/app/lib/actions';
+import { modifyCustomer } from '@/app/lib/actions/customers';
 
 export default function EditInvoiceForm({
     customer
 }: {
-    customer: FormattedCustomersTable;
+    customer: CustomersTableType;
 }) {
     const updateCustomerWithId = modifyCustomer.bind(null, customer._id);
     return (
@@ -87,20 +87,19 @@ export default function EditInvoiceForm({
                     </div>
                 </div>
 
-                {/* Image URL */}
+                {/* Image */}
                 <div className="mb-4">
-                    <label htmlFor="imageUrl" className="mb-2 block text-sm font-medium">
-                        Profile Image URL
+                    <label htmlFor="image" className="mb-2 block text-sm font-medium">
+                        Profile Image (optional)
                     </label>
                     <div className="relative mt-2 rounded-md">
                         <div className="relative">
                             <input
-                                id="imageUrl"
-                                name="imageUrl"
-                                type="string"
+                                id="image"
+                                name="image"
+                                type="file"
                                 step="0.01"
-                                defaultValue={customer.image_url}
-                                placeholder='Profile Image URL'
+                                placeholder='Profile Image (optional)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                             />
                             <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
