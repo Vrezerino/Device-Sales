@@ -35,7 +35,7 @@ export default function EditInvoiceForm({
                                 type="string"
                                 step="0.01"
                                 defaultValue={device.deviceName}
-                                placeholder='Device Name'
+                                placeholder='Device Name (min 5, max 50 characters)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -57,7 +57,7 @@ export default function EditInvoiceForm({
                                 type="string"
                                 step="0.01"
                                 defaultValue={device.deviceManufacturer}
-                                placeholder='Manufacturer'
+                                placeholder='Manufacturer (min 1, max 50 characters)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -79,7 +79,7 @@ export default function EditInvoiceForm({
                                 type="string"
                                 step="0.01"
                                 defaultValue={device.deviceDescription}
-                                placeholder='Description'
+                                placeholder='Description (min 1, max 1000 characters)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -121,7 +121,7 @@ export default function EditInvoiceForm({
                                 type="number"
                                 step="0.01"
                                 defaultValue={device.amount}
-                                placeholder="Enter integer value"
+                                placeholder="Enter integer value (min 0)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />

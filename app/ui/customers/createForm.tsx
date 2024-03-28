@@ -24,7 +24,7 @@ export default function Form() {
                                 name="name"
                                 type="string"
                                 step="0.01"
-                                placeholder="Full Name"
+                                placeholder="Full Name (min 5, max 50 characters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -68,7 +68,7 @@ export default function Form() {
                                 name="company"
                                 type="string"
                                 step="0.01"
-                                placeholder="Company Name"
+                                placeholder="Company Name (min 1 character)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />

@@ -161,7 +161,7 @@ export const validateCustomer = (formData: FormData) => {
   }
 
   if (name.toString().length > 50) {
-    throw new Error('Device name must be under 50 characters.')
+    throw new Error('Customer name must be under 50 characters.')
   }
 
   const email = formData.get('email');
@@ -174,6 +174,10 @@ export const validateCustomer = (formData: FormData) => {
   const company = formData.get('company');
   if (!company || typeof company !== 'string' || company.toString().length < 1) {
     throw new Error('Customer company is required.')
+  }
+
+  if (company.toString().length > 50) {
+    throw new Error('Customer name must be under 50 characters.')
   }
 
   // Assign file to a key so we can unset it if needed

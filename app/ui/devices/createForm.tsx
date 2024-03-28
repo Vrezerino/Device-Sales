@@ -26,7 +26,7 @@ export default function Form() {
                                 name="deviceName"
                                 type="string"
                                 step="0.01"
-                                placeholder="Device Name"
+                                placeholder="Device Name (min 5, max 50 characters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -49,7 +49,7 @@ export default function Form() {
                                 name="deviceManufacturer"
                                 type="string"
                                 step="0.01"
-                                placeholder="Manufacturer"
+                                placeholder="Manufacturer (min 1, max 50 characters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -71,7 +71,7 @@ export default function Form() {
                                 name="deviceDescription"
                                 type="string"
                                 step="0.01"
-                                placeholder="Device Description"
+                                placeholder="Device Description (min 1, max 1000 characters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -92,7 +92,7 @@ export default function Form() {
                                 name="deviceNumber"
                                 type="string"
                                 step="0.01"
-                                placeholder="Device Number (can include letters)"
+                                placeholder="Device Number (min 1, max 50 characters)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -113,7 +113,7 @@ export default function Form() {
                                 name="amount"
                                 type="number"
                                 step="0.01"
-                                placeholder="Amount of device in store (integer)"
+                                placeholder="Amount of device in store (more than 0)"
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900  py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />

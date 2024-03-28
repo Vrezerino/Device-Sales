@@ -34,7 +34,7 @@ export default function EditInvoiceForm({
                                 type="string"
                                 step="0.01"
                                 defaultValue={customer.name}
-                                placeholder='Name'
+                                placeholder='Name (min 5, max 50 characters)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
@@ -78,7 +78,7 @@ export default function EditInvoiceForm({
                                 type="string"
                                 step="0.01"
                                 defaultValue={customer.company}
-                                placeholder='Company Name'
+                                placeholder='Company Name (min 1, max 50 characters)'
                                 className="peer block w-full rounded-md border border-neutral-200/30 bg-neutral-900 py-2 pl-10 text-sm outline-2 placeholder:text-neutral-500"
                                 required
                             />
