@@ -48,7 +48,7 @@ export default function CustomersTable({
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
                             <Image
-                              src={customer.image_url || '/img/customers/___blankProfile.jpg'}
+                              src={customer.imageUrl || '/img/customers/___blankProfile.jpg'}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
@@ -111,7 +111,7 @@ export default function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
                           <Image
-                            src={customer.image_url || '/img/customers/___blankProfile.jpg'}
+                            src={customer.imageUrl || '/img/customers/___blankProfile.jpg'}
                             className="rounded-full"
                             alt={`${customer.name}'s profile picture`}
                             width={90}

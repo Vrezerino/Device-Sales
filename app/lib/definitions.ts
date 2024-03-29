@@ -54,7 +54,7 @@ export type InvoiceForm = {
 export type LatestInvoice = {
   id: string;
   name: string;
-  image_url: string;
+  imageUrl: string;
   email: string;
   amountInCents: string;
 };
@@ -69,7 +69,7 @@ export type InvoicesTable = {
   customerId: string;
   name: string;
   email: string;
-  image_url: string;
+  imageUrl: string;
   date: string;
   amountInCents: number;
   status: 'pending' | 'paid';
@@ -91,7 +91,7 @@ export type CustomersTableType = {
   _id: string;
   name: string;
   email: string;
-  image_url: string;
+  imageUrl: string;
   company: string;
   totalInvoices: number;
   totalPending: number;

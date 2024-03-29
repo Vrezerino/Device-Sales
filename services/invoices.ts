@@ -1,7 +1,8 @@
 'use server';
 
 import { InvoiceForm, NewInvoice } from '@/app/lib/definitions';
-import { DB_NAME, clientPromise } from '@/app/lib/mongodb';
+import { clientPromise } from '@/app/lib/mongodb';
+import { MONGODB_NAME } from '@/app/lib/env';
 import { ObjectId } from 'mongodb';
 
 const ITEMS_PER_PAGE = 6;
@@ -13,7 +14,7 @@ export async function fetchFilteredInvoices(
   const queryString = query;
   try {
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     /*
       SELECT
@@ -95,7 +96,7 @@ export async function fetchFilteredInvoices(
 export async function fetchInvoicesPages(query: string) {
   try {
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     const count = await db.collection('invoices').aggregate([
       {
@@ -145,7 +146,7 @@ export async function fetchInvoiceById(id: string) {
   try {
     const _id = new ObjectId(id);
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     const invoice = await db.collection('invoices').findOne({ _id });
     return JSON.parse(JSON.stringify(invoice));
@@ -158,7 +159,7 @@ export async function fetchInvoiceById(id: string) {
 export const fetchLatestInvoices = async () => {
   try {
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     // JOIN Invoices and Customers.
     const invoices = await db.collection('invoices').aggregate([
@@ -207,7 +208,7 @@ export const fetchLatestInvoices = async () => {
 export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/) {
   try {
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     const result = await db.collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
     return result;
@@ -221,7 +222,7 @@ export async function updateInvoice(id: string, invoice: InvoiceForm) {
   try {
     const _id = new ObjectId(id);
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     const result = await db.collection('invoices').updateOne({ _id }, {
       $set: {
@@ -239,7 +240,7 @@ export async function deleteInvoice(id: string) {
   try {
     const _id = new ObjectId(id);
     const client = await clientPromise;
-    const db = client.db(DB_NAME);
+    const db = client.db(MONGODB_NAME);
 
     const result = await db.collection('invoices').deleteOne({ _id });
     return result;

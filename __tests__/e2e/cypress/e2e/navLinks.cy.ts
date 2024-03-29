@@ -23,18 +23,18 @@ describe('Navigation', () => {
       .eq(2)
       .click()
       .url()
-      .should('include', '/devices');
+      .should('include', '/customers');
 
     cy.get('a.flex')
       .eq(3)
       .click()
       .url()
-      .should('include', '/invoices');
+      .should('include', '/devices');
 
     cy.get('a.flex')
       .eq(4)
       .click()
       .url()
-      .should('include', '/customers');
+      .should('include', '/invoices');
   });
 });

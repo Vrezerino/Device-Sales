@@ -1,12 +1,13 @@
 'use server';
 
-import { DB_NAME, clientPromise } from '@/app/lib/mongodb';
+import { clientPromise } from '@/app/lib/mongodb';
+import { MONGODB_NAME } from '@/app/lib/env';
 import { formatCurrency } from '@/app/lib/utils';
 
 export const fetchCardData = async () => {
     try {
       const client = await clientPromise;
-      const db = client.db(DB_NAME);
+      const db = client.db(MONGODB_NAME);
   
       // SELECT COUNT(*) FROM x
       const invoiceCountPromise = db.collection('invoices').countDocuments();

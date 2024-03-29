@@ -1,12 +1,13 @@
 'use server';
 
-import { DB_NAME, clientPromise } from '@/app/lib/mongodb';
+import { clientPromise } from '@/app/lib/mongodb';
+import { MONGODB_NAME } from '@/app/lib/env';
 import { customers, devices, invoices, revenue, users } from '@/app/lib/placeholderData';
 
 export const initDb = async () => {
     try {
       const client = await clientPromise;
-      const db = client.db(DB_NAME);
+      const db = client.db(MONGODB_NAME);
   
       const res1 = db?.collection('users').insertMany(users);
       const res2 = db?.collection('customers').insertMany(customers);
@@ -26,7 +27,7 @@ export const initDb = async () => {
   export const clearDb = async () => {
     try {
       const client = await clientPromise;
-      const db = client.db(DB_NAME);
+      const db = client.db(MONGODB_NAME);
   
       const res1 = db?.collection('users').deleteMany({});
       const res2 = db?.collection('customers').deleteMany({});

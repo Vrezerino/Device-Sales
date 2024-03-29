@@ -1,18 +1,20 @@
-describe('Devices table', () => {
+describe('Customer table', () => {
     beforeEach(() => {
-        cy.visit('/dashboard/devices');
+        cy.visit('/dashboard/customers');
     });
 
     it('has the expected columns', () => {
         // Check table header cell contents
-        cy.get('th').eq(0).contains('Device Name');
-        cy.get('th').eq(1).contains('Manufacturer');
-        cy.get('th').eq(2).contains('Number');
-        cy.get('th').eq(3).contains('Amount');
+        cy.get('th').eq(0).contains('Name');
+        cy.get('th').eq(1).contains('Email');
+        cy.get('th').eq(2).contains('Company');
+        cy.get('th').eq(3).contains('Total Invoices');
+        cy.get('th').eq(4).contains('Total Pending');
+        cy.get('th').eq(5).contains('Total Paid');
     });
 
-    it('device can be added', () => {
-        // Find and "push" Create Device button
+    it('customer can be added', () => {
+        // Find and click Create Customer button
         const createBtn = cy.get('a.flex.h-10.items-center.rounded-lg.bg-amber-500');
         createBtn.should('have.attr', 'href')
             .and('include', 'create')
@@ -20,12 +22,10 @@ describe('Devices table', () => {
                 cy.visit(href)
             });
 
-        // Fill new device form
-        cy.get('input[name="deviceName"]').type('Zz Cypresser');
-        cy.get('input[name="deviceManufacturer"]').type('Cypress Manufacturing');
-        cy.get('input[name="deviceDescription"]').type('Cypress!');
-        cy.get('input[name="deviceNumber"]').type('123789');
-        cy.get('input[name="amount"]').type('1');
+        // Fill new customer form
+        cy.get('input[name="name"]').type('Zz Cypress Customer');
+        cy.get('input[name="email"]').type('cy@cy.com');
+        cy.get('input[name="company"]').type('Cypress');
         cy.get('input[type=file]').selectFile('__tests__/e2e/cypress/support/test.jpg')
         cy.get('form').submit();
 
@@ -34,7 +34,7 @@ describe('Devices table', () => {
             .find('tr')
             .last()
             .find('td:nth-child(1)')
-            .contains('Zz Cypresser');
+            .contains('Zz Cypress Customer');
 
         // Assert that image exists, i.e. filename is based on the device name
         cy.get('table')
@@ -43,42 +43,42 @@ describe('Devices table', () => {
             .find('td:nth-child(1)')
             .find('img')
             .should('have.attr', 'src')
-            .and('contain', 'Cypresser')
+            .and('contain', 'Zz_Cypress_Customer')
     });
 
     it('row has edit and delete buttons', () => {
         cy.get('table')
             .find('tr')
             .last()
-            .find('td:nth-child(5) a')
+            .find('td:nth-child(7) a')
             .should('have.attr', 'href')
             .and('include', 'edit');
 
         cy.get('table')
             .find('tr')
             .last()
-            .find('td:nth-child(5) button')
+            .find('td:nth-child(7) button')
             .should('have.text', 'Delete');
     });
 
-    it('device can be edited', () => {
-        // Find device edit btn from last row/device and click on it
+    it('customer can be edited', () => {
+        // Find customer edit btn from last row/customer and click on it
         cy.get('table')
             .find('tr')
             .last()
-            .find('td:nth-child(5) a')
+            .find('td:nth-child(7) a')
             .click();
 
-        // Rename device
-        cy.get('input[name="deviceName"]').clear().type('Cypreza');
+        // Rename customer
+        cy.get('input[name="name"]').clear().type('ZQZ Cypresserino');
         cy.get('form').submit();
 
-        // Check from the row that device name was edited successfully
+        // Check from the row that customer name was edited successfully
         cy.get('table')
             .find('tr')
             .last()
             .find('td:nth-child(1)')
-            .contains('Cypreza');
+            .contains('ZQZ Cypresserino');
 
         // We are not uploading a new image which should result in the current one being deleted
         cy.get('table')
@@ -87,16 +87,24 @@ describe('Devices table', () => {
             .find('td:nth-child(1)')
             .find('img')
             .should('have.attr', 'src')
-            .and('contain', 'blankDevice')
+            .and('contain', 'blankProfile')
     });
 
-    it('device can be deleted', () => {
+    it('customer can be deleted', () => {
+        /* 
+          Don't proceed to deleting last row if it's not the one we added before;
+          Throw error instead if the row is already missing by evaluating its non-existence
+        */
+        if (!(cy.contains('ZQZ Cypresserino').should('exist'))) {
+            throw new Error('Test row was not found, terminating...');
+        }
+
         cy.get('table')
             .find('tr')
             .last()
-            .find('td:nth-child(5) button')
+            .find('td:nth-child(7) button')
             .click();
 
-        cy.contains('Cypreza').should('not.exist')
+        cy.contains('ZQZ Cypresserino').should('not.exist')
     });
 });

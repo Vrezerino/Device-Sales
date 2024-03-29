@@ -6,7 +6,7 @@ import { deleteInvoice, postInvoice, updateInvoice } from '@/services/invoices';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-// Server-side actions and schema(s) for server-side validation.
+// Server-side actions and validations.
 
 const InvoiceFormSchema = z.object({
     id: z.string(),
@@ -31,7 +31,6 @@ export async function createInvoice(formData: FormData) {
     const invoice = { customerId, amountInCents, status, date };
     const response = await postInvoice(invoice);
     if (response?.acknowledged) {
-        // Use store directly to dispatch if db query successful; can't use useDispatch within server code
         store.dispatch(addInvoice(invoice));
         redirect('/dashboard/invoices');
     }
@@ -52,7 +51,6 @@ export async function modifyInvoice(id: string, formData: FormData) {
     const invoice = { _id: id, customerId, amount: amountInCents, status };
     const response = await updateInvoice(id, invoice);
     if (response?.acknowledged) {
-        // Use store directly to dispatch if db query successful
         store.dispatch(editInvoice(invoice));
         redirect('/dashboard/invoices');
     }
@@ -61,7 +59,6 @@ export async function modifyInvoice(id: string, formData: FormData) {
 export async function destroyInvoice(id: string) {
     const response = await deleteInvoice(id);
     if (response?.acknowledged) {
-        // Use store directly to dispatch if db query successful
         store.dispatch(removeInvoice(id));
         redirect('/dashboard/invoices');
     }

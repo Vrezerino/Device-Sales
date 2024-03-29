@@ -104,6 +104,7 @@ export default function EditInvoiceForm({
                             />
                             <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-neutral-500 peer-focus:text-neutral-900" />
                         </div>
+                        <span className="mb-2 block text-xs text-neutral-500 font-medium">If you leave the image field empty, existing image will be deleted.</span>
                     </div>
                 </div>
             </div>
