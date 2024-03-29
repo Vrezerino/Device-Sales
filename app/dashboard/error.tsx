@@ -16,7 +16,7 @@ export default function Error({
   return (
     <main className="flex h-full flex-col items-center justify-center">
       <h2 className="text-center text-red-500"><b>Oh noes!</b></h2>
-      <p>{error.message}</p>
+      <p>{error.message || 'An error has occurred'}</p>
       <button
         className="mt-4 rounded-md bg-amber-700 px-4 py-2 text-sm text-white transition-colors hover:bg-amber-600"
         onClick={

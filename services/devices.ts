@@ -1,18 +1,16 @@
 'use server';
 
 import { Device } from '@/app/lib/definitions';
-import { clientPromise } from '@/app/lib/mongodb';
+import { getMongoDb as db } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import s3 from '../aws.config';
-import { AWS_NAME, AWS_URL, imgDirDevices, MONGODB_NAME } from '@/app/lib/env';
+import { AWS_NAME, AWS_URL, imgDirDevices } from '@/app/lib/env';
 
 export const fetchDevices = async () => {
   try {
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
 
     // Return devices sorted by their names, descending
-    const devices = await db.collection('devices').find({}).sort({ deviceName: -1 }).toArray();
+    const devices = await (await db()).collection('devices').find({}).sort({ deviceName: -1 }).toArray();
     return JSON.parse(JSON.stringify(devices));
   } catch (e) {
     console.error(e);
@@ -23,10 +21,7 @@ export const fetchDevices = async () => {
 export async function getDeviceById(id: string) {
   try {
     const _id = new ObjectId(id);
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
-
-    const device = await db.collection('devices').findOne({ _id });
+    const device = await (await db()).collection('devices').findOne({ _id });
     return JSON.parse(JSON.stringify(device));
   } catch (e) {
     console.error(e);
@@ -79,15 +74,11 @@ export const postDevice = async (device: Device) => {
     const newDevice = { ...device, imageUrl: `${AWS_URL}${imgDirDevices}${filename}` };
     delete newDevice.image;
 
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
-
     // If insertion was successful, return newDevice to be saved in app state
-    const result = await db.collection('devices').insertOne(newDevice);
+    const result = await (await db()).collection('devices').insertOne(newDevice);
     if (result.acknowledged) return newDevice;
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to insert new device!');
+    throw new Error('Failed to insert new device!', { cause: e });
   }
 };
 
@@ -129,9 +120,8 @@ export async function updateDevice(id: string, device: Device) {
 
     // Modify device object in the database
     const _id = new ObjectId(id);
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
-    const result = await db.collection('devices').updateOne({ _id }, {
+
+    const result = await (await db()).collection('devices').updateOne({ _id }, {
       $set: {
         deviceName: device.deviceName,
         deviceManufacturer: device.deviceManufacturer,
@@ -150,12 +140,9 @@ export async function updateDevice(id: string, device: Device) {
 export async function deleteDevice(id: string) {
   try {
     const _id = new ObjectId(id);
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
 
     // Get device image filename for image deletion
-    const device = await db.collection('devices').findOne({ _id });
-    console.log('IMAGE URL:', device?.imageUrl);
+    const device = await (await db()).collection('devices').findOne({ _id });
 
     const params = {
       Bucket: AWS_NAME,
@@ -168,12 +155,11 @@ export async function deleteDevice(id: string) {
         throw new Error(err);
       } else {
         console.log('Image was deleted from S3 bucket.');
-        console.log(data);
       }
     }).promise();
 
     // Remove device from database
-    const result = await db.collection('devices').deleteOne({ _id });
+    const result = await (await db()).collection('devices').deleteOne({ _id });
     return result;
   } catch (e) {
     console.error(e);

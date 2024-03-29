@@ -1,33 +1,45 @@
-import { MongoClient } from 'mongodb';
-import { MONGO_URI } from './env'
+import { MongoClient, Db } from 'mongodb';
+import { MONGO_URI, MONGODB_NAME } from './env';
 
-let client;
-let clientPromise: Promise<MongoClient>;
-const options = {};
-
-if (process.env.NODE_ENV === 'production') {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(MONGO_URI, options);
-  clientPromise = client.connect();
-  console.log('Connected to Device Sales!');
-} else if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>;
-  };
-
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(MONGO_URI, options);
-    globalWithMongo._mongoClientPromise = client.connect();
-  }
-  clientPromise = globalWithMongo._mongoClientPromise;
-  console.log('Connected to Device Sales (dev)!');
-} else if (process.env.NODE_ENV === 'test') {
-  client = new MongoClient(MONGO_URI, options);
-  clientPromise = client.connect();
-  console.log('Connected to Device Sales (test)!');
-
+// Options for MongoClient connection
+const options = {
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 10000,
+  maxIdleTimeMS: 20000
 };
 
-export { clientPromise };
+// Declare MongoClient as global variable
+let globalWithMongo = global as typeof globalThis & {
+  _mongoClientPromise?: Promise<MongoClient>;
+};
+
+// Establish connection to db, assign client promise to globalWithMongo and return that
+const getMongoClient = async () => {
+  /**
+   * Global is used here to maintain a cached connection across hot reloads
+   * in development. This prevents connections growing exponentially
+   * during API Route usage.
+   * https://github.com/vercel/next.js/pull/17666
+   */
+  if (!globalWithMongo._mongoClientPromise) {
+    try {
+      const client: MongoClient = new MongoClient(MONGO_URI, options);
+
+      // client.connect() returns an instance of MongoClient when resolved
+      globalWithMongo._mongoClientPromise = client.connect();
+
+      // Print info to console on successful connection
+      console.log(`Connected to ${MONGODB_NAME} MongoDB Atlas database!`)
+    } catch (e) {
+      console.error(`Failed to connect to ${MONGODB_NAME} MongoDB database!`);
+    }
+  }
+  return globalWithMongo._mongoClientPromise;
+}
+
+// Export database to be used in all CRUD methods
+export const getMongoDb = async () => {
+  const mongoClient = await getMongoClient();
+  const db = mongoClient?.db(MONGODB_NAME);
+  return db as Db;
+}

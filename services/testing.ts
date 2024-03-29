@@ -1,19 +1,15 @@
 'use server';
 
-import { clientPromise } from '@/app/lib/mongodb';
-import { MONGODB_NAME } from '@/app/lib/env';
+import { getMongoDb as db } from '@/app/lib/mongodb';
 import { customers, devices, invoices, revenue, users } from '@/app/lib/placeholderData';
 
 export const initDb = async () => {
     try {
-      const client = await clientPromise;
-      const db = client.db(MONGODB_NAME);
-  
-      const res1 = db?.collection('users').insertMany(users);
-      const res2 = db?.collection('customers').insertMany(customers);
-      const res3 = db?.collection('invoices').insertMany(invoices);
-      const res4 = db?.collection('revenue').insertMany(revenue);
-      const res5 = db?.collection('devices').insertMany(devices);
+      const res1 = (await db())?.collection('users').insertMany(users);
+      const res2 = (await db())?.collection('customers').insertMany(customers);
+      const res3 = (await db())?.collection('invoices').insertMany(invoices);
+      const res4 = (await db())?.collection('revenue').insertMany(revenue);
+      const res5 = (await db())?.collection('devices').insertMany(devices);
   
       await Promise.all([ res1, res2, res3, res4, res5 ])
       console.log('Database initialized!')
@@ -26,14 +22,11 @@ export const initDb = async () => {
   
   export const clearDb = async () => {
     try {
-      const client = await clientPromise;
-      const db = client.db(MONGODB_NAME);
-  
-      const res1 = db?.collection('users').deleteMany({});
-      const res2 = db?.collection('customers').deleteMany({});
-      const res3 = db?.collection('invoices').deleteMany({});
-      const res4 = db?.collection('revenue').deleteMany({});
-      const res5 = db?.collection('devices').deleteMany({});
+      const res1 = (await db())?.collection('users').deleteMany({});
+      const res2 = (await db())?.collection('customers').deleteMany({});
+      const res3 = (await db())?.collection('invoices').deleteMany({});
+      const res4 = (await db())?.collection('revenue').deleteMany({});
+      const res5 = (await db())?.collection('devices').deleteMany({});
   
       await Promise.all([ res1, res2, res3, res4, res5 ])
       console.log('Database cleared!')

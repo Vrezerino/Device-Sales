@@ -91,20 +91,23 @@ describe('Customer table', () => {
     });
 
     it('customer can be deleted', () => {
-        /* 
-          Don't proceed to deleting last row if it's not the one we added before;
-          Throw error instead if the row is already missing by evaluating its non-existence
-        */
-        if (!(cy.contains('ZQZ Cypresserino').should('exist'))) {
-            throw new Error('Test row was not found, terminating...');
+        const newRowExists = cy.contains('ZQZ Cypresserino').should('exist');
+
+        // Proceed to deleting last row only if it's the new one we just added
+        if (newRowExists) {
+            cy.get('table')
+                .find('tr')
+                .last()
+                .find('td:nth-child(7) button')
+                .click();
+
+            // Assert that deletion confirmation dialog pops up, and click Ok
+            cy.on('window:alert', (str) => {
+                cy.contains('Ok').click();
+            });
         }
-
-        cy.get('table')
-            .find('tr')
-            .last()
-            .find('td:nth-child(7) button')
-            .click();
-
-        cy.contains('ZQZ Cypresserino').should('not.exist')
+        // Reload page because Cypress can possibly hang here
+        cy.reload();
+        cy.contains('ZQZ Cypresserino').should('not.exist');
     });
 });

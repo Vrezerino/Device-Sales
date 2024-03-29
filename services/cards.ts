@@ -1,20 +1,17 @@
 'use server';
 
-import { clientPromise } from '@/app/lib/mongodb';
+import { getMongoDb as db } from '@/app/lib/mongodb';
 import { MONGODB_NAME } from '@/app/lib/env';
 import { formatCurrency } from '@/app/lib/utils';
 
 export const fetchCardData = async () => {
     try {
-      const client = await clientPromise;
-      const db = client.db(MONGODB_NAME);
-  
       // SELECT COUNT(*) FROM x
-      const invoiceCountPromise = db.collection('invoices').countDocuments();
-      const customerCountPromise = db.collection('customers').countDocuments();
+      const invoiceCountPromise = (await db()).collection('invoices').countDocuments();
+      const customerCountPromise = (await db()).collection('customers').countDocuments();
   
       // SELECT status, SUM(amount) FROM invoices GROUP BY status ASC
-      const invoiceStatusPromise = db.collection('invoices').aggregate([
+      const invoiceStatusPromise = (await db()).collection('invoices').aggregate([
         {
           $group: {
             _id: '$status',

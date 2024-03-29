@@ -1,18 +1,16 @@
 'use server';
 
 import { CustomerNoId } from '@/app/lib/definitions';
-import { clientPromise } from '@/app/lib/mongodb';
+import { getMongoDb as db } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { AWS_NAME, AWS_URL, MONGODB_NAME, imgDirCustomers } from '@/app/lib/env';
 import s3 from '@/aws.config';
 
 export async function getCustomer(id: string) {
   try {
-    const _id = new ObjectId(id);
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
+    const _id = new ObjectId(id);;
 
-    const customer = await db.collection('customers').findOne({ _id });
+    const customer = await (await db()).collection('customers').findOne({ _id });
     return JSON.parse(JSON.stringify(customer));
   } catch (e) {
     console.error(e);
@@ -65,11 +63,8 @@ export async function postCustomer(customer: CustomerNoId) {
     const newCustomer = { ...customer, imageUrl: `${AWS_URL}${imgDirCustomers}${filename}` };
     delete newCustomer.image;
 
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
-
     // If insertion was successful, return newCustomer to be saved in app state
-    const result = await db.collection('customers').insertOne(newCustomer);
+    const result = await (await db()).collection('customers').insertOne(newCustomer);
     if (result.acknowledged) return newCustomer;
   } catch (e) {
     console.error(e);
@@ -115,10 +110,8 @@ export async function updateCustomer(id: string, customer: CustomerNoId) {
 
     // Modify customer in the database
     const _id = new ObjectId(id);
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
 
-    const result = await db.collection('customers').updateOne({ _id }, {
+    const result = await (await db()).collection('customers').updateOne({ _id }, {
       $set: {
         name: customer.name,
         email: customer.email,
@@ -136,11 +129,9 @@ export async function updateCustomer(id: string, customer: CustomerNoId) {
 export async function deleteCustomer(id: string) {
   try {
     const _id = new ObjectId(id);
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
 
     // Get customer image filename for image deletion
-    const customer = await db.collection('customers').findOne({ _id });
+    const customer = await (await db()).collection('customers').findOne({ _id });
 
     const params = {
       Bucket: AWS_NAME,
@@ -157,7 +148,7 @@ export async function deleteCustomer(id: string) {
     }).promise();
 
     // Remove customer from database
-    const result = await db.collection('customers').deleteOne({ _id });
+    const result = await (await db()).collection('customers').deleteOne({ _id });
     return result;
   } catch (e) {
     console.error(e);
@@ -167,11 +158,8 @@ export async function deleteCustomer(id: string) {
 
 export async function fetchCustomers() {
   try {
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
-
     // Return customers sorted by their names, ascending
-    const customers = await db.collection('customers').find({}).sort({ name: 1 }).toArray();
+    const customers = await (await db()).collection('customers').find({}).sort({ name: 1 }).toArray();
 
     return JSON.parse(JSON.stringify(customers));
   } catch (e) {
@@ -182,10 +170,7 @@ export async function fetchCustomers() {
 
 export async function fetchFilteredCustomers(query: string) {
   try {
-    const client = await clientPromise;
-    const db = client.db(MONGODB_NAME);
-
-    const data = await db.collection('customers').aggregate([
+    const data = await (await db()).collection('customers').aggregate([
       {
         $lookup: {
           from: 'invoices',
