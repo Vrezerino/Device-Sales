@@ -5,5 +5,5 @@ config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION,
 });
-const s3 = new S3();
+const s3 = new S3({ s3ForcePathStyle: true });
 export default s3;
