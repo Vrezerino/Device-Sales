@@ -4,8 +4,11 @@ on: push
 
 env:
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
   MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
+  MONGODB_NAME_DEV: ${{ secrets.MONGODB_NAME_DEV }}
   MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
+  MONGODB_NAME_TEST: ${{ secrets.MONGODB_NAME_TEST }}
   AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME}}
   AWS_BUCKET_URL: ${{ secrets.AWS_BUCKET_URL }}
   AWS_BUCKET_NAME_DEV: ${{ secrets.AWS_BUCKET_NAME_DEV }}
