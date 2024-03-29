@@ -27,24 +27,23 @@ describe('Invoices table', () => {
         cy.get('input[type="radio"]').first().check();
         cy.get('form').submit();
 
+        cy.visit('/dashboard/invoices');
         // Check that the last row/invoice is the one we just created
-        cy.get('table')
-            .find('tr')
+        cy.get('tr')
             .last()
             .find('td:nth-child(3)')
             .contains('$549,282');
     });
 
     it('row has edit and delete buttons', () => {
-        cy.get('table')
-            .find('tr')
+        cy.visit('/dashboard/invoices');
+        cy.get('tr')
             .last()
             .find('td:nth-child(6) a')
             .should('have.attr', 'href')
             .and('include', 'edit');
 
-        cy.get('table')
-            .find('tr')
+        cy.get('tr')
             .last()
             .find('td:nth-child(6) button')
             .should('have.text', 'Delete');
@@ -52,8 +51,7 @@ describe('Invoices table', () => {
 
     it('invoice can be edited', () => {
         // Find edit invoice btn from last row/invoice and click on it
-        cy.get('table')
-            .find('tr')
+        cy.get('tr')
             .last()
             .find('td:nth-child(6) a')
             .click();
@@ -62,25 +60,23 @@ describe('Invoices table', () => {
         cy.get('input[name="amount"]').clear().type('444008');
         cy.get('form').submit();
 
+        cy.visit('/dashboard/invoices');
         // Check that the amount was edited successfully
-        cy.get('table')
-            .find('tr')
+        cy.get('tr')
             .last()
             .find('td:nth-child(3)')
             .contains('$444,008');
     });
 
     it('invoice can be deleted', () => {
-        cy.get('table')
-            .find('tr')
+        cy.get('tr')
             .last()
             .find('td:nth-child(6) button')
             .click();
 
-        cy.reload();
+        cy.visit('/dashboard/invoices');
 
-        cy.get('table')
-            .find('tr')
+        cy.get('tr')
             .last()
             .find('td:nth-child(3)')
             .contains('$444,008').should('not.exist');
