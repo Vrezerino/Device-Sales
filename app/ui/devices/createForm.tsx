@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import {
     CheckIcon,
@@ -8,11 +10,20 @@ import {
     PhotoIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createDevice } from '@/app/lib/actions/devices';
+import { postDevice } from '@/services/devices';
+import { toast } from 'react-hot-toast';
 
 export default function Form() {
+    const POST = async (formData: FormData) => {
+        const result = await postDevice(formData);
+        if (result?.error) {
+            toast.error(result.error);
+        } else {
+            toast.success('Device added!');
+        }
+    };
     return (
-        <form action={createDevice}>
+        <form action={POST}>
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">
                 {/* Device Name */}
                 <div className="mb-4">

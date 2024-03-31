@@ -1,7 +1,9 @@
-import { destroyCustomer } from '@/app/lib/actions/customers';
+'use client';
+
+import { deleteCustomer } from '@/services/customers';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-//import { destroyCustomer } from '@/app/lib/actions';
+import { toast } from 'react-hot-toast';
 
 export function CreateCustomer() {
   return (
@@ -27,9 +29,16 @@ export function UpdateCustomer({ id }: { id: string }) {
 };
 
 export function DeleteCustomer({ id, name }: { id: string, name: string }) {
-  const deleteCustomerWithId = () => {
-    window.confirm(`Really delete ${name}?`) && destroyCustomer(id);
-  }
+  const deleteCustomerWithId = async () => {
+    if (window.confirm(`Really delete ${name}?`)) {
+      const result = await deleteCustomer(id);
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success('Customer removed!');
+      }
+    }
+  };
   return (
     <form action={deleteCustomerWithId}>
       <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">

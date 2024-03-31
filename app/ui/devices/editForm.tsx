@@ -1,4 +1,5 @@
 'use client';
+
 import { DevicesTable } from '@/app/lib/definitions';
 import {
     CheckIcon,
@@ -9,16 +10,24 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyDevice } from '@/app/lib/actions/devices';
+import { updateDevice } from '@/services/devices';
+import { toast } from 'react-hot-toast';
 
 export default function EditInvoiceForm({
     device
 }: {
     device: DevicesTable;
 }) {
-    const updateDeviceWithId = modifyDevice.bind(null, device._id);
+    const EDIT = async (formData: FormData) => {
+        const result = await updateDevice(device._id, formData);
+        if (result?.error) {
+            toast.error(result.error);
+        } else {
+            toast.success('Device edited!');
+        }
+    };
     return (
-        <form action={updateDeviceWithId}>
+        <form action={EDIT}>
             <input type="hidden" name="id" value={device._id} />
             <input type="hidden" name="deviceNumber" value={device.deviceNumber} />
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">

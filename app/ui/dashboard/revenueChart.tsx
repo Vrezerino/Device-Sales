@@ -1,31 +1,34 @@
 'use client';
+
 import { generateYAxis } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchRevenue } from '@/services/revenue';
-import { Revenue } from '@/app/lib/definitions';
+import { InvoicesTable as InvoicesTableType, Revenue } from '@/app/lib/definitions';
+import { calculateRevenue } from '../../lib/utils'
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
+import { fetchFilteredInvoices } from '@/services/invoices';
+import { setInvoices } from '@/redux/features/invoiceSlice';
 import { useEffect } from 'react';
-import { setRevenue } from '@/redux/features/revenueSlice';
 
 export default function RevenueChart() {
   const dispatch = useDispatch<AppDispatch>();
-  const revenue: Revenue[] = useSelector(
-    (state: RootState) => state.revenueReducer.revenueList
+  const invoices: InvoicesTableType[] = useSelector(
+    (state: RootState) => state.invoiceReducer.invoiceList
   );
 
-  const fetchAndSetRevenue = async () => {
-    const data = await fetchRevenue();
-    dispatch(setRevenue(data));
+  const fetchAndSetInvoices = async () => {
+    const data = await fetchFilteredInvoices('', 0);
+    dispatch(setInvoices(data));
   };
 
   useEffect(() => {
-    fetchAndSetRevenue();
+    fetchAndSetInvoices();
   }, []);
-  const chartHeight = 350;
 
+  const revenue: Revenue[] = calculateRevenue(invoices);
+  const chartHeight = 350;
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   return (
@@ -45,16 +48,16 @@ export default function RevenueChart() {
             ))}
           </div>
 
-          {revenue.map((month) => (
-            <div key={month.month} className="flex flex-col items-center gap-2">
+          {revenue.map((monthObj) => (
+            <div key={monthObj.month} className="flex flex-col items-center gap-2">
               <div
                 className="w-full rounded-md bg-amber-500"
                 style={{
-                  height: `${(chartHeight / topLabel) * month.revenue}px`,
+                  height: `${(chartHeight / topLabel) * monthObj.revenue}px`,
                 }}
               ></div>
               <p className="-rotate-90 text-sm text-neutral-400 sm:rotate-0">
-                {month.month}
+                {monthObj.month}
               </p>
             </div>
           ))}

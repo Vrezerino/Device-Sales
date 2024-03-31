@@ -9,16 +9,24 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyCustomer } from '@/app/lib/actions/customers';
+import { updateCustomer } from '@/services/customers';
+import { toast } from 'react-hot-toast';
 
 export default function EditInvoiceForm({
     customer
 }: {
     customer: CustomersTableType;
 }) {
-    const updateCustomerWithId = modifyCustomer.bind(null, customer._id);
+    const EDIT = async (formData: FormData) => {
+        const result = await updateCustomer(customer._id, formData);
+        if (result?.error) {
+            toast.error(result.error);
+        } else {
+            toast.success('Customer edited!');
+        }
+    };
     return (
-        <form action={updateCustomerWithId}>
+        <form action={EDIT}>
             <input type="hidden" name="_id" value={customer._id} />
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">
                 {/* Name */}

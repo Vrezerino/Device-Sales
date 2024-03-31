@@ -9,7 +9,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { modifyInvoice } from '@/app/lib/actions/invoices';
+import { updateInvoice } from '@/services/invoices';
+import toast from 'react-hot-toast';
 
 export default function EditInvoiceForm({
   invoice,
@@ -18,8 +19,16 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const EDIT = async (formData: FormData) => {
+    const result = await updateInvoice(invoice._id, formData);
+    if (result?.error) {
+        toast.error(result.error);
+    } else {
+        toast.success('Invoice edited!');
+    }
+};
   return (
-    <form action={modifyInvoice.bind(null, invoice._id)}>
+    <form action={EDIT}>
       <input type="hidden" name="id" value={invoice._id} />
       <div className="rounded-md bg-neutral-800 p-4 md:p-6">
         {/* Customer Name */}

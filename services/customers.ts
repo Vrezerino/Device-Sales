@@ -3,31 +3,49 @@
 import { CustomerNoId } from '@/app/lib/definitions';
 import { getMongoDb as db } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
-import { AWS_NAME, AWS_URL, MONGODB_NAME, imgDirCustomers } from '@/app/lib/env';
-import s3 from '@/aws.config';
 
-export async function getCustomer(id: string) {
+import { validateCustomer } from '@/app/lib/validations';
+import { extractErrorMessage } from '@/app/lib/utils';
+
+import s3 from '@/aws.config';
+import { Upload } from '@aws-sdk/lib-storage';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { AWS_NAME, AWS_URL, imgDirCustomers } from '@/app/lib/env';
+
+import { store } from '@/redux/store';
+import { addCustomer, editCustomer, removeCustomer } from '@/redux/features/customerSlice';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+export const getCustomer = async (id: string) => {
   try {
     const _id = new ObjectId(id);;
 
     const customer = await (await db()).collection('customers').findOne({ _id });
     return JSON.parse(JSON.stringify(customer));
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to get customer!');
+    return { error: extractErrorMessage(e) };
   }
 };
 
-export async function postCustomer(customer: CustomerNoId) {
+export const postCustomer = async (formData: FormData) => {
+  // Helper boolean variable to be used for page redirection upon successful database insertion
+  let success = false;
+
+  // Customer with no image file and with image url instead, for db and redux state
+  let newCustomer;
+
   try {
+    const customer: CustomerNoId = validateCustomer(formData);
+
     // File upload is optional so file could be null
     const file = customer.image || null;
 
-    /*
-      Create filename from customer name, replacing spaces with underscores,
-      add period, add file extension. If no file was uploaded, filename refers
-      to a fallback/generic profile image in the storage.
-    */
+    /**
+     * Create filename from customer name, replacing spaces with underscores,
+     * add period, add file extension. If no file was uploaded, filename refers
+     * to a fallback/generic profile image in the storage.
+     */
     const filename = file
       ? `${customer.name.replaceAll(' ', '_')}.${file.type.split('/')[1]}`
       : '___blankProfile.jpg';
@@ -45,43 +63,63 @@ export async function postCustomer(customer: CustomerNoId) {
         Body: buffer,
       };
 
-      await s3.upload(params, (err: any, data: any) => {
-        if (err) {
-          throw new Error(err);
-        } else {
-          console.log(data);
-        }
-      }).promise();
+      const upload = new Upload({
+        client: s3,
+        params
+      });
+
+      upload.on('httpUploadProgress', (_progress) => {
+        //
+      });
+
+      await upload.done();
     }
 
-    /*
-      Insert customer then into the database.
-      Customers do not get inserted into db with the file blob.
-      They'll contain a URL to the file instead and the file
-      itself is uploaded on Amazon storage.
-    */
-    const newCustomer = { ...customer, imageUrl: `${AWS_URL}${imgDirCustomers}${filename}` };
+    /**
+     * Insert customer then into the database.
+     * Customers do not get inserted into db with the file blob.
+     * They'll contain a URL to the file instead, the file
+     * itself was uploaded on the Amazon storage.
+     */
+    newCustomer = { ...customer, imageUrl: `${AWS_URL}${imgDirCustomers}${filename}` };
     delete newCustomer.image;
-
-    // If insertion was successful, return newCustomer to be saved in app state
     const result = await (await db()).collection('customers').insertOne(newCustomer);
-    if (result.acknowledged) return newCustomer;
+
+    // Ensure insertion was successful, throw error otherwise
+    success = result.acknowledged && result.insertedId !== null;
+    if (!success) throw new Error('Database error: insertion failed!')
+
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to create customer!');
+    return { error: extractErrorMessage(e) };
+  }
+
+  /**
+   * Finally, dispatch customer to store and redirect to customer list page.
+   * redirect() can't be used inside a try/catch block.
+   */
+  if (newCustomer && success) {
+    store.dispatch(addCustomer(newCustomer));
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
   }
 };
 
-export async function updateCustomer(id: string, customer: CustomerNoId) {
+export const updateCustomer = async (id: string, formData: FormData) => {
+  // Helper boolean variable to be used for page redirection upon successful database insertion
+  let success = false;
+  let customer: CustomerNoId;
+
   try {
+    customer = validateCustomer(formData);
+
     // File upload is optional so file could be null
     const file = customer.image || null;
 
-    /*
-      Create filename from customer name, replacing spaces with underscores,
-      add period, add file extension. If no file was uploaded, filename refers
-      to a fallback/generic profile image in the storage.
-    */
+    /**
+     * Create filename from customer name, replacing spaces with underscores,
+     * add period, add file extension. If no file was uploaded, filename refers
+     * to a fallback/generic profile image in the storage.
+     */
     const filename = file
       ? `${customer.name.replaceAll(' ', '_')}.${file.type.split('/')[1]}`
       : '___blankProfile.jpg';
@@ -99,13 +137,16 @@ export async function updateCustomer(id: string, customer: CustomerNoId) {
         Body: buffer,
       };
 
-      await s3.upload(params, (err: any, data: any) => {
-        if (err) {
-          throw new Error(err);
-        } else {
-          console.log(data);
-        }
-      }).promise();
+      const upload = new Upload({
+        client: s3,
+        params
+      });
+
+      upload.on('httpUploadProgress', (_progress) => {
+        //
+      });
+
+      await upload.done();
     }
 
     // Modify customer in the database
@@ -119,56 +160,75 @@ export async function updateCustomer(id: string, customer: CustomerNoId) {
         company: customer.company
       }
     });
-    return result;
+
+    // Ensure that modification was successful, throw error otherwise
+    success = result.acknowledged && result.matchedCount === 1 && result.modifiedCount === 1;
+    if (!success) throw new Error('Database error! Does the customer exist?');
+
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to update customer!');
+    return { error: extractErrorMessage(e) };
+  }
+  // Finally, update customer in store
+  if (success && customer) {
+    store.dispatch(editCustomer(customer));
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
   }
 };
 
-export async function deleteCustomer(id: string) {
+export const deleteCustomer = async (id: string) => {
+  let success = false;
   try {
     const _id = new ObjectId(id);
 
     // Get customer image filename for image deletion
     const customer = await (await db()).collection('customers').findOne({ _id });
 
-    const params = {
-      Bucket: AWS_NAME,
-      Key: customer?.imageUrl
-    };
+    // Remove profile image only if it's not the fallback/default image
+    if (customer?.imageUrl.substring(67) !== '___blankProfile.jpg') {
+      const params = {
+        Bucket: AWS_NAME,
+        /**
+         * The domain part is not needed when deleting file from S3 storage, only
+         * directory/filename: img/customer/filename.jpeg
+         */
+        Key: customer?.imageUrl?.substring(53)
+      };
 
-    // Remove image from Amazon storage
-    await s3.deleteObject(params, (err: any) => {
-      if (err) {
-        throw new Error(err);
-      } else {
-        console.log('Image was deleted from S3 bucket.');
-      }
-    }).promise();
+      // Remove image from Amazon storage
+      const command = new DeleteObjectCommand(params);
+      await s3.send(command);
+    }
 
-    // Remove customer from database
+    // Delete from db, ensure deletion was successful, throw error otherwise
     const result = await (await db()).collection('customers').deleteOne({ _id });
-    return result;
+    success = result.acknowledged && result.deletedCount === 1;
+    if (!success) throw new Error('Database error! Does the customer exist?');
+
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to delete customer!');
+    return { error: extractErrorMessage(e) };
+  }
+
+  // Dispatch customer deletion to store and redirect to customer list page
+  if (success) {
+    store.dispatch(removeCustomer(id));
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
   }
 };
 
-export async function fetchCustomers() {
+export const fetchCustomers = async () => {
   try {
     // Return customers sorted by their names, ascending
     const customers = await (await db()).collection('customers').find({}).sort({ name: 1 }).toArray();
 
     return JSON.parse(JSON.stringify(customers));
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch customers!');
+    return { error: extractErrorMessage(e) };
   }
 };
 
-export async function fetchFilteredCustomers(query: string) {
+export const fetchFilteredCustomers = async (query: string) => {
   try {
     const data = await (await db()).collection('customers').aggregate([
       {
@@ -234,7 +294,6 @@ export async function fetchFilteredCustomers(query: string) {
 
     return JSON.parse(JSON.stringify(data));
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch customer table!');
+    return { error: extractErrorMessage(e) };
   }
 };

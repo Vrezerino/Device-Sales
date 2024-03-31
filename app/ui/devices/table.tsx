@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { UpdateDevice, DeleteDevice } from '@/app/ui/devices/buttons';
 import { fetchDevices } from '@/services/devices';
@@ -10,6 +11,8 @@ import { setDevices } from '@/redux/features/deviceSlice';
 import { useEffect } from 'react';
 import { DevicesTableSkeleton } from '../skeletons';
 
+import { toast } from 'react-hot-toast';
+
 export default function DevicesTable() {
   const dispatch = useDispatch<AppDispatch>();
   const devices: DevicesTableType[] = useSelector(
@@ -18,7 +21,11 @@ export default function DevicesTable() {
 
   const fetchAndSetDevices = async () => {
     const data = await fetchDevices();
-    dispatch(setDevices(data));
+    if (data.error) {
+      toast.error('Failed to fetch devices!');
+    } else {
+      dispatch(setDevices(data));
+    }
   };
 
   useEffect(() => {

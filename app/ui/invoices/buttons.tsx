@@ -1,9 +1,12 @@
 'use client';
+
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { destroyInvoice } from '@/app/lib/actions/invoices';
-import { InvoicesTable } from '@/app/lib/definitions';
 import { formatCurrency } from '@/app/lib/utils';
+import { toast } from 'react-hot-toast';
+
+import { InvoicesTable } from '@/app/lib/definitions';
+import { deleteInvoice } from '@/services/invoices';
 
 export function CreateInvoice() {
   return (
@@ -28,9 +31,18 @@ export function UpdateInvoice({ id }: { id: string }) {
 };
 
 export function DeleteInvoice({ invoice }: { invoice: InvoicesTable }) {
-  const deleteInvoiceWithId = () => {
+  const deleteInvoiceWithId = async () => {
     const amount = formatCurrency(invoice.amountInCents);
-    window.confirm(`Really delete ${invoice.name}, ${invoice.date}, ${amount}?`) && destroyInvoice(invoice._id);
+
+    if (window.confirm(`Really delete ${invoice.name}, ${invoice.date}, ${amount}?`)) {
+      const result = await deleteInvoice(invoice._id);
+
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success('Invoice removed!');
+      }
+    }
   }
   return (
     <form action={deleteInvoiceWithId}>

@@ -13,7 +13,7 @@ export type Device = {
   deviceName: string;
   deviceManufacturer: string;
   deviceNumber: string;
-  image: any;
+  image: File | undefined | null;
   deviceDescription: string;
   amount: number
 }
@@ -66,7 +66,6 @@ export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
 
 export type InvoicesTable = {
   _id: string;
-  customerId: string;
   name: string;
   email: string;
   imageUrl: string;
@@ -80,13 +79,13 @@ export type Customer = {
   _id: ObjectId;
   name: string;
   email: string;
-  image: any;
+  image: File | null | undefined;
   company: string;
 };
 
 export type CustomerNoId = Omit<Customer, '_id'>;
 
-// Customers with urls pointing to the image files on the server (not database)
+// Customers with urls pointing to the image files in file storage
 export type CustomersTableType = {
   _id: string;
   name: string;
@@ -109,5 +108,16 @@ export type ConnectionStatus = {
 
 export type Revenue = {
   month: string;
+  year: number,
   revenue: number;
+};
+
+/**
+ * We do not need this, nor a notification reducer since we're using
+ * React Hot Toast for notifs, but let's leave the type here anyway
+ */
+export type Notification = {
+  id: string,
+  message: string;
+  type: 'error' | 'success'
 };

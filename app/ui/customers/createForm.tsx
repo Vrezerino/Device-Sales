@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import {
     AtSymbolIcon,
@@ -6,11 +8,20 @@ import {
     BriefcaseIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createCustomer } from '@/app/lib/actions/customers';
+import { postCustomer } from '@/services/customers';
+import { toast } from 'react-hot-toast';
 
 export default function Form() {
+    const POST = async (formData: FormData) => {
+        const result = await postCustomer(formData);
+        if (result?.error) {
+            toast.error(result.error);
+        } else {
+            toast.success('Customer added!');
+        }
+    };
     return (
-        <form action={createCustomer}>
+        <form action={POST}>
             <div className="rounded-md bg-neutral-800 p-4 md:p-6">
                 {/* Name */}
                 <div className="mb-4">

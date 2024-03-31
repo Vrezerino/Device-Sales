@@ -1,14 +1,20 @@
 'use server';
 
-import { InvoiceForm, NewInvoice } from '@/app/lib/definitions';
-import { getMongoDb as db } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
+import { NewInvoice, UpdatingInvoice } from '@/app/lib/definitions';
+import { validateInvoice } from '@/app/lib/validations';
+import { getMongoDb as db } from '@/app/lib/mongodb';
+import { extractErrorMessage } from '@/app/lib/utils';
+
+import { addInvoice, editInvoice, removeInvoice } from '@/redux/features/invoiceSlice';
+import { store } from '@/redux/store';
+import { redirect } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(
+export const fetchFilteredInvoices = async (
   query: string,
   currentPage: number,
-) {
+) => {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   const queryString = query;
   try {
@@ -33,7 +39,7 @@ export async function fetchFilteredInvoices(
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    Pagination disabled for now.
+    Pagination disabled for now
     */
 
     const invoices = await (await db()).collection('invoices').aggregate([
@@ -46,9 +52,11 @@ export async function fetchFilteredInvoices(
         }
       },
       {
-        $replaceRoot: { // Replaces the input document with the specified document.
+        // Replaces the input document with the specified document
+        $replaceRoot: {
           newRoot: {
-            $mergeObjects: [ // Merge joined documents into a single document.
+            // Merge joined documents into a single document
+            $mergeObjects: [
               {
                 $arrayElemAt: ['$filteredInvoices', 0]
               }, '$$ROOT'
@@ -75,8 +83,8 @@ export async function fetchFilteredInvoices(
         }
       },
       {
-        $unset: [ // Drop fields from result set we don't need.
-          //'_id',
+        // Drop fields from result set we don't need
+        $unset: [
           'customerId',
           'company'
         ]
@@ -84,12 +92,11 @@ export async function fetchFilteredInvoices(
     ]).toArray();
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch invoices!');
+    return { error: extractErrorMessage(e) };
   }
 };
 
-export async function fetchInvoicesPages(query: string) {
+export const fetchInvoicesPages = async (query: string) => {
   try {
     const count = (await db()).collection('invoices').aggregate([
       {
@@ -101,9 +108,11 @@ export async function fetchInvoicesPages(query: string) {
         }
       },
       {
-        $replaceRoot: { // Replaces the input document with the specified document.
+        // Replaces the input document with the specified document
+        $replaceRoot: {
           newRoot: {
-            $mergeObjects: [ // Merge joined documents into a single document.
+            // Merge joined documents into a single document
+            $mergeObjects: [
               {
                 $arrayElemAt: ['$invoiceCount', 0]
               }, '$$ROOT'
@@ -130,20 +139,18 @@ export async function fetchInvoicesPages(query: string) {
     const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch total number of invoices!');
+    return { error: extractErrorMessage(e) };
   }
 };
 
-export async function fetchInvoiceById(id: string) {
+export const fetchInvoiceById = async (id: string) => {
   try {
     const _id = new ObjectId(id);
 
     const invoice = await (await db()).collection('invoices').findOne({ _id });
     return JSON.parse(JSON.stringify(invoice));
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch invoice!');
+    return { error: extractErrorMessage(e) };
   }
 };
 
@@ -160,9 +167,11 @@ export const fetchLatestInvoices = async () => {
         }
       },
       {
-        $replaceRoot: { // Replaces the input document with the specified document.
+        // Replaces the input document with the specified document
+        $replaceRoot: {
           newRoot: {
-            $mergeObjects: [ // Merge joined documents into a single document.
+            // Merge joined documents into a single document
+            $mergeObjects: [
               {
                 $arrayElemAt: ['$latestInvoices', 0]
               }, '$$ROOT'
@@ -176,55 +185,99 @@ export const fetchLatestInvoices = async () => {
         }
       },
       {
-        $unset: [ // Drop fields from result set we don't need.
-          //'_id',
+        // Drop fields from result set we don't need
+        $unset: [
           'customerId',
           'department',
           'status',
 
         ]
       }
-    ]).sort({ date: -1 }).limit(5).toArray(); // Sort by date, descending and limit to five results.
+      // Sort by date, descending and limit to five results
+    ]).sort({ date: -1 }).limit(5).toArray();
 
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to fetch latest invoices!');
+    return { error: extractErrorMessage(e) };
   }
 };
 
-export async function postInvoice(invoice: NewInvoice, /*res: NextApiResponse*/) {
+export const postInvoice = async (formData: FormData) => {
+  let success = false;
+  let invoice;
+
   try {
-    const result = await (await db()).collection('invoices').insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
-    return result;
+    invoice = validateInvoice(formData) as NewInvoice;
+
+    // Insert new invoice to database
+    const result = await (await db())
+      .collection('invoices')
+      .insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
+
+    // Ensure insertion was successful, throw error otherwise
+    success = result.acknowledged && result.insertedId !== null;
+    if (!success) throw new Error('Database error: insertion failed!')
+
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to insert new invoice!');
+    return { error: extractErrorMessage(e) };
+  }
+
+  /**
+   * Dispatch device to store and redirect to device list page.
+   * redirect() can't be used inside a try/catch block.
+   */
+  if (success) {
+    store.dispatch(addInvoice(invoice));
+    redirect('/dashboard/invoices');
   }
 };
 
-export async function updateInvoice(id: string, invoice: InvoiceForm) {
+export const updateInvoice = async (id: string, formData: FormData) => {
+  let success = false;
+  let invoice;
+
   try {
+    invoice = validateInvoice(formData) as UpdatingInvoice;
     const _id = new ObjectId(id);
+
+    // Update invoice in database
     const result = await (await db()).collection('invoices').updateOne({ _id }, {
       $set: {
-        amountInCents: invoice.amount, status: invoice.status
+        amountInCents: invoice.amountInCents, status: invoice.status
       }
     });
-    return result;
+
+    // Ensure update was successful, throw error otherwise
+    success = result.acknowledged && result.modifiedCount === 1 && result.matchedCount === 1;
+    if (!success) throw new Error('Database error! Does the invoice exist?');
+
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to update invoice!');
+    return { error: extractErrorMessage(e) };
+  }
+
+  // Dispatch invoice modification to store and redirect
+  if (success) {
+    store.dispatch(editInvoice(invoice));
+    redirect('/dashboard/invoices');
   }
 };
 
-export async function deleteInvoice(id: string) {
+export const deleteInvoice = async (id: string) => {
+  let success = false;
   try {
     const _id = new ObjectId(id);
+
+    // Delete from db, ensure deletion was successful, throw error otherwise
     const result = await (await db()).collection('invoices').deleteOne({ _id });
-    return result;
+    success = result.acknowledged && result.deletedCount === 1;
+    if (!success) throw new Error('Database error! Does the invoice exist?');
+
   } catch (e) {
-    console.error(e);
-    throw new Error('Failed to delete invoice!');
+    return { error: extractErrorMessage(e) };
+  }
+  // Dispatch invoice deletion to store and redirect
+  if (success) {
+    store.dispatch(removeInvoice(id));
+    redirect('/dashboard/invoices');
   }
 };

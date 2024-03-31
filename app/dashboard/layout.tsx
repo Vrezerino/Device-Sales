@@ -1,4 +1,5 @@
 import SideNav from '@/app/ui/dashboard/sidenav';
+import { Toaster } from 'react-hot-toast';
  
 export const dynamic = 'force-dynamic'; // Due to Vercel
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -8,6 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <SideNav />
       </div>
       <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+      <Toaster position='top-right' />
     </div>
   );
 };

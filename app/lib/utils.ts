@@ -1,6 +1,12 @@
 require('dotenv').config();
-import { Revenue } from './definitions';
 
+import { Revenue, InvoicesTable as InvoicesTableType } from './definitions';
+
+/**
+ * Return US dollar amount from a sum of cents as a formatted string.
+ * @param amount 
+ * @returns string
+ */
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',
@@ -69,8 +75,10 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
-// A function utilizing this array will get the order number from each month's index in the array
-export const monthOrder = [
+/**
+ * An array that holds month names of the year and their order in the form of array indices (indexes)
+ */
+export const monthNames = [
   'Jan',
   'Feb',
   'Mar',
@@ -84,3 +92,89 @@ export const monthOrder = [
   'Nov',
   'Dec'
 ];
+
+/**
+ * @param {InvoicesTableType[]} invoices An array of invoices
+ * @returns An array of month objects that holds revenue from the last 12 months
+ */
+export const calculateRevenue = (invoices: InvoicesTableType[]) => {
+
+  /**
+   * getMonth() returns an index of the month of a given date, which is
+   * convenient, because we have a monthNames list in the file and can use
+   * it with getMonth().
+   */
+  const date = new Date();
+  const currentMonth = date.getMonth();
+  const currentYear = date.getFullYear();
+
+  let revenue: Revenue[] = [];
+
+  /**
+   * Let's fill the revenue list with 12 objects that each hold a month name,
+   * that month's revenue, and the year.
+   */
+  for (let a = 11, b = 0; a >= 0; a--, b++) {
+    /**
+     * Index of the month at each step. If current month is April (index no. 3) and we're looking 
+     * six months back, we get the right index (9) with ((3 - 6) + 12) % 12, because that modular
+     * operation always returns a positive remainder. We'll use this number to get the correct month
+     * name from month name list later.
+    */
+    let monthIndex = ((currentMonth - b) + 12) % 12;
+
+    /**
+     * Twelth (index no. 11) element in the revenue list will hold an object that holds current month,
+     * year and revenue, eleventh (index 10) element will hold last month's revenue, and so on.
+     */
+    revenue[a] = {
+
+      // Get month name with month index
+      month: monthNames[monthIndex],
+
+      /**
+       * If current month's number is more than or equal to the amount of months we're looking 
+       * into the past (let b), year is current year. Otherwise year is past year, i.e. one less than
+       * the current year.
+       */
+      year: currentMonth >= b ? currentYear : currentYear - 1,
+      revenue: 0
+    }
+
+    invoices.forEach(
+      (inv) => {
+        const invoiceDate = new Date(inv.date);
+        const invoiceMonth = invoiceDate.getMonth();
+        const amount = inv.amountInCents / 100;
+        const status = inv.status;
+
+        if (invoiceMonth === monthIndex && status === 'paid') {
+          revenue[a].revenue += amount;
+        }
+      }
+    );
+  }
+
+  return revenue;
+}
+
+/**
+ * Check the shape of any error object and return error message string.
+ * @param {unknown} error 
+ * @returns Error message string
+ */
+export const extractErrorMessage = (error: unknown): string => {
+  let message: string;
+
+  if (error instanceof Error) {
+    message = error.message;
+  } else if (error && typeof error === 'object' && 'message' in error) {
+    message = String(error.message);
+  } else if (typeof error === 'string') {
+    message = error;
+  } else {
+    message = 'Something went wrong!'
+  }
+
+  return message;
+}

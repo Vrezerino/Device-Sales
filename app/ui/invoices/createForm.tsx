@@ -1,3 +1,5 @@
+'use client';
+
 import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
@@ -7,11 +9,20 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createInvoice } from '@/app/lib/actions/invoices';
+import { postInvoice } from '@/services/invoices';
+import { toast } from 'react-hot-toast';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
+  const POST = async (formData: FormData) => {
+    const result = await postInvoice(formData);
+    if (result?.error) {
+        toast.error(result.error);
+    } else {
+        toast.success('Invoice added!');
+    }
+};
   return (
-    <form action={createInvoice}>
+    <form action={POST}>
       <div className="rounded-md bg-neutral-800 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">

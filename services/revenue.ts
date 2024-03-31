@@ -2,8 +2,7 @@
 
 import { Revenue } from '@/app/lib/definitions';
 import { getMongoDb as db } from '@/app/lib/mongodb';
-import { MONGODB_NAME } from '@/app/lib/env';
-import { monthOrder } from '@/app/lib/utils';
+import { extractErrorMessage, monthNames } from '@/app/lib/utils';
 
 export const fetchRevenue = async () => {
     try {
@@ -11,12 +10,11 @@ export const fetchRevenue = async () => {
       const parsedAndStringifiedRevenue: Revenue[] = JSON.parse(JSON.stringify(revenue));
   
       const revebueSortedByMonth = parsedAndStringifiedRevenue.sort((a, b) => {
-        return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
+        return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
       });
   
       return revebueSortedByMonth;
     } catch (e) {
-      console.error(e);
-      throw new Error('Failed to fetch customer revenue!');
+      return { error: extractErrorMessage(e) };
     }
   };
