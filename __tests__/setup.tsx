@@ -1,28 +1,53 @@
-import { DevicesTable, Revenue } from '@/app/lib/definitions';
+import { DevicesTable, InvoicesTable as InvoicesTableType } from '@/app/lib/definitions';
 import { DeviceState } from '@/redux/features/deviceSlice';
-import { RevenueState } from '@/redux/features/revenueSlice';
+import { InvoiceState } from '@/redux/features/invoiceSlice';
 import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { vi } from 'vitest';
 
 // Define mock Redux store.
-const preloadedRevenueState: RevenueState = {
-    revenueList: [
-        { month: 'Jan', revenue: 3200 },
-        { month: 'Feb', revenue: 4000 }
-    ]
+const preloadedInvoiceState: InvoiceState = {
+    invoiceList: [
+        {
+            _id: '66088d7f9f9de096ed429a63',
+            name: 'Delba de Oliveira',
+            email: 'delba@oliveira.com',
+            imageUrl: 'https://device-sales-dev.s3.eu-north-1.amazonaws.com/img/customers/delba-de-oliveira.png',
+            amountInCents: 123650,
+            date: '2024-03-30',
+            status: 'paid'
+          },
+          {
+            _id: '66088fe29f9de096ed429a69',
+            name: 'Patrick Park',
+            email: 'abc@gmail.com',
+            imageUrl: 'https://device-sales-dev.s3.eu-north-1.amazonaws.com/img/customers/patrick-park.png',
+            amountInCents: 600000,
+            date: '2024-02-5',
+            status: 'paid'
+          }
+    ],
 };
 
 const preloadedDeviceState: DeviceState = {
     deviceList: []
 };
 
-export const revenueSlice = createSlice({
-    name: 'revenue',
-    initialState: preloadedRevenueState,
+export const invoiceSlice = createSlice({
+    name: 'invoices',
+    initialState: preloadedInvoiceState,
     reducers: {
-        setRevenue: (state, action: PayloadAction<Revenue[]>) => {
-            state.revenueList = action.payload;
+        setInvoices: (state, action: PayloadAction<InvoicesTableType[]>) => {
+            state.invoiceList = action.payload;
+        },
+        addInvoice: (state, action) => {
+            state.invoiceList.push(action.payload);
+        },
+        editInvoice: (state, action) => {
+            state.invoiceList = state.invoiceList.map((invoice) => invoice._id === action.payload._id ? action.payload : invoice);
+        },
+        removeInvoice: (state, action) => {
+            state.invoiceList = state.invoiceList.filter((invoice) => invoice._id !== action.payload);
         }
     },
 });
@@ -43,20 +68,20 @@ export const deviceSlice = createSlice({
     },
 });
 
-export const revenueReducer = revenueSlice.reducer;
+export const invoiceReducer = invoiceSlice.reducer;
 export const deviceReducer = deviceSlice.reducer;
 
 export const mockStore = configureStore({
     reducer: {
-        revenueReducer,
+        invoiceReducer,
         deviceReducer
     },
 });
 
-/*
-Setup file needs to have a .tsx file extension so that Provider
-doesn't merely refer to its type.
-*/
+/**
+ * Setup file needs to have a .tsx file extension so that Provider
+ * doesn't merely refer to its type.
+ */
 export const ReduxMockProvider = ({ children }: { children: React.ReactNode }) => (
     <Provider store={mockStore}>{children}</Provider>
 );

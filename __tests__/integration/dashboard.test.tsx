@@ -25,7 +25,7 @@ describe('Dashboard', () => {
 
     it('revenue chart exists and data is fetched', () => {
         render(<ReduxMockProvider><RevenueChart /></ReduxMockProvider>);
-        expect(screen.getByText('$4K')).toBeTruthy();
+        expect(screen.getByText('$6K')).toBeTruthy();
     });
 });
 
