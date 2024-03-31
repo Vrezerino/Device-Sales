@@ -14,14 +14,15 @@ import { useEffect } from 'react';
 
 export default function RevenueChart() {
   const dispatch = useDispatch<AppDispatch>();
-  const invoices: InvoicesTableType[] = useSelector(
-    (state: RootState) => state.invoiceReducer.invoiceList
-  );
 
   const fetchAndSetInvoices = async () => {
     const data = await fetchFilteredInvoices('', 0);
     dispatch(setInvoices(data));
   };
+
+  const invoices: InvoicesTableType[] = useSelector(
+    (state: RootState) => state.invoiceReducer.invoiceList
+  );
 
   useEffect(() => {
     fetchAndSetInvoices();

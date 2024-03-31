@@ -21,14 +21,16 @@ export default function InvoicesTable({
   currentPage: number;
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  const invoices: InvoicesTableType[] = useSelector(
-    (state: RootState) => state.invoiceReducer.invoiceList
-  );
 
   const fetchAndSetInvoices = async () => {
     const data = await fetchFilteredInvoices(query, currentPage);
+    if (data.error) console.log(data.error);
     dispatch(setInvoices(data));
   };
+
+  const invoices: InvoicesTableType[] = useSelector(
+    (state: RootState) => state.invoiceReducer.invoiceList
+  );
 
   useEffect(() => {
     fetchAndSetInvoices();
