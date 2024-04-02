@@ -106,7 +106,7 @@ export const postDevice = async (formData: FormData) => {
    */
   if (success && newDevice) {
     store.dispatch(addDevice(newDevice));
-    revalidatePath('/dashboard/devicess');
+    revalidatePath('/dashboard/devices');
     redirect('/dashboard/devices');
   }
 };
@@ -179,7 +179,7 @@ export const updateDevice = async (id: string, formData: FormData) => {
   // Finally, dispatch edited device to store
   if (success && device) {
     store.dispatch(editDevice(device));
-    revalidatePath('/dashboard/devicess');
+    revalidatePath('/dashboard/devices');
     redirect('/dashboard/devices');
   }
 };
@@ -199,7 +199,7 @@ export const deleteDevice = async (id: string) => {
       const params = {
         Bucket: AWS_NAME,
         /**
-          The domain part is not needed when deleting file from S3 storage, only
+         * The domain part is not needed when deleting file from S3 storage, only
          * directory/filename: img/devices/filename.jpeg
          */
         Key: device?.imageUrl?.substring(53)
