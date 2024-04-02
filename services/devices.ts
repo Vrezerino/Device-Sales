@@ -222,6 +222,7 @@ export const deleteDevice = async (id: string) => {
   // Dispatch device deletion to store and redirect to device list page
   if (success) {
     store.dispatch(removeDevice(id));
+    revalidatePath('/dashboard/devices');
     redirect('/dashboard/devices');
   }
 };
