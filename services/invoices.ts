@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 import { NewInvoice, UpdatingInvoice } from '@/app/lib/definitions';
 import { validateInvoice } from '@/app/lib/validations';
 import { getMongoDb as db } from '@/app/lib/mongodb';
-import { extractErrorMessage } from '@/app/lib/utils';
+import { errorWithStatusCode } from '@/app/lib/utils';
 
 import { addInvoice, editInvoice, removeInvoice } from '@/redux/features/invoiceSlice';
 import { store } from '@/redux/store';
@@ -90,9 +90,11 @@ export const fetchFilteredInvoices = async (
         ]
       }
     ]).toArray();
+
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -139,7 +141,8 @@ export const fetchInvoicesPages = async (query: string) => {
     const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -148,9 +151,15 @@ export const fetchInvoiceById = async (id: string) => {
     const _id = new ObjectId(id);
 
     const invoice = await (await db()).collection('invoices').findOne({ _id });
-    return JSON.parse(JSON.stringify(invoice));
+
+    if (invoice) {
+      return JSON.parse(JSON.stringify(invoice));
+    } else {
+      throw errorWithStatusCode('Invoice not found.', 404);
+    }
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -198,7 +207,8 @@ export const fetchLatestInvoices = async () => {
 
     return JSON.parse(JSON.stringify(invoices));
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -212,14 +222,15 @@ export const postInvoice = async (formData: FormData) => {
     // Insert new invoice to database
     const result = await (await db())
       .collection('invoices')
-      .insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) });
+      .insertOne({ ...invoice, customerId: new ObjectId(invoice.customerId) }).catch((reason) => reason);
 
     // Ensure insertion was successful, throw error otherwise
     success = result.acknowledged && result.insertedId !== null;
-    if (!success) throw new Error('Database error: insertion failed!')
+    if (!success) throw new Error('Database error: insertion failed!');
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   /**
@@ -249,10 +260,11 @@ export const updateInvoice = async (id: string, formData: FormData) => {
 
     // Ensure update was successful, throw error otherwise
     success = result.acknowledged && result.modifiedCount === 1 && result.matchedCount === 1;
-    if (!success) throw new Error('Database error! Does the invoice exist?');
+    if (!success) throw errorWithStatusCode('Update failed, invoice not found!', 404);
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   // Dispatch invoice modification to store and redirect
@@ -270,10 +282,11 @@ export const deleteInvoice = async (id: string) => {
     // Delete from db, ensure deletion was successful, throw error otherwise
     const result = await (await db()).collection('invoices').deleteOne({ _id });
     success = result.acknowledged && result.deletedCount === 1;
-    if (!success) throw new Error('Database error! Does the invoice exist?');
+    if (!success) throw errorWithStatusCode('Update failed, invoice not found!', 404);
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
   // Dispatch invoice deletion to store and redirect
   if (success) {

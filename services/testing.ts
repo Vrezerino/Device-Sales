@@ -2,7 +2,7 @@
 
 import { getMongoDb as db } from '@/app/lib/mongodb';
 import { customers, devices, invoices, revenue, users } from '@/app/lib/placeholderData';
-import { extractErrorMessage } from '@/app/lib/utils';
+import { errorWithStatusCode } from '@/app/lib/utils';
 
 export const initDb = async () => {
   try {
@@ -16,7 +16,8 @@ export const initDb = async () => {
     console.log('Database initialized!')
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -31,6 +32,7 @@ export const clearDb = async () => {
     await Promise.all([res1, res2, res3, res4, res5])
     console.log('Database cleared!')
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };

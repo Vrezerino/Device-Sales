@@ -5,7 +5,7 @@ import { getMongoDb as db } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
 import { validateCustomer } from '@/app/lib/validations';
-import { extractErrorMessage } from '@/app/lib/utils';
+import { errorWithStatusCode } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -22,9 +22,16 @@ export const getCustomer = async (id: string) => {
     const _id = new ObjectId(id);;
 
     const customer = await (await db()).collection('customers').findOne({ _id });
-    return JSON.parse(JSON.stringify(customer));
+
+    if (customer) {
+      return JSON.parse(JSON.stringify(customer));
+    } else {
+      throw errorWithStatusCode(`Customer doesn't exist!`, 404);
+    }
+
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -90,7 +97,8 @@ export const postCustomer = async (formData: FormData) => {
     if (!success) throw new Error('Database error: insertion failed!')
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   /**
@@ -163,10 +171,11 @@ export const updateCustomer = async (id: string, formData: FormData) => {
 
     // Ensure that modification was successful, throw error otherwise
     success = result.acknowledged && result.matchedCount === 1 && result.modifiedCount === 1;
-    if (!success) throw new Error('Database error! Does the customer exist?');
+    if (!success) throw errorWithStatusCode(`Customer doesn't exist!`, 404);
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
   // Finally, update customer in store
   if (success && customer) {
@@ -203,10 +212,11 @@ export const deleteCustomer = async (id: string) => {
     // Delete from db, ensure deletion was successful, throw error otherwise
     const result = await (await db()).collection('customers').deleteOne({ _id });
     success = result.acknowledged && result.deletedCount === 1;
-    if (!success) throw new Error('Database error! Does the customer exist?');
+    if (!success) throw errorWithStatusCode(`Customer doesn't exist!`, 404);
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   // Dispatch customer deletion to store and redirect to customer list page
@@ -224,7 +234,8 @@ export const fetchCustomers = async () => {
 
     return JSON.parse(JSON.stringify(customers));
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -294,6 +305,7 @@ export const fetchFilteredCustomers = async (query: string) => {
 
     return JSON.parse(JSON.stringify(data));
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };

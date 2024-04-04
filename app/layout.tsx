@@ -12,11 +12,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://device-sales.vercel.app'),
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) => {
   return (
     <html lang="en">
       <head>
@@ -28,3 +28,5 @@ export default function RootLayout({
     </html>
   );
 };
+
+export default RootLayout;

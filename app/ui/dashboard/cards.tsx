@@ -15,7 +15,7 @@ const iconMap = {
   invoices: InboxIcon,
 };
 
-export default async function CardWrapper() {
+const CardWrapper = async () => {
   const data = await fetchCardData();
   data?.error && toast.error('Failed to fetch card data!');
   
@@ -37,7 +37,7 @@ export default async function CardWrapper() {
   );
 };
 
-export function Card({
+export const Card = ({
   title,
   value,
   type,
@@ -45,7 +45,7 @@ export function Card({
   title: string;
   value: number | string;
   type: 'invoices' | 'customers' | 'pending' | 'collected';
-}) {
+}) => {
   const Icon = iconMap[type];
 
   return (
@@ -63,3 +63,5 @@ export function Card({
     </div>
   );
 };
+
+export default CardWrapper;

@@ -10,13 +10,13 @@ export const metadata: Metadata = {
     title: 'Customers',
 };
 
-export default async function Page({
+const Page = async ({
     searchParams,
 }: {
     searchParams?: {
         query?: string;
     };
-}) {
+}) => {
     const query = searchParams?.query || '';
     const rand = Math.floor(Math.random() * 100);
 
@@ -35,3 +35,5 @@ export default async function Page({
         </div>
     );
 };
+
+export default Page;

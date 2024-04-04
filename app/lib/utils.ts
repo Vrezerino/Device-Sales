@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-import { Revenue, InvoicesTable as InvoicesTableType } from './definitions';
+import { Revenue, InvoicesTable as InvoicesTableType, ErrorWithStatusCode } from './definitions';
 
 /**
  * Return US dollar amount from a sum of cents as a formatted string.
@@ -159,22 +159,40 @@ export const calculateRevenue = (invoices: InvoicesTableType[]) => {
 }
 
 /**
- * Check the shape of any error object and return error message string.
- * @param {unknown} error 
- * @returns Error message string
+ * Check the shape of any error object and return error object with error message and
+ * given HTTP status code.
+ * @param {unknown} errorObject 
+ * @returns error object with message and HTTP status code
  */
-export const extractErrorMessage = (error: unknown): string => {
-  let message: string;
+export const errorWithStatusCode = (errorObject: unknown, code: number): ErrorWithStatusCode => {
+  let error: string;
+  let statusCode: number;
 
-  if (error instanceof Error) {
-    message = error.message;
-  } else if (error && typeof error === 'object' && 'message' in error) {
-    message = String(error.message);
-  } else if (typeof error === 'string') {
-    message = error;
+  if (errorObject instanceof Error) {
+    error = errorObject.message;
+  } else if (errorObject && typeof errorObject === 'object' && 'message' in errorObject) {
+    error = String(errorObject.message);
+  } else if (typeof errorObject === 'string') {
+    error = errorObject;
   } else {
-    message = 'Something went wrong!'
+    error = 'Something went wrong!'
   }
 
-  return message;
+  /**
+   * If error is already ErrorWithStatusCode, for example if you're throwing an error with 404
+   * and you're returning it while catching it, statusCode is error's statusCode,
+   * otherwise if for example error is an instance of Error that lacks status code property,
+   * statusCode is code parameter's provided argument.
+   */
+  if (isErrorWithStatusCodeType(errorObject)) {
+    statusCode = errorObject.statusCode;
+  } else {
+    statusCode = code;
+  }
+
+  return { error, statusCode };
+}
+
+export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
+  return x.code !== undefined;
 }

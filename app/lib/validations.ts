@@ -1,5 +1,4 @@
-import { ObjectId } from "mongodb";
-import { CustomerNoId, Device, NewInvoice, UpdatingInvoice } from "./definitions";
+import { CustomerNoId, Device, NewInvoice, UpdatingInvoice } from './definitions';
 
 export const MAX_FILE_SIZE = 1000000;
 export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];

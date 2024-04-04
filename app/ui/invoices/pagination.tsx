@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-export default function Pagination({ totalPages }: { totalPages: number }) {
+const Pagination = ({ totalPages }: { totalPages: number }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
@@ -20,14 +20,14 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
   return (
     <>
-      <div className="inline-flex">
+      <div className='inline-flex'>
         <PaginationArrow
-          direction="left"
+          direction='left'
           href={createPageURL(currentPage - 1)}
           isDisabled={currentPage <= 1}
         />
 
-        <div className="flex -space-x-px">
+        <div className='flex -space-x-px'>
           {allPages?.map((page, index) => {
             let position: 'first' | 'last' | 'single' | 'middle' | undefined;
 
@@ -49,7 +49,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
         </div>
 
         <PaginationArrow
-          direction="right"
+          direction='right'
           href={createPageURL(currentPage + 1)}
           isDisabled={currentPage >= totalPages}
         />
@@ -58,7 +58,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   );
 };
 
-function PaginationNumber({
+const PaginationNumber = ({
   page,
   href,
   isActive,
@@ -68,7 +68,7 @@ function PaginationNumber({
   href: string;
   position?: 'first' | 'last' | 'middle' | 'single';
   isActive: boolean;
-}) {
+}) => {
   const className = clsx(
     'flex h-10 w-10 items-center justify-center text-sm border',
     {
@@ -89,7 +89,7 @@ function PaginationNumber({
   );
 };
 
-function PaginationArrow({
+const PaginationArrow = ({
   href,
   direction,
   isDisabled,
@@ -97,7 +97,7 @@ function PaginationArrow({
   href: string;
   direction: 'left' | 'right';
   isDisabled?: boolean;
-}) {
+}) => {
   const className = clsx(
     'flex h-10 w-10 items-center justify-center rounded-md border',
     {
@@ -110,9 +110,9 @@ function PaginationArrow({
 
   const icon =
     direction === 'left' ? (
-      <ArrowLeftIcon className="w-4" />
+      <ArrowLeftIcon className='w-4' />
     ) : (
-      <ArrowRightIcon className="w-4" />
+      <ArrowRightIcon className='w-4' />
     );
 
   return isDisabled ? (
@@ -123,3 +123,5 @@ function PaginationArrow({
     </Link>
   );
 };
+
+export default Pagination;

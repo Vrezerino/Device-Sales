@@ -1,8 +1,8 @@
 import Form from '@/app/ui/invoices/createForm';
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/breadcrumbs';
 import { fetchCustomers } from '@/services/customers';
  
-export default async function Page() {
+const Page = async () => {
   const customers = await fetchCustomers();
  
   return (
@@ -21,3 +21,5 @@ export default async function Page() {
     </main>
   );
 };
+
+export default Page;

@@ -2,23 +2,33 @@
 
 import { User } from '@/app/lib/definitions';
 import { getMongoDb as db } from '@/app/lib/mongodb';
-import { extractErrorMessage } from '@/app/lib/utils';
+import { errorWithStatusCode } from '@/app/lib/utils';
 
 export const getUser = async (email: string) => {
   try {
-
     const user = await (await db()).collection('users').findOne({ email });
-    return JSON.parse(JSON.stringify(user));
+
+    if (user) {
+      return JSON.parse(JSON.stringify(user));
+    } else {
+      throw errorWithStatusCode('User not found!', 404);
+    }
+
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
 export const createUser = async (user: User) => {
   try {
-    await (await db()).collection('users').insertOne(user);
-    //return res.status(201).send('Created');
+    const result = await (await db()).collection('users').insertOne(user);
+    if (result.acknowledged && result.insertedId !== null) {
+      return result.insertedId;
+    }
+
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };

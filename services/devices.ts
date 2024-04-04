@@ -1,11 +1,12 @@
 'use server';
 
+import { NextResponse } from 'next/server';
 import { Device } from '@/app/lib/definitions';
 import { getMongoDb as db } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
 import { validateDevice } from '@/app/lib/validations';
-import { extractErrorMessage } from '@/app/lib/utils';
+import { errorWithStatusCode } from '@/app/lib/utils';
 
 import s3 from '../aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -18,12 +19,15 @@ import { revalidatePath } from 'next/cache';
 import { addDevice, editDevice, removeDevice } from '@/redux/features/deviceSlice';
 
 export const fetchDevices = async () => {
+  console.log('yeah');
   try {
     // Return devices sorted by their names, descending
     const devices = await (await db()).collection('devices').find({}).sort({ deviceName: -1 }).toArray();
     return JSON.parse(JSON.stringify(devices));
+
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -31,9 +35,15 @@ export const getDeviceById = async (id: string) => {
   try {
     const _id = new ObjectId(id);
     const device = await (await db()).collection('devices').findOne({ _id });
-    return JSON.parse(JSON.stringify(device));
+
+    if (device) {
+      return JSON.parse(JSON.stringify(device));
+    } else {
+      throw errorWithStatusCode(`Device doesn't exist!`, 404);
+    }
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 };
 
@@ -97,7 +107,8 @@ export const postDevice = async (formData: FormData) => {
     if (!success) throw new Error('Database error: insertion failed!')
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   /**
@@ -170,10 +181,11 @@ export const updateDevice = async (id: string, formData: FormData) => {
 
     // Ensure that modification was successful, throw error otherwise
     success = result.acknowledged && result.matchedCount === 1 && result.modifiedCount === 1;
-    if (!success) throw new Error('Database error! Does the device exist?');
+    if (!success) throw errorWithStatusCode(`Device doesn't exist!`, 404);
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   // Finally, dispatch edited device to store
@@ -213,10 +225,11 @@ export const deleteDevice = async (id: string) => {
     // Delete from db, ensure deletion was successful, throw error otherwise
     const result = await (await db()).collection('devices').deleteOne({ _id });
     success = result.acknowledged && result.deletedCount === 1;
-    if (!success) throw new Error('Database error! Does the device exist?');
+    if (!success) throw errorWithStatusCode(`Device doesn't exist!`, 404);
 
   } catch (e) {
-    return { error: extractErrorMessage(e) };
+    console.error(e);
+    return errorWithStatusCode(e, 500);
   }
 
   // Dispatch device deletion to store and redirect to device list page

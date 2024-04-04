@@ -9,15 +9,15 @@ export const metadata: Metadata = {
     title: 'Devices',
 };
 
-export default function Page() {
+const Page = () => {
     const rand = Math.floor(Math.random() * 100);
 
     return (
-        <div className="w-full">
-            <div className="flex w-full items-center justify-between">
+        <div className='w-full'>
+            <div className='flex w-full items-center justify-between'>
                 <h1 className={`${lusitana.className} text-2xl`}>Devices</h1>
             </div>
-            <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+            <div className='mt-4 flex items-center justify-between gap-2 md:mt-8'>
                 <CreateDevice />
             </div>
             <Suspense key={rand} fallback={<DevicesTableSkeleton />}>
@@ -26,3 +26,5 @@ export default function Page() {
         </div>
     );
 };
+
+export default Page;

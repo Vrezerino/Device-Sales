@@ -2,23 +2,23 @@
 const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
-export function CardSkeleton() {
+export const CardSkeleton = () => {
   return (
     <div
       className={`${shimmer} relative overflow-hidden rounded-xl bg-neutral-800 p-2 shadow-sm`}
     >
-      <div className="flex p-4">
-        <div className="h-5 w-5 rounded-md bg-neutral-800" />
-        <div className="ml-2 h-6 w-16 rounded-md bg-neutral-700 text-sm font-medium" />
+      <div className='flex p-4'>
+        <div className='h-5 w-5 rounded-md bg-neutral-800' />
+        <div className='ml-2 h-6 w-16 rounded-md bg-neutral-700 text-sm font-medium' />
       </div>
-      <div className="flex items-center justify-center truncate rounded-xl bg-neutral-800 px-4 py-8">
-        <div className="h-7 w-20 rounded-md bg-neutral-900" />
+      <div className='flex items-center justify-center truncate rounded-xl bg-neutral-800 px-4 py-8'>
+        <div className='h-7 w-20 rounded-md bg-neutral-900' />
       </div>
     </div>
   );
-}
+};
 
-export function CardsSkeleton() {
+export const CardsSkeleton = () => {
   return (
     <>
       <CardSkeleton />
@@ -27,148 +27,148 @@ export function CardsSkeleton() {
       <CardSkeleton />
     </>
   );
-}
+};
 
-export function RevenueChartSkeleton() {
+export const RevenueChartSkeleton = () => {
   return (
     <div className={`${shimmer} relative w-full overflow-hidden md:col-span-4`}>
-      <div className="mb-4 h-8 w-36 rounded-md bg-neutral-800" />
-      <div className="rounded-xl bg-neutral-800 p-4">
-        <div className="mt-0 grid h-[410px] grid-cols-12 items-end gap-2 rounded-md bg-neutral-800 p-4 sm:grid-cols-13 md:gap-4" />
-        <div className="flex items-center pb-2 pt-6">
-          <div className="h-5 w-5 rounded-full bg-neutral-900" />
-          <div className="ml-2 h-4 w-20 rounded-md bg-neutral-900" />
+      <div className='mb-4 h-8 w-36 rounded-md bg-neutral-800' />
+      <div className='rounded-xl bg-neutral-800 p-4'>
+        <div className='mt-0 grid h-[410px] grid-cols-12 items-end gap-2 rounded-md bg-neutral-800 p-4 sm:grid-cols-13 md:gap-4' />
+        <div className='flex items-center pb-2 pt-6'>
+          <div className='h-5 w-5 rounded-full bg-neutral-900' />
+          <div className='ml-2 h-4 w-20 rounded-md bg-neutral-900' />
         </div>
       </div>
     </div>
   );
-}
+};
 
-export function InvoiceSkeleton() {
+export const InvoiceSkeleton = () => {
   return (
-    <div className="flex flex-row items-center justify-between border-b border-gray-100 py-4">
-      <div className="flex items-center">
-        <div className="mr-2 h-8 w-8 rounded-full bg-neutral-800" />
-        <div className="min-w-0">
-          <div className="h-5 w-40 rounded-md bg-neutral-700" />
-          <div className="mt-2 h-4 w-12 rounded-md bg-neutral-700" />
+    <div className='flex flex-row items-center justify-between border-b border-gray-100 py-4'>
+      <div className='flex items-center'>
+        <div className='mr-2 h-8 w-8 rounded-full bg-neutral-800' />
+        <div className='min-w-0'>
+          <div className='h-5 w-40 rounded-md bg-neutral-700' />
+          <div className='mt-2 h-4 w-12 rounded-md bg-neutral-700' />
         </div>
       </div>
-      <div className="mt-2 h-4 w-12 rounded-md bg-neutral-900" />
+      <div className='mt-2 h-4 w-12 rounded-md bg-neutral-900' />
     </div>
   );
-}
+};
 
-export function LatestInvoicesSkeleton() {
+export const LatestInvoicesSkeleton = () => {
   return (
     <div
       className={`${shimmer} relative flex w-full flex-col overflow-hidden md:col-span-4`}
     >
-      <div className="mb-4 h-8 w-36 rounded-md bg-neutral-800" />
-      <div className="flex grow flex-col justify-between rounded-xl bg-neutral-900 p-4">
-        <div className="bg-neutral-800 px-6">
+      <div className='mb-4 h-8 w-36 rounded-md bg-neutral-800' />
+      <div className='flex grow flex-col justify-between rounded-xl bg-neutral-900 p-4'>
+        <div className='bg-neutral-800 px-6'>
           <InvoiceSkeleton />
           <InvoiceSkeleton />
           <InvoiceSkeleton />
           <InvoiceSkeleton />
           <InvoiceSkeleton />
-          <div className="flex items-center pb-2 pt-6">
-            <div className="h-5 w-5 rounded-full bg-neutral-900" />
-            <div className="ml-2 h-4 w-20 rounded-md bg-neutral-900" />
+          <div className='flex items-center pb-2 pt-6'>
+            <div className='h-5 w-5 rounded-full bg-neutral-900' />
+            <div className='ml-2 h-4 w-20 rounded-md bg-neutral-900' />
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default function DashboardSkeleton() {
+export const DashboardSkeleton = () => {
   return (
     <>
       <div
         className={`${shimmer} relative mb-4 h-8 w-36 overflow-hidden rounded-md bg-neutral-800`}
       />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
         <CardSkeleton />
         <CardSkeleton />
         <CardSkeleton />
         <CardSkeleton />
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+      <div className='mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8'>
         <RevenueChartSkeleton />
         <LatestInvoicesSkeleton />
       </div>
     </>
   );
-}
+};
 
-export function TableRowSkeleton() {
+export const TableRowSkeleton = () => {
   return (
-    <tr className="w-full border-b bg-neutral-800 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+    <tr className='w-full border-b bg-neutral-800 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg'>
       {/* Customer Name and Image */}
-      <td className="relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-neutral-900"></div>
-          <div className="h-6 w-24 rounded bg-neutral-900"></div>
+      <td className='relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3'>
+        <div className='flex items-center gap-3'>
+          <div className='h-8 w-8 rounded-full bg-neutral-900'></div>
+          <div className='h-6 w-24 rounded bg-neutral-900'></div>
         </div>
       </td>
       {/* Email */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-32 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-32 rounded bg-neutral-900'></div>
       </td>
       {/* Amount */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Date */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Status */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Actions */}
-      <td className="whitespace-nowrap py-3 pl-6 pr-3">
-        <div className="flex justify-end gap-3">
-          <div className="h-[38px] w-[38px] rounded bg-neutral-900"></div>
-          <div className="h-[38px] w-[38px] rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap py-3 pl-6 pr-3'>
+        <div className='flex justify-end gap-3'>
+          <div className='h-[38px] w-[38px] rounded bg-neutral-900'></div>
+          <div className='h-[38px] w-[38px] rounded bg-neutral-900'></div>
         </div>
       </td>
     </tr>
   );
-}
+};
 
-export function InvoicesMobileSkeleton() {
+export const InvoicesMobileSkeleton = () => {
   return (
-    <div className="mb-2 w-full rounded-md bg-neutral-800 p-4">
-      <div className="flex items-center justify-between border-b border-gray-100 pb-8">
-        <div className="flex items-center">
-          <div className="mr-2 h-8 w-8 rounded-full bg-neutral-900"></div>
-          <div className="h-6 w-16 rounded bg-neutral-900"></div>
+    <div className='mb-2 w-full rounded-md bg-neutral-800 p-4'>
+      <div className='flex items-center justify-between border-b border-gray-100 pb-8'>
+        <div className='flex items-center'>
+          <div className='mr-2 h-8 w-8 rounded-full bg-neutral-900'></div>
+          <div className='h-6 w-16 rounded bg-neutral-900'></div>
         </div>
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </div>
-      <div className="flex w-full items-center justify-between pt-4">
+      <div className='flex w-full items-center justify-between pt-4'>
         <div>
-          <div className="h-6 w-16 rounded bg-neutral-900"></div>
-          <div className="mt-2 h-6 w-24 rounded bg-neutral-900"></div>
+          <div className='h-6 w-16 rounded bg-neutral-900'></div>
+          <div className='mt-2 h-6 w-24 rounded bg-neutral-900'></div>
         </div>
-        <div className="flex justify-end gap-2">
-          <div className="h-10 w-10 rounded bg-neutral-900"></div>
-          <div className="h-10 w-10 rounded bg-neutral-900"></div>
+        <div className='flex justify-end gap-2'>
+          <div className='h-10 w-10 rounded bg-neutral-900'></div>
+          <div className='h-10 w-10 rounded bg-neutral-900'></div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export function InvoicesTableSkeleton() {
+export const InvoicesTableSkeleton = () => {
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-neutral-800 p-2 md:pt-0">
-          <div className="md:hidden">
+    <div className='mt-6 flow-root'>
+      <div className='inline-block min-w-full align-middle'>
+        <div className='rounded-lg bg-neutral-800 p-2 md:pt-0'>
+          <div className='md:hidden'>
             <InvoicesMobileSkeleton />
             <InvoicesMobileSkeleton />
             <InvoicesMobileSkeleton />
@@ -176,33 +176,33 @@ export function InvoicesTableSkeleton() {
             <InvoicesMobileSkeleton />
             <InvoicesMobileSkeleton />
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
+          <table className='hidden min-w-full text-gray-900 md:table'>
+            <thead className='rounded-lg text-left text-sm font-normal'>
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                <th scope='col' className='px-4 py-5 font-medium sm:pl-6'>
                   Customer
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Email
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Amount
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Date
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Status
                 </th>
                 <th
-                  scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
+                  scope='col'
+                  className='relative pb-4 pl-3 pr-6 pt-2 sm:pr-6'
                 >
-                  <span className="sr-only">Edit</span>
+                  <span className='sr-only'>Edit</span>
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-neutral-800">
+            <tbody className='bg-neutral-800'>
               <TableRowSkeleton />
               <TableRowSkeleton />
               <TableRowSkeleton />
@@ -215,61 +215,61 @@ export function InvoicesTableSkeleton() {
       </div>
     </div>
   );
-}
+};
 
-export function DevicesMobileSkeleton() {
+export const DevicesMobileSkeleton = () => {
   return (
-    <div className="mb-2 w-full rounded-md bg-neutral-800 p-4">
-      <div className="flex items-center justify-between border-b border-gray-100 pb-8">
-        <div className="flex items-center">
-          <div className="mr-2 h-8 w-8 rounded-full bg-neutral-900"></div>
-          <div className="h-6 w-16 rounded bg-neutral-900"></div>
+    <div className='mb-2 w-full rounded-md bg-neutral-800 p-4'>
+      <div className='flex items-center justify-between border-b border-gray-100 pb-8'>
+        <div className='flex items-center'>
+          <div className='mr-2 h-8 w-8 rounded-full bg-neutral-900'></div>
+          <div className='h-6 w-16 rounded bg-neutral-900'></div>
         </div>
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </div>
-      <div className="flex w-full items-center justify-between pt-4">
+      <div className='flex w-full items-center justify-between pt-4'>
         <div>
-          <div className="h-6 w-16 rounded bg-neutral-900"></div>
-          <div className="mt-2 h-6 w-24 rounded bg-neutral-900"></div>
+          <div className='h-6 w-16 rounded bg-neutral-900'></div>
+          <div className='mt-2 h-6 w-24 rounded bg-neutral-900'></div>
         </div>
-        <div className="flex justify-end gap-2">
-          <div className="h-10 w-10 rounded bg-neutral-900"></div>
-          <div className="h-10 w-10 rounded bg-neutral-900"></div>
+        <div className='flex justify-end gap-2'>
+          <div className='h-10 w-10 rounded bg-neutral-900'></div>
+          <div className='h-10 w-10 rounded bg-neutral-900'></div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export function DeviceTableRowSkeleton() {
+export const DeviceTableRowSkeleton = () => {
   return (
-    <tr className="w-full border-b bg-neutral-800 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+    <tr className='w-full border-b bg-neutral-800 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg'>
       {/* Device Name */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-32 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-32 rounded bg-neutral-900'></div>
       </td>
       {/* Manufacturer */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Device Number */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Amount */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
     </tr>
   );
-}
+};
 
-export function DevicesTableSkeleton() {
+export const DevicesTableSkeleton = () => {
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-neutral-800 p-2 md:pt-0">
-          <div className="md:hidden">
+    <div className='mt-6 flow-root'>
+      <div className='inline-block min-w-full align-middle'>
+        <div className='rounded-lg bg-neutral-800 p-2 md:pt-0'>
+          <div className='md:hidden'>
             <DevicesMobileSkeleton />
             <DevicesMobileSkeleton />
             <DevicesMobileSkeleton />
@@ -277,30 +277,30 @@ export function DevicesTableSkeleton() {
             <DevicesMobileSkeleton />
             <DevicesMobileSkeleton />
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
+          <table className='hidden min-w-full text-gray-900 md:table'>
+            <thead className='rounded-lg text-left text-sm font-normal'>
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                <th scope='col' className='px-4 py-5 font-medium sm:pl-6'>
                   Device Name
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Manufacturer
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Device Number
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Amount
                 </th>
                 <th
-                  scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
+                  scope='col'
+                  className='relative pb-4 pl-3 pr-6 pt-2 sm:pr-6'
                 >
-                  <span className="sr-only">Edit</span>
+                  <span className='sr-only'>Edit</span>
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-neutral-800">
+            <tbody className='bg-neutral-800'>
               <DeviceTableRowSkeleton />
               <DeviceTableRowSkeleton />
               <DeviceTableRowSkeleton />
@@ -313,37 +313,37 @@ export function DevicesTableSkeleton() {
       </div>
     </div>
   );
-}
+};
 
-export function CustomersTableRowSkeleton() {
+export const CustomersTableRowSkeleton = () => {
   return (
-    <tr className="w-full border-b bg-neutral-800 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+    <tr className='w-full border-b bg-neutral-800 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg'>
       {/* Name */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-32 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-32 rounded bg-neutral-900'></div>
       </td>
       {/* Email */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Company */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
       {/* Amount */}
-      <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-neutral-900"></div>
+      <td className='whitespace-nowrap px-3 py-3'>
+        <div className='h-6 w-16 rounded bg-neutral-900'></div>
       </td>
     </tr>
   );
-}
+};
 
-export function CustomersTableSkeleton() {
+export const CustomersTableSkeleton = () => {
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-neutral-800 p-2 md:pt-0">
-          <div className="md:hidden">
+    <div className='mt-6 flow-root'>
+      <div className='inline-block min-w-full align-middle'>
+        <div className='rounded-lg bg-neutral-800 p-2 md:pt-0'>
+          <div className='md:hidden'>
             <DevicesMobileSkeleton />
             <DevicesMobileSkeleton />
             <DevicesMobileSkeleton />
@@ -351,30 +351,30 @@ export function CustomersTableSkeleton() {
             <DevicesMobileSkeleton />
             <DevicesMobileSkeleton />
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
+          <table className='hidden min-w-full text-gray-900 md:table'>
+            <thead className='rounded-lg text-left text-sm font-normal'>
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                <th scope='col' className='px-4 py-5 font-medium sm:pl-6'>
                   Name
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Email
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Company
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope='col' className='px-3 py-5 font-medium'>
                   Amount
                 </th>
                 <th
-                  scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
+                  scope='col'
+                  className='relative pb-4 pl-3 pr-6 pt-2 sm:pr-6'
                 >
-                  <span className="sr-only">Edit</span>
+                  <span className='sr-only'>Edit</span>
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-neutral-800">
+            <tbody className='bg-neutral-800'>
               <DeviceTableRowSkeleton />
               <DeviceTableRowSkeleton />
               <DeviceTableRowSkeleton />
@@ -387,4 +387,4 @@ export function CustomersTableSkeleton() {
       </div>
     </div>
   );
-}
+};

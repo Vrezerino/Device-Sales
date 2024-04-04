@@ -1,8 +1,7 @@
 import Form from '@/app/ui/customers/createForm';
-// Can be re-used from Invoices:
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/breadcrumbs';
  
-export default async function Page() {
+const Page = () => {
   return (
     <main>
       <Breadcrumbs
@@ -19,3 +18,5 @@ export default async function Page() {
     </main>
   );
 };
+
+export default Page;

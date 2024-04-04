@@ -1,7 +1,7 @@
 'use server';
 
 import { getMongoDb as db } from '@/app/lib/mongodb';
-import { extractErrorMessage, formatCurrency } from '@/app/lib/utils';
+import { errorWithStatusCode, formatCurrency } from '@/app/lib/utils';
 
 export const fetchCardData = async () => {
     try {
@@ -42,6 +42,7 @@ export const fetchCardData = async () => {
       };
       
     } catch (e) {
-      return { error: extractErrorMessage(e) };
+      console.error(e);
+      return errorWithStatusCode(e, 500);
     }
   };

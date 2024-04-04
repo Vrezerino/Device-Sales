@@ -1,10 +1,10 @@
 import Form from '@/app/ui/customers/editForm';
 // Can be re-used from Invoices:
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/breadcrumbs';
 import { getCustomer } from '@/services/customers';
 import { notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { id: string } }) {
+const Page = async ({ params }: { params: { id: string } }) => {
     const id = params.id;
     const customer = await getCustomer(id);
 
@@ -27,3 +27,5 @@ export default async function Page({ params }: { params: { id: string } }) {
         </main>
     );
 };
+
+export default Page;

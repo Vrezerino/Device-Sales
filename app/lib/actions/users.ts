@@ -1,8 +1,8 @@
 'use server';
 
-import { signIn } from "@/app/auth";
-import { AuthError } from "next-auth";
-import { z } from "zod";
+import { signIn } from '@/app/auth';
+import { AuthError } from 'next-auth';
+import { z } from 'zod';
 
 const UserFormSchema = z.object({
     id: z.string(),

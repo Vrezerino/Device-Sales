@@ -1,5 +1,9 @@
 import { ObjectId } from 'mongodb';
 
+export type ErrorWithStatusCode = {
+  error: string;
+  statusCode: number
+};
 
 export type User = {
   id: string;

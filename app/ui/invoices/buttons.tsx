@@ -8,29 +8,29 @@ import { toast } from 'react-hot-toast';
 import { InvoicesTable } from '@/app/lib/definitions';
 import { deleteInvoice } from '@/services/invoices';
 
-export function CreateInvoice() {
+export const CreateInvoice = () => {
   return (
     <Link
-      href="/dashboard/invoices/create"
-      className="flex h-10 items-center rounded-lg bg-amber-500 px-4 text-sm font-medium text-white transition-colors hover:bg-amber-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      href='/dashboard/invoices/create'
+      className='flex h-10 items-center rounded-lg bg-amber-500 px-4 text-sm font-medium text-white transition-colors hover:bg-amber-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
     >
-      <span className="hidden md:block">Create Invoice</span>{' '}
-      <PlusIcon className="h-5 md:ml-4" />
+      <span className='hidden md:block'>Create Invoice</span>{' '}
+      <PlusIcon className='h-5 md:ml-4' />
     </Link>
   );
 };
 
-export function UpdateInvoice({ id }: { id: string }) {
+export const UpdateInvoice = ({ id }: { id: string }) => {
   return (
     <Link
       href={`/dashboard/invoices/${id}/edit`}
-      className="rounded-md border border-orange-200/20 p-2 hover:bg-amber-500">
-      <PencilIcon className="w-5" />
+      className='rounded-md border border-orange-200/20 p-2 hover:bg-amber-500'>
+      <PencilIcon className='w-5' />
     </Link>
   );
 };
 
-export function DeleteInvoice({ invoice }: { invoice: InvoicesTable }) {
+export const DeleteInvoice = ({ invoice }: { invoice: InvoicesTable }) => {
   const deleteInvoiceWithId = async () => {
     const amount = formatCurrency(invoice.amountInCents);
 
@@ -46,9 +46,9 @@ export function DeleteInvoice({ invoice }: { invoice: InvoicesTable }) {
   }
   return (
     <form action={deleteInvoiceWithId}>
-      <button className="rounded-md border border-orange-200/20 p-2 hover:bg-red-600">
-        <span className="sr-only">Delete</span>
-        <TrashIcon className="w-5" />
+      <button className='rounded-md border border-orange-200/20 p-2 hover:bg-red-600'>
+        <span className='sr-only'>Delete</span>
+        <TrashIcon className='w-5' />
       </button>
     </form>
   );
