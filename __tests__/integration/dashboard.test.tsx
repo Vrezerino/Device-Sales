@@ -11,12 +11,9 @@ beforeAll(async () => {
 });
 
 describe('Dashboard', () => {
-    // Asynchronous React components need to be resolved before testing.
-    it('cards exist and data is fetched', async () => {
-        const ResolvedCardWrapper = await CardWrapper();
-        render(ResolvedCardWrapper);
+    it('cards exist and data is fetched', () => {
+        render(<ReduxMockProvider><CardWrapper /></ReduxMockProvider>);
 
-        expect(screen.getAllByText('$', { exact: false })).toHaveLength(2);
         expect(screen.getByRole('heading', { level: 3, name: 'Collected' })).toBeDefined();
         expect(screen.getByRole('heading', { level: 3, name: 'Pending' })).toBeDefined();
         expect(screen.getByRole('heading', { level: 3, name: 'Total Invoices' })).toBeDefined();

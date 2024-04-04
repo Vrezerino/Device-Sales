@@ -19,11 +19,66 @@ import { redirect } from 'next/navigation';
 
 export const getCustomer = async (id: string) => {
   try {
-    const _id = new ObjectId(id);
-    const customer = await (await db()).collection('customers').findOne({ _id });
+    const customer = await (await db()).collection('customers').aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id)
+        }
+      },
+      // Left join with the invoices collection
+      {
+        $lookup: {
+          from: 'invoices',
+          localField: '_id',
+          foreignField: 'customerId',
+          as: 'invoices'
+        }
+      },
+      // Project needed fields only
+      {
+        $project: {
+          id: 1,
+          name: 1,
+          email: 1,
+          imageUrl: 1,
+          company: 1,
+          totalInvoices: { $size: '$invoices' },
+          totalPending: {
+            $sum: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$invoices',
+                    as: 'invoice',
+                    cond: { $eq: ['$$invoice.status', 'pending'] }
+                  }
+                },
+                as: 'pendingInvoice',
+                in: '$$pendingInvoice.amountInCents'
+              }
+            }
+          },
+          totalPaid: {
+            $sum: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$invoices',
+                    as: 'invoice',
+                    cond: { $eq: ['$$invoice.status', 'paid'] }
+                  }
+                },
+                as: 'paidInvoice',
+                in: '$$paidInvoice.amountInCents'
+              }
+            }
+          }
+        }
+      }
+    ]).toArray();
 
     if (customer) {
-      return JSON.parse(JSON.stringify(customer));
+      return JSON.parse(JSON.stringify(customer[0]));
     } else {
       throw errorWithStatusCode(`Customer doesn't exist!`, 404);
     }
@@ -242,14 +297,6 @@ export const fetchFilteredCustomers = async (query: string) => {
   try {
     const data = await (await db()).collection('customers').aggregate([
       {
-        $lookup: {
-          from: 'invoices',
-          localField: '_id',
-          foreignField: 'customerId',
-          as: 'invoices'
-        }
-      },
-      {
         $match: {
           $or: [
             { 'name': { $regex: query, $options: 'i' } },
@@ -257,6 +304,16 @@ export const fetchFilteredCustomers = async (query: string) => {
           ]
         }
       },
+      // Left join with the invoices collection
+      {
+        $lookup: {
+          from: 'invoices',
+          localField: '_id',
+          foreignField: 'customerId',
+          as: 'invoices'
+        }
+      },
+      // Project needed fields only
       {
         $project: {
           id: 1,

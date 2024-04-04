@@ -1,6 +1,8 @@
-import { DevicesTable, InvoicesTable as InvoicesTableType } from '@/app/lib/definitions';
+import { CardsData, DevicesTable, InvoicesTable as InvoicesTableType } from '@/app/lib/definitions';
+import { CardsState } from '@/redux/features/cardsSlice';
 import { DeviceState } from '@/redux/features/deviceSlice';
 import { InvoiceState } from '@/redux/features/invoiceSlice';
+
 import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { vi } from 'vitest';
@@ -31,6 +33,10 @@ const preloadedInvoiceState: InvoiceState = {
 
 const preloadedDeviceState: DeviceState = {
     deviceList: []
+};
+
+const preloadedCardsState: CardsState = {
+    cardsData: {} as CardsData
 };
 
 export const invoiceSlice = createSlice({
@@ -68,13 +74,25 @@ export const deviceSlice = createSlice({
     },
 });
 
+export const cardsSlice = createSlice({
+    name: 'cardsdata',
+    initialState: preloadedCardsState,
+    reducers: {
+        setCardsData: (state, action: PayloadAction<CardsData>) => {
+            state.cardsData = action.payload;
+        }
+    },
+});
+
 export const invoiceReducer = invoiceSlice.reducer;
 export const deviceReducer = deviceSlice.reducer;
+export const cardsReducer = cardsSlice.reducer;
 
 export const mockStore = configureStore({
     reducer: {
         invoiceReducer,
-        deviceReducer
+        deviceReducer,
+        cardsReducer
     },
 });
 
