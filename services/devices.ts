@@ -19,7 +19,6 @@ import { revalidatePath } from 'next/cache';
 import { addDevice, editDevice, removeDevice } from '@/redux/features/deviceSlice';
 
 export const fetchDevices = async () => {
-  console.log('yeah');
   try {
     // Return devices sorted by their names, descending
     const devices = await (await db()).collection('devices').find({}).sort({ deviceName: -1 }).toArray();

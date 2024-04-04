@@ -172,6 +172,8 @@ export const errorWithStatusCode = (errorObject: unknown, code: number): ErrorWi
     error = errorObject.message;
   } else if (errorObject && typeof errorObject === 'object' && 'message' in errorObject) {
     error = String(errorObject.message);
+  } else if (errorObject && typeof errorObject === 'object' && 'error' in errorObject) {
+    error = String(errorObject.error);
   } else if (typeof errorObject === 'string') {
     error = errorObject;
   } else {

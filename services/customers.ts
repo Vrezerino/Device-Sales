@@ -19,8 +19,7 @@ import { redirect } from 'next/navigation';
 
 export const getCustomer = async (id: string) => {
   try {
-    const _id = new ObjectId(id);;
-
+    const _id = new ObjectId(id);
     const customer = await (await db()).collection('customers').findOne({ _id });
 
     if (customer) {

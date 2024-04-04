@@ -18,10 +18,6 @@ export const metadata: Metadata = {
 
 const DevicePage = async ({ params }: { params: { id: string } }) => {
     const deviceId = params.id;
-    const device: DevicesTable = await getDeviceById(deviceId);
-
-    // Redirect to 404 page if device not found.
-    if (!device) notFound();
     return (
         <main>
             <Breadcrumbs
@@ -34,7 +30,7 @@ const DevicePage = async ({ params }: { params: { id: string } }) => {
                     },
                 ]}
             />
-            <Page device={device} />
+            <Page params={params} />
             <Link href='/dashboard/devices'><Button style={{ marginTop: '7px' }}>🔙 Return</Button></Link>
         </main>
     )

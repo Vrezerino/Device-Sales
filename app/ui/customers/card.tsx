@@ -1,16 +1,45 @@
 'use client';
 
-import { CustomersTableType } from '@/app/lib/definitions';
-import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
+import { setCustomersWithInvoiceInfo } from '@/redux/features/customerSlice';
+import { AppDispatch, RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 
-const CustomerCard = ({ customerId }: { customerId: string }) => {
-    const customers: CustomersTableType[] = useSelector(
+import { getCustomer } from '@/services/customers';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { CardSkeleton } from '../skeletons';
+import { formatCurrency } from '@/app/lib/utils';
+
+const CustomerCard = ({ params }: { params: { id: string } }) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const customers = useSelector(
         (state: RootState) => state.customerReducer.customerWithInvoiceInfoList
-      );
+    );
 
-    const customer = customers?.find((c) => c._id === customerId);
+    const customer = customers?.find((c) => c._id === params.id);
 
+    /**
+     * If customer is not in store for example because you refreshed the single customer view,
+     * fetch the customer by id and dispatch this single customer to store
+     */
+    const fetchAndSetSingleCustomer = async () => {
+        if (!customer) {
+            const data = await getCustomer(params.id);
+
+            if (!data.error) {
+                dispatch(setCustomersWithInvoiceInfo([data]));
+            } else {
+                toast.error(data.error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchAndSetSingleCustomer();
+    }, [])
+
+    if (!customer) return(<><CardSkeleton /></>)
+    
     return (
         <div className='max-w-sm w-full lg:max-w-full lg:flex'>
             <div className='h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden' style={{ backgroundImage: `url(${customer?.imageUrl})` }} title='Customer image'>
@@ -19,11 +48,12 @@ const CustomerCard = ({ customerId }: { customerId: string }) => {
                 <div className='mb-8'>
                     <div className='text-gray-900 font-bold text-xl mb-2'>{customer?.name}</div>
                     <ol className='text-gray-600 text-base'>
-                        <li>{customer?.email}</li>
-                        <li>{customer?.company}</li>
-                        <li>Invoices: {customer?.totalInvoices}</li>
-                        <li>Paid: {customer?.totalPaid}</li>
-                        <li>Pending: {customer?.totalPending}</li>
+                        <li className='text-gray-400 text-sm'>{customer?.email}</li>
+                        <li  className='text-gray-400 text-sm'>{customer?.company}</li>
+                        <br />
+                        <li>Invoices: {customer?.totalInvoices || 0}</li>
+                        <li>Paid: {formatCurrency(customer?.totalPaid)}</li>
+                        <li>Pending: {formatCurrency(customer?.totalPending)}</li>
                     </ol>
                 </div>
                 <div className='flex items-center'>

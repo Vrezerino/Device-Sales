@@ -1,13 +1,8 @@
-import { DevicesTable } from '@/app/lib/definitions';
 import DeviceCard from './card';
 
-const Page = ({
-    device
-}: {
-    device: DevicesTable;
-}) => {
+const Page = ({ params }: { params: { id: string } }) => {
     return (
-        <DeviceCard device={device} />
+        <DeviceCard params={params} />
     );
 }
 

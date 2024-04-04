@@ -1,12 +1,8 @@
 import CustomerCard from './card';
 
-const Page = ({
-    customerId
-}: {
-    customerId: string;
-}) => {
+const Page = ({ params }: { params: { id: string } }) => {
     return (
-        <CustomerCard customerId={customerId} />
+        <CustomerCard params={params} />
     );
 }
 
