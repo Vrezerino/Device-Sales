@@ -125,3 +125,10 @@ export type Notification = {
   message: string;
   type: 'error' | 'success'
 };
+
+export type CardsData = {
+  numberOfInvoices: number;
+  numberOfCustomers: number;
+  totalPaidInvoices: string;
+  totalPendingInvoices: string;
+}

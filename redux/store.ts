@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import deviceReducer from './features/deviceSlice';
 import customerReducer from './features/customerSlice';
 import invoiceReducer from './features/invoiceSlice';
+import cardsReducer from './features/cardsSlice'
 
 export const store = configureStore({
     reducer: {
         deviceReducer,
         customerReducer,
-        invoiceReducer
+        invoiceReducer,
+        cardsReducer
     },
 });
 

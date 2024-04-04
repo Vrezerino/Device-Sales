@@ -1,11 +1,21 @@
+'use client';
+
 import {
   BanknotesIcon,
   ClockIcon,
   UserGroupIcon,
   InboxIcon,
 } from '@heroicons/react/24/outline';
+
 import { lusitana } from '@/app/ui/fonts';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { setCardsData } from '@/redux/features/cardsSlice';
+
 import { fetchCardData } from '@/services/cards';
+import { isErrorWithStatusCodeType } from '@/app/lib/utils';
+
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const iconMap = {
@@ -15,22 +25,34 @@ const iconMap = {
   invoices: InboxIcon,
 };
 
-const CardWrapper = async () => {
-  const data = await fetchCardData();
-  data?.error && toast.error('Failed to fetch card data!');
-  
-  const numberOfInvoices = data?.numberOfInvoices;
-  const numberOfCustomers = data?.numberOfCustomers;
-  const totalPaidInvoices = data?.totalPaidInvoices;
-  const totalPendingInvoices = data?.totalPendingInvoices;
+const CardWrapper = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const cardsData = useSelector(
+    (state: RootState) => state.cardsReducer.cardsData
+  );
+
+  const fetchData = async () => {
+    const data = await fetchCardData();
+
+    if (isErrorWithStatusCodeType(data)) {
+      toast.error(data.error);
+    } else {
+      dispatch(setCardsData(data));
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
   return (
     <>
-      <Card title='Collected' value={totalPaidInvoices || 0} type='collected' />
-      <Card title='Pending' value={totalPendingInvoices || 0} type='pending' />
-      <Card title='Total Invoices' value={numberOfInvoices || 0} type='invoices' />
+      <Card title='Collected' value={cardsData.totalPaidInvoices || 0} type='collected' />
+      <Card title='Pending' value={cardsData.totalPendingInvoices || 0} type='pending' />
+      <Card title='Total Invoices' value={cardsData.numberOfInvoices || 0} type='invoices' />
       <Card
         title='Total Customers'
-        value={numberOfCustomers || 0}
+        value={cardsData.numberOfCustomers || 0}
         type='customers'
       />
     </>
